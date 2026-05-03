@@ -973,6 +973,170 @@
         background: var(--sage);
         border: 1px solid rgba(14, 109, 100, 0.16);
       }
+
+      /* ── Partition-switch diagram (slide 21) ── */
+      .switch-diagram {
+        display: grid;
+        grid-template-columns: 1fr 72px 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .switch-col {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .switch-mid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--teal);
+        font-weight: 760;
+      }
+
+      .switch-mid .sw-chevron {
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .staging-box {
+        border: 1px solid rgba(14, 109, 100, 0.32);
+        border-radius: 8px;
+        background: #e7f1ee;
+        padding: 12px 14px;
+      }
+
+      .staging-box .stag-title {
+        font-family: var(--mono);
+        font-size: 15px;
+        color: var(--teal);
+        margin-bottom: 8px;
+      }
+
+      /* ── Rowgroup timeline (slides 23-24) ── */
+      .rg-timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .rg-axis-row {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 10px;
+      }
+
+      .rg-axis-labels {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 14px;
+        color: var(--muted);
+        padding-bottom: 2px;
+      }
+
+      .rg-bar-row {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .rg-bar-label {
+        font-family: var(--mono);
+        font-size: 14px;
+        color: var(--muted);
+        text-align: right;
+      }
+
+      .rg-track-wrap {
+        position: relative;
+        height: 38px;
+      }
+
+      .rg-track {
+        position: absolute;
+        inset: 0;
+        background: #f4f7f4;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .rg-fill {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+        font-family: var(--mono);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .rg-fill.overlap {
+        background: rgba(214, 95, 60, 0.22);
+        border: 1px solid rgba(214, 95, 60, 0.4);
+        color: var(--rust);
+      }
+
+      .rg-fill.match {
+        background: rgba(14, 109, 100, 0.22);
+        border: 1px solid rgba(14, 109, 100, 0.4);
+        color: var(--teal);
+      }
+
+      .rg-fill.faded {
+        background: rgba(237, 242, 236, 0.7);
+        border: 1px solid var(--line);
+        color: var(--muted);
+        opacity: 0.45;
+      }
+
+      .rg-query-line {
+        position: absolute;
+        top: -6px;
+        bottom: -6px;
+        width: 2px;
+        background: var(--rust);
+        z-index: 3;
+      }
+
+      .rg-query-label {
+        position: absolute;
+        top: -22px;
+        left: 4px;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--rust);
+        white-space: nowrap;
+      }
+
+      .rg-result-badge {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+
+      .rg-result-badge.read {
+        background: rgba(214, 95, 60, 0.15);
+        color: var(--rust);
+      }
+
+      .rg-result-badge.skip {
+        background: rgba(14, 109, 100, 0.12);
+        color: var(--teal);
+      }
     </style>
   </head>
   <body>
@@ -980,7 +1144,7 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="160"
+      data-duration="200"
       data-width="1920"
       data-height="1080"
     >
@@ -1864,6 +2028,402 @@ GROUP BY Region;</div>
         </div>
       </section>
 
+      <!-- ═══════════════════════════════════════════════════ SLIDE 21 ═══ -->
+      <section id="slide-21" class="clip slide" data-start="160" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Partition Switch</div>
+            <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
+          </div>
+          <div class="slide-no motion">21 / 21</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="panel motion" style="padding: 22px;">
+              <h3 style="margin-bottom: 16px;">d. Metadata-only switch — no data movement</h3>
+              <div class="switch-diagram">
+                <div class="switch-col">
+                  <div class="staging-box motion">
+                    <div class="stag-title">Staging Jan</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                    <p class="small muted" style="margin-top:8px;">CCI pre-sorted on data_date</p>
+                  </div>
+                  <div class="staging-box motion">
+                    <div class="stag-title">Staging Feb</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                    <p class="small muted" style="margin-top:8px;">Loaded independently, in parallel</p>
+                  </div>
+                  <div class="staging-box motion">
+                    <div class="stag-title">Staging Mar</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                    <p class="small muted" style="margin-top:8px;">Monthly partition boundary explicit</p>
+                  </div>
+                </div>
+                <div class="switch-mid motion">
+                  <div class="sw-chevron">→</div>
+                  <div class="sw-chevron">→</div>
+                  <div class="sw-chevron">→</div>
+                  <div style="margin-top:4px;">SWITCH</div>
+                </div>
+                <div class="switch-col">
+                  <div class="month-box motion">
+                    <div class="month-title">Part 1 — Jan CCI</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  </div>
+                  <div class="month-box motion">
+                    <div class="month-title">Part 2 — Feb CCI</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  </div>
+                  <div class="month-box motion">
+                    <div class="month-title">Part 3 — Mar CCI</div>
+                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="codebox dark motion">TRUNCATE target PARTITION N
+ALTER TABLE staging
+  SWITCH PARTITION N TO target PARTITION N</div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>e. Result: Fully compressed segments</h3>
+              <div class="simple-list" style="margin-top: 16px;">
+                <div class="item"><span class="num">1</span><span>Full rowgroups (~1 M rows each, maximally compressed)</span></div>
+                <div class="item"><span class="num">2</span><span>Ordered CCI segments with tight, non-overlapping min/max</span></div>
+                <div class="item"><span class="num">3</span><span>No delta stores, no open rowgroups, no fragmentation</span></div>
+              </div>
+            </div>
+            <div class="panel callout gold motion">
+              <p class="body-copy">The swap is metadata-only — only internal page pointers are reassigned. No rows move on disk. Completes in milliseconds regardless of table size.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SLIDE 22 ═══ -->
+      <section id="slide-22" class="clip slide" data-start="168" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Architectural Comparison</div>
+            <h2 class="motion">Old (DELETE → INSERT) vs. New (staging → CCI → SWITCH)</h2>
+          </div>
+          <div class="slide-no motion">22 / 22</div>
+        </div>
+        <div class="stack">
+          <div class="content-grid">
+            <div class="stack">
+              <div class="panel callout rust motion">
+                <h3>OLD — DELETE → INSERT</h3>
+                <div class="codebox motion" style="margin-top:14px;font-size:18px;line-height:1.4;">DELETE FROM target
+  WHERE data_date BETWEEN @start AND @end
+  -- row-level logging · lock escalation · minutes
+INSERT INTO target SELECT * FROM source
+  -- row-level logging · random segment order</div>
+                <div class="simple-list" style="margin-top:14px;">
+                  <div class="item"><span class="dot"></span><span>Heavy transaction log · serial execution · slow</span></div>
+                  <div class="item"><span class="dot"></span><span>Segment min/max widens on every reload</span></div>
+                  <div class="item"><span class="dot"></span><span>Fragmentation accumulates with each run</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="panel callout motion">
+                <h3>NEW — Staging → CCI rebuild → SWITCH</h3>
+                <div class="codebox dark motion" style="margin-top:14px;font-size:18px;line-height:1.4;">Load staging tables  -- no contention, parallel
+Build CCI per staging  -- pre-sorted, optimal
+TRUNCATE + SWITCH      -- metadata-only, ms</div>
+                <div class="simple-list" style="margin-top:14px;">
+                  <div class="item"><span class="dot"></span><span>Minimal log · concurrent across partitions</span></div>
+                  <div class="item"><span class="dot"></span><span>Tight non-overlapping segment min/max always</span></div>
+                  <div class="item"><span class="dot"></span><span>Zero fragmentation — fresh CCI every reload</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="metric-row">
+            <div class="metric motion">
+              <div class="value" style="color:var(--rust);">mins</div>
+              <div class="label">Old: DELETE + INSERT duration</div>
+            </div>
+            <div class="metric motion">
+              <div class="value">ms</div>
+              <div class="label">New: SWITCH duration (metadata only)</div>
+            </div>
+            <div class="metric motion">
+              <div class="value">0%</div>
+              <div class="label">Fragmentation after new pipeline run</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SLIDE 23 ═══ -->
+      <section id="slide-23" class="clip slide" data-start="176" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">8. Fragmented CCI — Segment Overlap</div>
+            <h2 class="motion">Overlapping min/max ranges force the engine to scan every rowgroup.</h2>
+          </div>
+          <div class="slide-no motion">23 / 23</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>data_date segments — unordered CCI</h3>
+              <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
+              <div class="rg-timeline" style="margin-top:18px;">
+                <div class="rg-axis-row">
+                  <div></div>
+                  <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span></div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 0</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill overlap" style="left:2%;width:94%;">Jan 3 — Mar 28</div>
+                    </div>
+                    <div class="rg-query-line" style="left:51%;"><div class="rg-query-label">Feb 15</div></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 1</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill overlap" style="left:5%;width:89%;">Jan 5 — Mar 25</div>
+                    </div>
+                    <div class="rg-query-line" style="left:51%;"></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 2</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill overlap" style="left:0%;width:98%;">Jan 1 — Mar 30</div>
+                    </div>
+                    <div class="rg-query-line" style="left:51%;"></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 3</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill overlap" style="left:8%;width:84%;">Jan 8 — Mar 20</div>
+                    </div>
+                    <div class="rg-query-line" style="left:51%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel callout rust motion">
+              <p class="body-copy">All 4 rowgroups read — <strong>0% elimination.</strong> Every query must decompress and scan the full table.</p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>Why this happens</h3>
+              <div class="simple-list" style="margin-top:16px;">
+                <div class="item"><span class="num">1</span><span>Data arrives in random order — mixed dates per batch</span></div>
+                <div class="item"><span class="num">2</span><span>Rows fill rowgroups in arrival order, not date order</span></div>
+                <div class="item"><span class="num">3</span><span>Each ~1 M-row rowgroup ends up spanning the full date range</span></div>
+                <div class="item"><span class="num">4</span><span>Segment min/max spans months — elimination is useless</span></div>
+              </div>
+            </div>
+            <div class="panel motion">
+              <h3>Visualized as overlapping ranges</h3>
+              <div class="rg-grid" style="margin-top:14px;">
+                <div class="rowgroup-card skip">
+                  <h3>RG 0</h3><p class="small muted">Jan 3 → Mar 28</p>
+                  <span class="status">MUST READ</span>
+                </div>
+                <div class="rowgroup-card skip">
+                  <h3>RG 1</h3><p class="small muted">Jan 5 → Mar 25</p>
+                  <span class="status">MUST READ</span>
+                </div>
+                <div class="rowgroup-card skip">
+                  <h3>RG 2</h3><p class="small muted">Jan 1 → Mar 30</p>
+                  <span class="status">MUST READ</span>
+                </div>
+                <div class="rowgroup-card skip">
+                  <h3>RG 3</h3><p class="small muted">Jan 8 → Mar 20</p>
+                  <span class="status">MUST READ</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SLIDE 24 ═══ -->
+      <section id="slide-24" class="clip slide" data-start="184" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
+            <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
+          </div>
+          <div class="slide-no motion">24 / 24</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>data_date segments — ordered CCI</h3>
+              <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
+              <div class="rg-timeline" style="margin-top:18px;">
+                <div class="rg-axis-row">
+                  <div></div>
+                  <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span></div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 0</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill faded" style="left:0%;width:25%;">Jan 1—31</div>
+                    </div>
+                    <div class="rg-query-line" style="left:38%;"><div class="rg-query-label">Feb 15</div></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 1</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill match" style="left:25%;width:23%;">Feb 1—28</div>
+                    </div>
+                    <div class="rg-query-line" style="left:38%;"></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 2</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill faded" style="left:48%;width:26%;">Mar 1—31</div>
+                    </div>
+                    <div class="rg-query-line" style="left:38%;"></div>
+                  </div>
+                </div>
+                <div class="rg-bar-row">
+                  <div class="rg-bar-label">RG 3</div>
+                  <div class="rg-track-wrap">
+                    <div class="rg-track">
+                      <div class="rg-fill faded" style="left:74%;width:25%;">Apr 1—30</div>
+                    </div>
+                    <div class="rg-query-line" style="left:38%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel callout motion">
+              <p class="body-copy">Only <strong>RG 1</strong> overlaps Feb 15. RG 0, 2, 3 are skipped by min/max metadata — <strong>75% elimination before decompression.</strong></p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>How ordering enables elimination</h3>
+              <div class="simple-list" style="margin-top:16px;">
+                <div class="item"><span class="num">1</span><span>Staging table sorted on data_date — B-tree guarantees physical order</span></div>
+                <div class="item"><span class="num">2</span><span>CCI builder reads rows sequentially: each rowgroup receives a contiguous date range</span></div>
+                <div class="item"><span class="num">3</span><span>Segment min/max spans only ~30 days, not 90</span></div>
+                <div class="item"><span class="num">4</span><span>Query engine checks metadata first — skips non-overlapping segments entirely</span></div>
+              </div>
+            </div>
+            <div class="panel motion">
+              <h3>Rowgroup status at query time</h3>
+              <div class="rg-grid" style="margin-top:14px;">
+                <div class="rowgroup-card skip">
+                  <h3>RG 0</h3><p class="small muted">Jan 1 → Jan 31</p>
+                  <span class="status skip">SKIP</span>
+                </div>
+                <div class="rowgroup-card read">
+                  <h3>RG 1</h3><p class="small muted">Feb 1 → Feb 28</p>
+                  <span class="status">READ</span>
+                </div>
+                <div class="rowgroup-card skip">
+                  <h3>RG 2</h3><p class="small muted">Mar 1 → Mar 31</p>
+                  <span class="status skip">SKIP</span>
+                </div>
+                <div class="rowgroup-card skip">
+                  <h3>RG 3</h3><p class="small muted">Apr 1 → Apr 30</p>
+                  <span class="status skip">SKIP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ SLIDE 25 ═══ -->
+      <section id="slide-25" class="clip slide" data-start="192" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Final Impact from All Optimizations</div>
+            <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
+          </div>
+          <div class="slide-no motion">25 / 25</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>How strict ordering is achieved</h3>
+              <div class="simple-list" style="margin-top:16px;">
+                <div class="item motion">
+                  <span class="num">1</span>
+                  <span><strong>Create staging table with clustered rowstore index</strong><br>
+                    <span class="muted small">ON (data_date, ...) — B-tree guarantees physical sort order on disk</span></span>
+                </div>
+                <div class="item motion">
+                  <span class="num">2</span>
+                  <span><strong>Load data into staging table</strong><br>
+                    <span class="muted small">Rows stored in date order; arrival sequence doesn’t matter</span></span>
+                </div>
+                <div class="item motion">
+                  <span class="num">3</span>
+                  <span><strong>Build CCI on the sorted staging table</strong><br>
+                    <span class="muted small">CCI builder reads sequentially — each rowgroup gets a contiguous date range with tight min/max</span></span>
+                </div>
+                <div class="item motion">
+                  <span class="num">4</span>
+                  <span><strong>Partition switch into target table</strong><br>
+                    <span class="muted small">Target inherits perfectly ordered segments — metadata-only, milliseconds</span></span>
+                </div>
+              </div>
+            </div>
+            <div class="panel callout gold motion">
+              <p class="body-copy">Column elimination × segment elimination × compressed I/O × batch mode — each layer compounds the benefit of the one before it.</p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel motion">
+              <h3>Impact on query performance</h3>
+              <table style="margin-top:16px;" class="dense-table">
+                <thead>
+                  <tr><th>Metric</th><th style="color:var(--rust);">Fragmented CCI</th><th style="color:var(--teal);">Unfragmented CCI</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><strong>Segments scanned</strong></td><td style="color:var(--rust);">ALL</td><td style="color:var(--teal);">Only matching</td></tr>
+                  <tr><td><strong>Decompression work</strong></td><td style="color:var(--rust);">100%</td><td style="color:var(--teal);">~25%</td></tr>
+                  <tr><td><strong>I/O from disk</strong></td><td style="color:var(--rust);">Full table</td><td style="color:var(--teal);">1 rowgroup</td></tr>
+                  <tr><td><strong>Segment elimination</strong></td><td style="color:var(--rust);">0%</td><td style="color:var(--teal);">75%</td></tr>
+                  <tr><td><strong>Query speed</strong></td><td style="color:var(--rust);">Slow</td><td style="color:var(--teal);">Fast</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="metric-row">
+              <div class="metric motion">
+                <div class="value">75%</div>
+                <div class="label">Rowgroups eliminated by min/max metadata</div>
+              </div>
+              <div class="metric motion">
+                <div class="value">~10x</div>
+                <div class="label">Typical end-to-end query speed improvement</div>
+              </div>
+              <div class="metric motion">
+                <div class="value">ms</div>
+                <div class="label">SWITCH duration — zero data movement</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div class="clicker-controls" data-layout-ignore>
         <button class="clicker-button" type="button" data-clicker-prev aria-label="Previous slide">‹</button>
         <span class="clicker-progress" data-clicker-progress>01 / 20</span>
@@ -1874,7 +2434,7 @@ GROUP BY Region;</div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      const slideCount = 20;
+      const slideCount = 25;
       const slideDuration = 8;
 
       document.querySelectorAll(".slide-no").forEach((slideNo, index) => {
