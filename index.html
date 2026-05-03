@@ -1195,9 +1195,9 @@
         </div>
         <div class="content-grid">
           <div class="stack center-stack">
-            <div class="panel callout rust motion">
+            <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
               <h3>Without a shared layer</h3>
-              <div class="simple-list" style="margin-top: 18px;">
+              <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
                 <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
                 <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
                 <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
@@ -1243,7 +1243,7 @@
         </div>
         <div class="content-grid wide-left">
           <div class="stack">
-            <div class="codebox dark motion">import ibis
+            <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
 
 def trade_pnl(trades):
     return (
@@ -1319,8 +1319,8 @@ result = trade_pnl(con.table("fact_trades"))</div>
               <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
             </div>
           </div>
-          <div class="content-grid">
-            <div class="panel motion">
+          <div class="content-grid" style="flex: 1;">
+            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Governance surface</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
@@ -1328,7 +1328,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
               </div>
             </div>
-            <div class="panel gold motion">
+            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Optimization surface</h3>
               <p class="body-copy" style="margin-top: 16px;">
                 The same library can make projection, predicates, grouping keys, date windows,
@@ -1386,7 +1386,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 </div>
               </div>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
               <div class="simple-list">
                 <div class="item"><span class="dot"></span><span>Repeated APAC values are scattered across pages with other columns.</span></div>
                 <div class="item"><span class="dot"></span><span>Compression cannot exploit repetition across unrelated types.</span></div>
@@ -1405,7 +1405,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
           </div>
           <div class="slide-no motion">06 / 14</div>
         </div>
-        <div class="stack">
+        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly;">
           <div class="segment motion">
             <div class="segment-name">Segment: ID</div>
             <div class="segment-strip"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span></div>
@@ -1462,10 +1462,10 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 </div>
               </div>
             </div>
-            <div class="codebox motion">After RLE:
+            <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">After RLE:
 [(APAC, 350000) | (EMEA, 350000) | (AMER, 348576)]</div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel teal motion">
               <h3>How it works</h3>
               <p class="body-copy" style="margin-top: 16px;">
@@ -1473,7 +1473,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 positions, store one value plus a count instead of repeating the value.
               </p>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Storage impact</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="dot"></span><span>Before: 1,048,576 x 4 bytes = about 4 MB.</span></div>
@@ -1498,19 +1498,19 @@ result = trade_pnl(con.table("fact_trades"))</div>
             <div class="panel motion">
               <h3>Date column: partially sorted</h3>
               <div class="segment-strip" style="margin-top: 18px;">
-                <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span>
+                <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span>
               </div>
               <div class="codebox" style="margin-top: 18px;">After RLE:
 [(2024-01-15, 3) | (2024-02-10, 2)]</div>
             </div>
-            <div class="panel callout gold motion">
+            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">
                 Ordered columnstore indexes reduce segment overlap by sorting order-key values before compression,
                 improving both RLE opportunities and segment elimination.
               </p>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
             <div class="tier motion">
               <div class="tier-label">BEST</div>
               <p class="body-copy">Sorted columns with long consecutive runs, such as APAC... EMEA... AMER...</p>
@@ -1518,6 +1518,11 @@ result = trade_pnl(con.table("fact_trades"))</div>
             <div class="tier good motion">
               <div class="tier-label">GOOD</div>
               <p class="body-copy">Naturally clustered batches, such as one trade date appearing 50,000 times.</p>
+            </div>
+            
+            <div class="tier motion" style="margin-top: 24px; background: var(--soft); border: 1px solid var(--line);">
+              <div class="tier-label" style="background: var(--teal);">PRO TIP</div>
+              <p class="body-copy">Use <strong>Clustered Columnstore Indexes</strong> to enforce physical order on your most important filter columns.</p>
             </div>
             <div class="tier poor motion">
               <div class="tier-label">POOR</div>
@@ -1551,7 +1556,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 </tbody>
               </table>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Step 2: replace strings with codes</h3>
               <div class="encoded-row" style="margin-top: 18px;">
                 <span class="code-token">0</span><span class="code-token">1</span><span class="code-token">0</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="ellipsis">...</span>
@@ -1566,7 +1571,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 the segment stores a dense stream of integers.
               </p>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Storage impact</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="dot"></span><span>Before: 1,048,576 rows x avg 7 bytes = about 7.3 MB.</span></div>
@@ -1595,11 +1600,11 @@ result = trade_pnl(con.table("fact_trades"))</div>
                 <div class="item"><span class="num">3</span><span>Composable compression: codes can be RLE compressed and bit-packed.</span></div>
               </div>
             </div>
-            <div class="codebox motion">codes: [0, 0, 0, 0, 1, 1, 2]
+            <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">codes: [0, 0, 0, 0, 1, 1, 2]
 RLE:   [(0, 4), (1, 2), (2, 1)]
 bits:  values 0-3 need only 2 bits each</div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel callout rust motion">
               <h3>SQL Server specifics</h3>
               <div class="simple-list" style="margin-top: 18px;">
@@ -1608,7 +1613,7 @@ bits:  values 0-3 need only 2 bits each</div>
                 <div class="item"><span class="dot"></span><span>String columns and repeated values benefit most when segments are well ordered.</span></div>
               </div>
             </div>
-            <div class="panel soft motion">
+            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">
                 In the access layer, prefer constrained categorical columns and stable domain values
                 over free-form strings in high-volume analytical tables.
@@ -1635,14 +1640,14 @@ bits:  values 0-3 need only 2 bits each</div>
               </div>
               <p class="body-copy muted" style="margin-top: 18px;">Max value = 3, so ceil(log2(4)) = 2 bits per value.</p>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Bit-packed stream</h3>
               <div class="encoded-row" style="margin-top: 18px;">
                 <span class="bit teal">11</span><span class="bit">01</span><span class="bit rust">10</span><span class="bit">00</span><span class="bit">01</span><span class="bit teal">11</span><span class="bit">00</span><span class="bit rust">10</span>
               </div>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="codebox dark motion">Standard 32-bit storage:
 8 values x 32 bits = 256 bits = 32 bytes
 
@@ -1650,7 +1655,7 @@ Bit-packed storage:
 8 values x 2 bits = 16 bits = 2 bytes
 
 Savings in this example: 16x</div>
-            <div class="panel callout motion">
+            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">
                 The access layer helps by preserving low-cardinality domains, projecting only needed
                 columns, and avoiding transformations that explode values before filters run.
@@ -1685,7 +1690,7 @@ Savings in this example: 16x</div>
               </tbody>
             </table>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel motion">
               <h3>3-bit values can cross byte boundaries</h3>
               <div class="byte-boundary" style="margin-top: 18px;">
@@ -1703,7 +1708,7 @@ Savings in this example: 16x</div>
                 </div>
               </div>
             </div>
-            <div class="panel soft motion">
+            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">The storage engine packs for density. The query engine unpacks or compares vectors in batches.</p>
             </div>
           </div>
@@ -1737,8 +1742,8 @@ Savings in this example: 16x</div>
               <div class="node-text">Contiguous bit stream for scan and compare</div>
             </div>
           </div>
-          <div class="content-grid">
-            <div class="panel motion">
+          <div class="content-grid" style="flex: 1;">
+            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Four reinforcing mechanisms</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="num">1</span><span>Column elimination: read only referenced columns.</span></div>
@@ -1747,7 +1752,7 @@ Savings in this example: 16x</div>
                 <div class="item"><span class="num">4</span><span>Batch execution: compare and aggregate many values at once.</span></div>
               </div>
             </div>
-            <div class="codebox dark motion">SELECT Region, SUM(Sales)
+            <div class="codebox dark motion" style="display: flex; flex-direction: column; justify-content: center;">SELECT Region, SUM(Sales)
 FROM FactTrades
 WHERE Date >= '2024-01-01'
   AND Date <  '2024-04-01'
@@ -1780,11 +1785,11 @@ GROUP BY Region;</div>
                 <div class="prune-col skip"><strong>Notes</strong><span>SKIP</span></div>
               </div>
             </div>
-            <div class="panel callout motion">
+            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Row store reads all columns from every page. Column store reads only the referenced segments: 3 of 12 columns, about 25% of column I/O.</p>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel motion">
               <h3>B. Segment elimination</h3>
               <p class="small muted" style="margin-top: 8px;">Predicate: Date >= 2024-01-01 and Date < 2024-04-01</p>
@@ -1795,7 +1800,7 @@ GROUP BY Region;</div>
                 <div class="rowgroup-card skip"><h3>RG 3</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
               </div>
             </div>
-            <div class="panel gold motion">
+            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Ordered CCI keeps min/max ranges tight, so elimination is precise instead of producing overlapping false positives.</p>
             </div>
           </div>
@@ -1824,11 +1829,11 @@ GROUP BY Region;</div>
                 </tbody>
               </table>
             </div>
-            <div class="panel callout motion">
+            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Engines can operate directly on dictionary codes and packed values, delaying materialization until results are needed.</p>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel motion">
               <h3>D. Batch mode vectors</h3>
               <div class="vector-stack" style="margin-top: 18px;">
@@ -1838,7 +1843,7 @@ GROUP BY Region;</div>
                 <div class="vector-row"><div class="vector-label">Bitmap</div><div class="bitmap"><span>1</span><span>1</span><span>1</span><span class="zero">0</span><span class="zero">0</span></div></div>
               </div>
             </div>
-            <div class="panel soft motion">
+            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Instead of row-by-row branching, a batch scan evaluates about 900 rows as column vectors and aggregates surviving values.</p>
             </div>
           </div>
@@ -1861,7 +1866,7 @@ GROUP BY Region;</div>
             <div class="node"><div class="node-title">Merge</div><div class="node-text">combine partials</div></div>
             <div class="node warn"><div class="node-title">Final SUM</div><div class="node-text">135,000</div></div>
           </div>
-          <div class="panel motion">
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             <table>
               <thead><tr><th>Mechanism</th><th>Impact</th></tr></thead>
               <tbody>
@@ -1873,7 +1878,7 @@ GROUP BY Region;</div>
               </tbody>
             </table>
           </div>
-          <div class="panel callout gold motion">
+          <div class="panel callout gold motion" style="display: flex; flex-direction: column; justify-content: center;">
             <p class="body-copy">The net effect compounds: queries that took minutes can often complete in seconds when pruning, compression, and vector execution align.</p>
           </div>
         </div>
@@ -1895,8 +1900,8 @@ GROUP BY Region;</div>
             <div class="pipe-stage"><strong>Encode + compress</strong><span>Dictionary, RLE, delta, bit-pack selected per segment.</span></div>
             <div class="pipe-stage"><strong>Metadata</strong><span>Store min, max, null count, row count, and compact segment bytes.</span></div>
           </div>
-          <div class="content-grid">
-            <div class="panel motion">
+          <div class="content-grid" style="flex: 1;">
+            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Engine choices per segment</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="dot"></span><span>Region: dictionary encode, RLE runs, then bit-pack codes.</span></div>
@@ -1904,7 +1909,7 @@ GROUP BY Region;</div>
                 <div class="item"><span class="dot"></span><span>Date: convert to integer representation, then exploit repeated runs.</span></div>
               </div>
             </div>
-            <div class="panel gold motion">
+            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Compression result</h3>
               <p class="body-copy" style="margin-top: 16px;">Original rowgroup around 50 MB can compress to about 4 MB when order and domains are favorable.</p>
             </div>
@@ -1927,14 +1932,14 @@ FROM FactTrades
 WHERE Date >= '2024-01-01'
   AND Date <  '2024-04-01'
 GROUP BY Region;</div>
-            <div class="flow two-row motion">
+            <div class="flow two-row motion" style="flex: 1; align-content: space-evenly;">
               <div class="node accent"><div class="node-title">1. Columns</div><div class="node-text">Need Date, Region, Sales only.</div></div>
               <div class="node accent"><div class="node-title">2. Segments</div><div class="node-text">Min/max skips 2 of 3 rowgroups.</div></div>
               <div class="node accent"><div class="node-title">3. Batch scan</div><div class="node-text">Build bitmaps over vectors.</div></div>
               <div class="node warn"><div class="node-title">4. Merge</div><div class="node-text">Partial aggregates become final result.</div></div>
             </div>
           </div>
-          <div class="panel motion">
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
             <h3>Output table</h3>
             <table style="margin-top: 16px;">
               <thead><tr><th>Region</th><th>SUM(Sales)</th></tr></thead>
@@ -1975,12 +1980,12 @@ GROUP BY Region;</div>
               <p class="small muted" style="margin-top: 14px;">Monthly partition boundary is explicit.</p>
             </div>
           </div>
-          <div class="content-grid">
-            <div class="panel teal motion">
+          <div class="content-grid" style="flex: 1;">
+            <div class="panel teal motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Rebuild CCI per staging table</h3>
               <p class="body-copy" style="margin-top: 16px;">The CCI builder reads pre-sorted rowstore data, creating rowgroups with tight, non-overlapping min/max metadata.</p>
             </div>
-            <div class="panel gold motion">
+            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
               <h3>Partition switch</h3>
               <p class="body-copy" style="margin-top: 16px;">Truncate target partition, then switch staging partition into target. The swap is metadata-only and preserves fully compressed segments.</p>
             </div>
@@ -1997,8 +2002,8 @@ GROUP BY Region;</div>
           <div class="slide-no motion">20 / 20</div>
         </div>
         <div class="content-grid">
-          <div class="stack">
-            <div class="panel teal motion">
+          <div class="stack" style="flex: 1;">
+            <div class="panel teal motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Transformation API rules</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
@@ -2008,8 +2013,8 @@ GROUP BY Region;</div>
               </div>
             </div>
           </div>
-          <div class="stack">
-            <div class="panel gold motion">
+          <div class="stack" style="flex: 1;">
+            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Columnar storage rules</h3>
               <div class="simple-list" style="margin-top: 18px;">
                 <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
@@ -2018,7 +2023,7 @@ GROUP BY Region;</div>
                 <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
               </div>
             </div>
-            <div class="panel callout rust motion">
+            <div class="panel callout rust motion" style="display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">
                 The unified access layer is not just portability. It is a place to encode the habits
                 that let columnar engines avoid work.
@@ -2081,11 +2086,11 @@ GROUP BY Region;</div>
                 </div>
               </div>
             </div>
-            <div class="codebox dark motion">TRUNCATE target PARTITION N
+            <div class="codebox dark motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">TRUNCATE target PARTITION N
 ALTER TABLE staging
   SWITCH PARTITION N TO target PARTITION N</div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel teal motion">
               <h3>e. Result: Fully compressed segments</h3>
               <div class="simple-list" style="margin-top: 16px;">
@@ -2094,7 +2099,7 @@ ALTER TABLE staging
                 <div class="item"><span class="num">3</span><span>No delta stores, no open rowgroups, no fragmentation</span></div>
               </div>
             </div>
-            <div class="panel callout gold motion">
+            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">The swap is metadata-only — only internal page pointers are reassigned. No rows move on disk. Completes in milliseconds regardless of table size.</p>
             </div>
           </div>
@@ -2110,10 +2115,10 @@ ALTER TABLE staging
           </div>
           <div class="slide-no motion">22 / 22</div>
         </div>
-        <div class="stack">
-          <div class="content-grid">
+        <div class="stack" style="flex: 1;">
+          <div class="content-grid" style="flex: 1;">
             <div class="stack">
-              <div class="panel callout rust motion">
+              <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <h3>OLD — DELETE → INSERT</h3>
                 <div class="codebox motion" style="margin-top:14px;font-size:18px;line-height:1.4;">DELETE FROM target
   WHERE data_date BETWEEN @start AND @end
@@ -2128,7 +2133,7 @@ INSERT INTO target SELECT * FROM source
               </div>
             </div>
             <div class="stack">
-              <div class="panel callout motion">
+              <div class="panel callout motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
                 <h3>NEW — Staging → CCI rebuild → SWITCH</h3>
                 <div class="codebox dark motion" style="margin-top:14px;font-size:18px;line-height:1.4;">Load staging tables  -- no contention, parallel
 Build CCI per staging  -- pre-sorted, optimal
@@ -2215,11 +2220,11 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
                 </div>
               </div>
             </div>
-            <div class="panel callout rust motion">
+            <div class="panel callout rust motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">All 4 rowgroups read — <strong>0% elimination.</strong> Every query must decompress and scan the full table.</p>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel teal motion">
               <h3>Why this happens</h3>
               <div class="simple-list" style="margin-top:16px;">
@@ -2229,7 +2234,7 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
                 <div class="item"><span class="num">4</span><span>Segment min/max spans months — elimination is useless</span></div>
               </div>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Visualized as overlapping ranges</h3>
               <div class="rg-grid" style="margin-top:14px;">
                 <div class="rowgroup-card skip">
@@ -2311,11 +2316,11 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
                 </div>
               </div>
             </div>
-            <div class="panel callout motion">
+            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Only <strong>RG 1</strong> overlaps Feb 15. RG 0, 2, 3 are skipped by min/max metadata — <strong>75% elimination before decompression.</strong></p>
             </div>
           </div>
-          <div class="stack">
+          <div class="stack" style="flex: 1;">
             <div class="panel teal motion">
               <h3>How ordering enables elimination</h3>
               <div class="simple-list" style="margin-top:16px;">
@@ -2325,7 +2330,7 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
                 <div class="item"><span class="num">4</span><span>Query engine checks metadata first — skips non-overlapping segments entirely</span></div>
               </div>
             </div>
-            <div class="panel motion">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Rowgroup status at query time</h3>
               <div class="rg-grid" style="margin-top:14px;">
                 <div class="rowgroup-card skip">
@@ -2386,12 +2391,12 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
                 </div>
               </div>
             </div>
-            <div class="panel callout gold motion">
+            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <p class="body-copy">Column elimination × segment elimination × compressed I/O × batch mode — each layer compounds the benefit of the one before it.</p>
             </div>
           </div>
-          <div class="stack">
-            <div class="panel motion">
+          <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
               <h3>Impact on query performance</h3>
               <table style="margin-top:16px;" class="dense-table">
                 <thead>
@@ -2493,7 +2498,7 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
         parentRequestedClicker = false;
       }
 
-      const clickerRequested = hasClickerFlag(window.location) || parentRequestedClicker;
+      const clickerRequested = true; // Always enable the clicker and keyboard navigation
 
       if (clickerRequested) {
         document.body.classList.add("clicker-mode");
