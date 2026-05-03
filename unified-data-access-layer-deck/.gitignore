@@ -1,0 +1,4 @@
+.thumbnails/
+renders/
+node_modules/
+npm-debug.log*

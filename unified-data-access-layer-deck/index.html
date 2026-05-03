@@ -1,0 +1,2101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Unified Data Access Layer</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --canvas: #f6f8f4;
+        --ink: #1e2a32;
+        --muted: #4f5f66;
+        --teal: #0e6d64;
+        --rust: #9e3c25;
+        --blue: #46758e;
+        --sage: #d9e5d6;
+        --gold: #f1c766;
+        --panel: #ffffff;
+        --line: #d6ded7;
+        --soft: #edf2ec;
+        --shadow: rgba(30, 42, 50, 0.08);
+        --mono: "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+        --sans: Inter, "Avenir Next", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--canvas);
+        color: var(--ink);
+        font-family: var(--sans);
+        letter-spacing: 0;
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background:
+          linear-gradient(90deg, rgba(214, 222, 215, 0.58) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(214, 222, 215, 0.42) 1px, transparent 1px),
+          var(--canvas);
+        background-size: 96px 96px, 96px 96px, auto;
+      }
+
+      .bg-mark {
+        position: absolute;
+        inset: auto;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      #drift-a {
+        width: 760px;
+        height: 420px;
+        left: -180px;
+        top: 620px;
+        border: 1px solid rgba(14, 109, 100, 0.18);
+        background: rgba(217, 229, 214, 0.52);
+        transform: rotate(-12deg);
+      }
+
+      #drift-b {
+        width: 880px;
+        height: 280px;
+        right: -260px;
+        top: 60px;
+        border: 1px solid rgba(214, 95, 60, 0.18);
+        background: rgba(241, 199, 102, 0.22);
+        transform: rotate(9deg);
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        padding: 72px 84px 62px;
+        display: flex;
+        flex-direction: column;
+        gap: 26px;
+        overflow: hidden;
+      }
+
+      .slide-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 32px;
+        min-height: 212px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 30px;
+      }
+
+      .kicker {
+        font-family: var(--mono);
+        font-size: 18px;
+        color: var(--teal);
+        text-transform: uppercase;
+        letter-spacing: 0;
+        margin-bottom: 12px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        font-size: 86px;
+        line-height: 1.04;
+        font-weight: 820;
+        max-width: 1260px;
+      }
+
+      h2 {
+        font-size: 58px;
+        line-height: 1.08;
+        font-weight: 780;
+        max-width: 1240px;
+      }
+
+      h3 {
+        font-size: 27px;
+        line-height: 1.18;
+        font-weight: 760;
+      }
+
+      .subhead {
+        font-size: 30px;
+        line-height: 1.28;
+        color: var(--muted);
+        max-width: 1220px;
+      }
+
+      .slide-no {
+        flex: 0 0 auto;
+        font-family: var(--mono);
+        color: var(--muted);
+        font-size: 18px;
+        padding-top: 8px;
+      }
+
+      .content-grid {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+        gap: 34px;
+      }
+
+      .content-grid.wide-left {
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      }
+
+      .content-grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-height: 0;
+      }
+
+      .center-stack {
+        justify-content: center;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 22px 42px var(--shadow);
+        padding: 24px;
+      }
+
+      .panel.soft {
+        background: rgba(237, 242, 236, 0.88);
+      }
+
+      .panel.teal {
+        background: #e5f0ed;
+        border-color: rgba(14, 109, 100, 0.24);
+      }
+
+      .panel.gold {
+        background: #fff5d2;
+        border-color: rgba(241, 199, 102, 0.75);
+      }
+
+      .callout {
+        border-left: 6px solid var(--teal);
+        background: rgba(229, 240, 237, 0.92);
+      }
+
+      .callout.rust {
+        border-left-color: var(--rust);
+        background: rgba(255, 239, 232, 0.94);
+      }
+
+      .callout.gold {
+        border-left-color: var(--gold);
+        background: rgba(255, 247, 220, 0.96);
+      }
+
+      .body-copy {
+        font-size: 26px;
+        line-height: 1.34;
+        color: var(--ink);
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .small {
+        font-size: 20px;
+        line-height: 1.34;
+      }
+
+      .tight {
+        line-height: 1.18;
+      }
+
+      .metric-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .metric {
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        min-height: 132px;
+      }
+
+      .metric .value {
+        font-family: var(--mono);
+        font-size: 48px;
+        line-height: 1;
+        color: var(--teal);
+        margin-bottom: 12px;
+      }
+
+      .metric .label {
+        font-size: 20px;
+        line-height: 1.28;
+        color: var(--muted);
+      }
+
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .flow.two-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .node {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        min-height: 142px;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: space-between;
+      }
+
+      .node.accent {
+        border-color: rgba(14, 109, 100, 0.32);
+        background: #e7f1ee;
+      }
+
+      .node.warn {
+        border-color: rgba(214, 95, 60, 0.28);
+        background: #fff0ea;
+      }
+
+      .node .node-title {
+        font-size: 25px;
+        line-height: 1.12;
+        font-weight: 780;
+      }
+
+      .node .node-text {
+        font-size: 18px;
+        line-height: 1.25;
+        color: var(--muted);
+      }
+
+      .connector {
+        height: 2px;
+        background: linear-gradient(90deg, var(--teal), var(--blue));
+        align-self: center;
+        margin: 0 -4px;
+      }
+
+      .codebox {
+        font-family: var(--mono);
+        font-size: 20px;
+        line-height: 1.38;
+        color: #21313a;
+        background: #f9fbf7;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 22px;
+        white-space: pre-wrap;
+        overflow: hidden;
+      }
+
+      .codebox.dark {
+        background: #1f2e34;
+        color: #f4f7f0;
+        border-color: #31454d;
+      }
+
+      .token-accent {
+        color: var(--rust);
+        font-weight: 760;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .pill {
+        font-family: var(--mono);
+        font-size: 16px;
+        line-height: 1;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--panel);
+        color: var(--teal);
+      }
+
+      .simple-list {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+
+      .simple-list .item {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+        font-size: 24px;
+        line-height: 1.25;
+      }
+
+      .simple-list .num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--teal);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-family: var(--mono);
+        font-size: 15px;
+      }
+
+      .simple-list .dot {
+        width: 12px;
+        height: 12px;
+        margin-top: 10px;
+        background: var(--rust);
+        border-radius: 50%;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 20px;
+        line-height: 1.22;
+        background: var(--panel);
+      }
+
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 12px 13px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        font-family: var(--mono);
+        font-size: 15px;
+        color: var(--teal);
+        text-transform: uppercase;
+        background: #eef4ef;
+      }
+
+      .dense-table th,
+      .dense-table td {
+        padding: 10px 11px;
+        font-size: 18px;
+      }
+
+      .source-table td:nth-child(3),
+      .source-table td:nth-child(5) {
+        color: var(--teal);
+        font-weight: 720;
+      }
+
+      .store-pages {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .page-block {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 16px;
+      }
+
+      .page-label {
+        font-family: var(--mono);
+        font-size: 16px;
+        color: var(--rust);
+        margin-bottom: 10px;
+      }
+
+      .row-strip,
+      .segment-strip,
+      .byte-strip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: nowrap;
+        overflow: hidden;
+      }
+
+      .cell {
+        flex: 0 0 auto;
+        min-width: 56px;
+        padding: 9px 11px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #f8fbf7;
+        font-family: var(--mono);
+        font-size: 17px;
+        line-height: 1;
+        text-align: center;
+      }
+
+      .cell.date {
+        min-width: 128px;
+      }
+
+      .cell.region,
+      .cell.product {
+        color: var(--teal);
+        background: #e8f2ef;
+      }
+
+      .cell.sales {
+        color: var(--rust);
+        background: #fff0ea;
+      }
+
+      .ellipsis {
+        font-family: var(--mono);
+        color: var(--muted);
+        padding: 0 2px;
+      }
+
+      .segment {
+        display: grid;
+        grid-template-columns: 160px minmax(0, 1fr) 390px;
+        gap: 16px;
+        align-items: center;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+      }
+
+      .segment-name {
+        font-family: var(--mono);
+        font-size: 18px;
+        color: var(--teal);
+      }
+
+      .segment-note {
+        font-size: 18px;
+        color: var(--muted);
+        line-height: 1.24;
+      }
+
+      .rle-band {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0;
+        height: 118px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .rle-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 18px;
+        border-right: 1px solid var(--line);
+      }
+
+      .rle-section:last-child {
+        border-right: 0;
+      }
+
+      .rle-section .value {
+        font-family: var(--mono);
+        font-size: 32px;
+        color: var(--teal);
+      }
+
+      .rle-section .count {
+        font-size: 18px;
+        color: var(--muted);
+      }
+
+      .encoded-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .code-token {
+        font-family: var(--mono);
+        min-width: 38px;
+        height: 38px;
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+        background: #e7f1ee;
+        color: var(--teal);
+        border: 1px solid rgba(14, 109, 100, 0.22);
+      }
+
+      .bit {
+        font-family: var(--mono);
+        min-width: 42px;
+        height: 42px;
+        border-radius: 6px;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: var(--ink);
+      }
+
+      .bit.teal {
+        background: var(--teal);
+      }
+
+      .bit.rust {
+        background: var(--rust);
+      }
+
+      .byte-boundary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .byte {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 18px;
+      }
+
+      .byte-title {
+        font-family: var(--mono);
+        font-size: 15px;
+        color: var(--muted);
+        margin-bottom: 12px;
+      }
+
+      .bit-line {
+        display: flex;
+        gap: 4px;
+      }
+
+      .bit-chip {
+        font-family: var(--mono);
+        font-size: 19px;
+        padding: 8px 10px;
+        background: #1f2e34;
+        color: #fff;
+        border-radius: 6px;
+      }
+
+      .tier {
+        display: grid;
+        grid-template-columns: 132px minmax(0, 1fr);
+        gap: 18px;
+        align-items: start;
+        padding: 18px;
+        border-radius: 8px;
+        border: 1px solid var(--line);
+        background: #fff;
+      }
+
+      .tier-label {
+        font-family: var(--mono);
+        font-size: 18px;
+        color: #fff;
+        background: var(--teal);
+        border-radius: 6px;
+        text-align: center;
+        padding: 11px;
+      }
+
+      .tier.good .tier-label {
+        background: var(--blue);
+      }
+
+      .tier.poor .tier-label {
+        background: var(--rust);
+      }
+
+      .chain {
+        display: grid;
+        grid-template-columns: 1.15fr 0.9fr 0.75fr 0.8fr;
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .chain .node {
+        min-height: 160px;
+      }
+
+      .footer-note {
+        position: absolute;
+        left: 84px;
+        bottom: 34px;
+        font-family: var(--mono);
+        font-size: 14px;
+        color: var(--muted);
+      }
+
+      .large-emphasis {
+        font-size: 110px;
+        line-height: 1.02;
+        font-weight: 860;
+        max-width: 1280px;
+      }
+
+      .hero-band {
+        margin-top: auto;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 34px;
+        align-items: end;
+      }
+
+      .rule-stack {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 9px;
+        height: 132px;
+      }
+
+      .bar {
+        align-self: end;
+        border-radius: 6px 6px 0 0;
+        background: var(--teal);
+        border: 1px solid rgba(14, 109, 100, 0.2);
+      }
+
+      .bar:nth-child(2) {
+        height: 66%;
+        background: var(--blue);
+      }
+
+      .bar:nth-child(3) {
+        height: 86%;
+        background: var(--rust);
+      }
+
+      .bar:nth-child(4) {
+        height: 48%;
+        background: var(--gold);
+      }
+
+      .bar:nth-child(5) {
+        height: 76%;
+        background: var(--sage);
+      }
+
+      .bar:nth-child(1) {
+        height: 58%;
+      }
+
+      body.clicker-mode .clip {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+
+      body.clicker-mode .clip.active-slide {
+        display: flex !important;
+        visibility: visible !important;
+      }
+
+      body.clicker-mode .clip.active-slide * {
+        visibility: visible !important;
+      }
+
+      body.clicker-mode .motion,
+      body.clicker-mode .cell,
+      body.clicker-mode .code-token,
+      body.clicker-mode .bit,
+      body.clicker-mode .node,
+      body.clicker-mode .tier,
+      body.clicker-mode .prune-col,
+      body.clicker-mode .rowgroup-card,
+      body.clicker-mode .vector-row,
+      body.clicker-mode .pipe-stage,
+      body.clicker-mode .month-box {
+        visibility: visible !important;
+      }
+
+      .clicker-controls {
+        position: absolute;
+        right: 32px;
+        bottom: 28px;
+        z-index: 20;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border: 1px solid rgba(30, 42, 50, 0.18);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 14px 28px rgba(30, 42, 50, 0.1);
+        font-family: var(--mono);
+        font-size: 14px;
+        color: var(--ink);
+      }
+
+      body.clicker-mode .clicker-controls {
+        display: flex;
+      }
+
+      .clicker-button {
+        width: 34px;
+        height: 30px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: #fff;
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .clicker-button:hover {
+        border-color: var(--teal);
+        color: var(--teal);
+      }
+
+      .clicker-progress {
+        min-width: 74px;
+        text-align: center;
+      }
+
+      .prune-strip {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .prune-col {
+        min-height: 118px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 14px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 15px;
+        color: var(--muted);
+      }
+
+      .prune-col.read {
+        background: #e7f1ee;
+        border-color: rgba(14, 109, 100, 0.32);
+        color: var(--teal);
+      }
+
+      .prune-col.skip {
+        background: #f4f0e7;
+        color: #806f4e;
+      }
+
+      .rg-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .rowgroup-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 18px;
+        min-height: 146px;
+      }
+
+      .rowgroup-card.read {
+        background: #e7f1ee;
+        border-color: rgba(14, 109, 100, 0.32);
+      }
+
+      .rowgroup-card.skip {
+        background: #fff0ea;
+        border-color: rgba(158, 60, 37, 0.22);
+      }
+
+      .status {
+        display: inline-block;
+        margin-top: 14px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        font-family: var(--mono);
+        font-size: 16px;
+        color: #fff;
+        background: var(--teal);
+      }
+
+      .status.skip {
+        background: var(--rust);
+      }
+
+      .vector-stack {
+        display: grid;
+        gap: 10px;
+      }
+
+      .vector-row {
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+      }
+
+      .vector-label {
+        font-family: var(--mono);
+        color: var(--teal);
+        font-size: 18px;
+      }
+
+      .bitmap {
+        display: flex;
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+
+      .bitmap span {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+        font-family: var(--mono);
+        background: #e7f1ee;
+        color: var(--teal);
+        border: 1px solid rgba(14, 109, 100, 0.2);
+      }
+
+      .bitmap span.zero {
+        background: #fff0ea;
+        color: var(--rust);
+        border-color: rgba(158, 60, 37, 0.2);
+      }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .pipe-stage {
+        min-height: 172px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        padding: 18px;
+      }
+
+      .pipe-stage strong {
+        display: block;
+        font-size: 22px;
+        line-height: 1.12;
+        margin-bottom: 12px;
+      }
+
+      .pipe-stage span {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.22;
+      }
+
+      .switch-flow {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .month-box {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 18px;
+        background: #fff;
+      }
+
+      .month-title {
+        font-family: var(--mono);
+        color: var(--teal);
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      .sort-lines {
+        display: grid;
+        gap: 7px;
+      }
+
+      .sort-line {
+        height: 12px;
+        border-radius: 3px;
+        background: var(--sage);
+        border: 1px solid rgba(14, 109, 100, 0.16);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="160"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div id="drift-a" class="bg-mark" data-layout-ignore></div>
+      <div id="drift-b" class="bg-mark" data-layout-ignore></div>
+
+      <section id="slide-1" class="clip slide" data-start="0" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Unified Data Access Layer</div>
+            <h1 class="large-emphasis motion">One transformation library. Many execution engines.</h1>
+          </div>
+          <div class="slide-no motion">01 / 14</div>
+        </div>
+        <div class="hero-band">
+          <p class="subhead motion">
+            A Python abstraction built on Ibis lets teams define governed transformations once,
+            then execute them where the data lives: embedded analytics, warehouses, lakehouses,
+            or distributed engines.
+          </p>
+          <div class="panel motion">
+            <div class="metric-row">
+              <div class="metric">
+                <div class="value">1</div>
+                <div class="label">Canonical transformation API</div>
+              </div>
+              <div class="metric">
+                <div class="value">20+</div>
+                <div class="label">Backend classes through Ibis</div>
+              </div>
+              <div class="metric">
+                <div class="value">10x</div>
+                <div class="label">Typical columnstore compression target</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-note motion">Scope: Ibis expressions, reusable metrics, columnar storage, predicate and segment elimination.</div>
+      </section>
+
+      <section id="slide-2" class="clip slide" data-start="8" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">The Integration Problem</div>
+            <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
+          </div>
+          <div class="slide-no motion">02 / 14</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack center-stack">
+            <div class="panel callout rust motion">
+              <h3>Without a shared layer</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
+                <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
+                <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="flow two-row motion">
+              <div class="node warn">
+                <div class="node-title">pandas notebook</div>
+                <div class="node-text">Fast exploration, limited pushdown</div>
+              </div>
+              <div class="node warn">
+                <div class="node-title">Warehouse SQL</div>
+                <div class="node-text">Powerful execution, dialect drift</div>
+              </div>
+              <div class="node warn">
+                <div class="node-title">Spark job</div>
+                <div class="node-text">Scale, but separate code path</div>
+              </div>
+              <div class="node warn">
+                <div class="node-title">BI semantic layer</div>
+                <div class="node-text">Metrics after the fact</div>
+              </div>
+            </div>
+            <div class="panel soft motion">
+              <p class="body-copy">
+                The access layer should turn transformation code into a portable query plan,
+                while keeping storage-aware choices visible to engineers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-3" class="clip slide" data-start="16" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Ibis As The Core</div>
+            <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
+          </div>
+          <div class="slide-no motion">03 / 14</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="codebox dark motion">import ibis
+
+def trade_pnl(trades):
+    return (
+        trades
+        .filter(trades.trade_date >= "2024-01-01")
+        .mutate(notional=trades.qty * trades.price)
+        .group_by(["region", "product"])
+        .aggregate(
+            sales=trades.notional.sum(),
+            trades=trades.trade_id.nunique(),
+        )
+    )
+
+# Same expression, different execution target.
+result = trade_pnl(con.table("fact_trades"))</div>
+            <div class="pill-row motion">
+              <span class="pill">DuckDB</span>
+              <span class="pill">Snowflake</span>
+              <span class="pill">BigQuery</span>
+              <span class="pill">PostgreSQL</span>
+              <span class="pill">Spark</span>
+              <span class="pill">Polars</span>
+              <span class="pill">DataFusion</span>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>Library contract</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
+                <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
+                <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
+              </div>
+            </div>
+            <div class="panel motion">
+              <p class="small muted">
+                Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
+                expressions to SQL, while DataFrame backends execute expression plans natively.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-4" class="clip slide" data-start="24" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Reference Architecture</div>
+            <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
+          </div>
+          <div class="slide-no motion">04 / 14</div>
+        </div>
+        <div class="stack">
+          <div class="flow motion">
+            <div class="node">
+              <div class="node-title">Sources</div>
+              <div class="node-text">OLTP, events, reference data, market data</div>
+            </div>
+            <div class="node accent">
+              <div class="node-title">Columnar zone</div>
+              <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
+            </div>
+            <div class="node accent">
+              <div class="node-title">Ibis library</div>
+              <div class="node-text">Typed expressions, metrics, reusable transformations</div>
+            </div>
+            <div class="node">
+              <div class="node-title">Compiler</div>
+              <div class="node-text">SQL or dataframe plan for the chosen backend</div>
+            </div>
+            <div class="node">
+              <div class="node-title">Consumers</div>
+              <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
+            </div>
+          </div>
+          <div class="content-grid">
+            <div class="panel motion">
+              <h3>Governance surface</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
+                <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
+                <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
+              </div>
+            </div>
+            <div class="panel gold motion">
+              <h3>Optimization surface</h3>
+              <p class="body-copy" style="margin-top: 16px;">
+                The same library can make projection, predicates, grouping keys, date windows,
+                and sort keys explicit enough for columnar engines to skip data and stay compressed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-5" class="clip slide" data-start="32" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">1. Row Store vs Column Store</div>
+            <h2 class="motion">Columnstores compress better because similar values are stored together.</h2>
+          </div>
+          <div class="slide-no motion">05 / 14</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <table class="source-table">
+                <thead>
+                  <tr><th>ID</th><th>Date</th><th>Region</th><th>Sales</th><th>Product</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>1</td><td>2024-01-15</td><td>APAC</td><td>100</td><td>Bond</td></tr>
+                  <tr><td>2</td><td>2024-01-15</td><td>APAC</td><td>120</td><td>Bond</td></tr>
+                  <tr><td>3</td><td>2024-02-10</td><td>APAC</td><td>130</td><td>Equity</td></tr>
+                  <tr><td>4</td><td>2024-02-10</td><td>EMEA</td><td>200</td><td>Equity</td></tr>
+                  <tr><td>5</td><td>2024-03-05</td><td>EMEA</td><td>180</td><td>Bond</td></tr>
+                  <tr><td>6</td><td>2024-03-05</td><td>AMER</td><td>150</td><td>Bond</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel callout motion">
+              <p class="body-copy">
+                Row store pages interleave int, date, varchar, and numeric values. Reading one column
+                still drags every other column through I/O and cache.
+              </p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="store-pages motion">
+              <div class="page-block">
+                <div class="page-label">Page 1: entire rows packed together</div>
+                <div class="row-strip">
+                  <span class="cell">1</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="cell sales">100</span><span class="cell product">Bond</span><span class="cell">2</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="ellipsis">...</span>
+                </div>
+              </div>
+              <div class="page-block">
+                <div class="page-label">Page 2: unrelated types continue</div>
+                <div class="row-strip">
+                  <span class="ellipsis">...</span><span class="cell product">Bond</span><span class="cell">3</span><span class="cell date">2024-02-10</span><span class="cell region">APAC</span><span class="cell sales">130</span><span class="cell product">Equity</span><span class="cell">4</span><span class="ellipsis">...</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel motion">
+              <div class="simple-list">
+                <div class="item"><span class="dot"></span><span>Repeated APAC values are scattered across pages with other columns.</span></div>
+                <div class="item"><span class="dot"></span><span>Compression cannot exploit repetition across unrelated types.</span></div>
+                <div class="item"><span class="dot"></span><span>Projection pushdown matters because columnar layouts can avoid unused columns.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-6" class="clip slide" data-start="40" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">The Column Store Layout</div>
+            <h2 class="motion">Each column is stored independently in its own segment.</h2>
+          </div>
+          <div class="slide-no motion">06 / 14</div>
+        </div>
+        <div class="stack">
+          <div class="segment motion">
+            <div class="segment-name">Segment: ID</div>
+            <div class="segment-strip"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span></div>
+            <div class="segment-note">Monotonic integers bit-pack well.</div>
+          </div>
+          <div class="segment motion">
+            <div class="segment-name">Segment: Date</div>
+            <div class="segment-strip"><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-05</span></div>
+            <div class="segment-note">Repeats cluster, so RLE compresses pairs.</div>
+          </div>
+          <div class="segment motion">
+            <div class="segment-name">Segment: Region</div>
+            <div class="segment-strip"><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">EMEA</span><span class="cell region">EMEA</span><span class="cell region">AMER</span></div>
+            <div class="segment-note">3 values can be dictionary encoded to 2 bits.</div>
+          </div>
+          <div class="segment motion">
+            <div class="segment-name">Segment: Sales</div>
+            <div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">180</span><span class="cell sales">150</span></div>
+            <div class="segment-note">Small range, few bits per value.</div>
+          </div>
+          <div class="panel callout gold motion">
+            <p class="body-copy">
+              Same type per segment, clustered values, low cardinality dictionaries, bit-packing,
+              and min/max metadata combine into typical 5x to 10x compression over row-oriented storage.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-7" class="clip slide" data-start="48" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">2. Run-Length Encoding</div>
+            <h2 class="motion">RLE replaces consecutive repeated values with value-count pairs.</h2>
+          </div>
+          <div class="slide-no motion">07 / 14</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>Original region segment in one rowgroup</h3>
+              <div class="rle-band" style="margin-top: 18px;">
+                <div class="rle-section">
+                  <div class="value">APAC</div>
+                  <div class="count">350,000 identical values</div>
+                </div>
+                <div class="rle-section">
+                  <div class="value">EMEA</div>
+                  <div class="count">350,000 identical values</div>
+                </div>
+                <div class="rle-section">
+                  <div class="value">AMER</div>
+                  <div class="count">348,576 identical values</div>
+                </div>
+              </div>
+            </div>
+            <div class="codebox motion">After RLE:
+[(APAC, 350000) | (EMEA, 350000) | (AMER, 348576)]</div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>How it works</h3>
+              <p class="body-copy" style="margin-top: 16px;">
+                Scan the segment top to bottom. Whenever the same value appears in consecutive
+                positions, store one value plus a count instead of repeating the value.
+              </p>
+            </div>
+            <div class="panel motion">
+              <h3>Storage impact</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Before: 1,048,576 x 4 bytes = about 4 MB.</span></div>
+                <div class="item"><span class="dot"></span><span>After: 3 x value-count pairs = about 24 bytes.</span></div>
+                <div class="item"><span class="dot"></span><span>Compression ratio: about 170,000:1 for this column.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-8" class="clip slide" data-start="56" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">RLE Effectiveness And Sorting</div>
+            <h2 class="motion">RLE works best when physical order creates long runs.</h2>
+          </div>
+          <div class="slide-no motion">08 / 14</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>Date column: partially sorted</h3>
+              <div class="segment-strip" style="margin-top: 18px;">
+                <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span>
+              </div>
+              <div class="codebox" style="margin-top: 18px;">After RLE:
+[(2024-01-15, 3) | (2024-02-10, 2)]</div>
+            </div>
+            <div class="panel callout gold motion">
+              <p class="body-copy">
+                Ordered columnstore indexes reduce segment overlap by sorting order-key values before compression,
+                improving both RLE opportunities and segment elimination.
+              </p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="tier motion">
+              <div class="tier-label">BEST</div>
+              <p class="body-copy">Sorted columns with long consecutive runs, such as APAC... EMEA... AMER...</p>
+            </div>
+            <div class="tier good motion">
+              <div class="tier-label">GOOD</div>
+              <p class="body-copy">Naturally clustered batches, such as one trade date appearing 50,000 times.</p>
+            </div>
+            <div class="tier poor motion">
+              <div class="tier-label">POOR</div>
+              <p class="body-copy">Random high-cardinality columns, such as unique trade IDs or event UUIDs.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-9" class="clip slide" data-start="64" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">3. Dictionary Encoding</div>
+            <h2 class="motion">Repeated strings become compact integer codes plus one lookup table.</h2>
+          </div>
+          <div class="slide-no motion">09 / 14</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>Step 1: build dictionary once per segment</h3>
+              <table style="margin-top: 16px;">
+                <thead>
+                  <tr><th>Code</th><th>Value</th><th>Original size</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>0</td><td>Singapore</td><td>9 bytes x 400,000 occurrences</td></tr>
+                  <tr><td>1</td><td>London</td><td>6 bytes x 300,000 occurrences</td></tr>
+                  <tr><td>2</td><td>Tokyo</td><td>5 bytes x 200,000 occurrences</td></tr>
+                  <tr><td>3</td><td>New York</td><td>8 bytes x 148,576 occurrences</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel motion">
+              <h3>Step 2: replace strings with codes</h3>
+              <div class="encoded-row" style="margin-top: 18px;">
+                <span class="code-token">0</span><span class="code-token">1</span><span class="code-token">0</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="ellipsis">...</span>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>Why it compresses</h3>
+              <p class="body-copy" style="margin-top: 16px;">
+                Four distinct values need only 2 bits per row. The strings stay in a small dictionary;
+                the segment stores a dense stream of integers.
+              </p>
+            </div>
+            <div class="panel motion">
+              <h3>Storage impact</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Before: 1,048,576 rows x avg 7 bytes = about 7.3 MB.</span></div>
+                <div class="item"><span class="dot"></span><span>After: about 40 bytes dictionary + 256 KB codes.</span></div>
+                <div class="item"><span class="dot"></span><span>Compression ratio: about 29:1 before other encodings.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-10" class="clip slide" data-start="72" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Dictionary Encoding Benefits</div>
+            <h2 class="motion">Storage savings also become CPU and cache advantages.</h2>
+          </div>
+          <div class="slide-no motion">10 / 14</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <div class="simple-list">
+                <div class="item"><span class="num">1</span><span>Cache efficiency: integer codes fit more rows into L1/L2 cache.</span></div>
+                <div class="item"><span class="num">2</span><span>Faster comparisons: WHERE Region = 'Singapore' becomes code lookup plus integer scan.</span></div>
+                <div class="item"><span class="num">3</span><span>Composable compression: codes can be RLE compressed and bit-packed.</span></div>
+              </div>
+            </div>
+            <div class="codebox motion">codes: [0, 0, 0, 0, 1, 1, 2]
+RLE:   [(0, 4), (1, 2), (2, 1)]
+bits:  values 0-3 need only 2 bits each</div>
+          </div>
+          <div class="stack">
+            <div class="panel callout rust motion">
+              <h3>SQL Server specifics</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Column segments can use local dictionaries within a rowgroup segment.</span></div>
+                <div class="item"><span class="dot"></span><span>Segment metadata exposes encoding type, dictionary IDs, row counts, and min/max statistics.</span></div>
+                <div class="item"><span class="dot"></span><span>String columns and repeated values benefit most when segments are well ordered.</span></div>
+              </div>
+            </div>
+            <div class="panel soft motion">
+              <p class="body-copy">
+                In the access layer, prefer constrained categorical columns and stable domain values
+                over free-form strings in high-volume analytical tables.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-11" class="clip slide" data-start="80" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">4. Bit-Packing</div>
+            <h2 class="motion">Store integers using only the minimum number of bits required.</h2>
+          </div>
+          <div class="slide-no motion">11 / 14</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>Dictionary codes from Region</h3>
+              <div class="encoded-row" style="margin-top: 18px;">
+                <span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">1</span><span class="code-token">3</span><span class="code-token">0</span><span class="code-token">2</span>
+              </div>
+              <p class="body-copy muted" style="margin-top: 18px;">Max value = 3, so ceil(log2(4)) = 2 bits per value.</p>
+            </div>
+            <div class="panel motion">
+              <h3>Bit-packed stream</h3>
+              <div class="encoded-row" style="margin-top: 18px;">
+                <span class="bit teal">11</span><span class="bit">01</span><span class="bit rust">10</span><span class="bit">00</span><span class="bit">01</span><span class="bit teal">11</span><span class="bit">00</span><span class="bit rust">10</span>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="codebox dark motion">Standard 32-bit storage:
+8 values x 32 bits = 256 bits = 32 bytes
+
+Bit-packed storage:
+8 values x 2 bits = 16 bits = 2 bytes
+
+Savings in this example: 16x</div>
+            <div class="panel callout motion">
+              <p class="body-copy">
+                The access layer helps by preserving low-cardinality domains, projecting only needed
+                columns, and avoiding transformations that explode values before filters run.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-12" class="clip slide" data-start="88" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Bit-Packing At Segment Scale</div>
+            <h2 class="motion">The fewer distinct values, the more rows per byte, cache line, and memory page.</h2>
+          </div>
+          <div class="slide-no motion">12 / 14</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="panel motion">
+            <table class="dense-table">
+              <thead>
+                <tr><th>Distinct values</th><th>Bits/value</th><th>32-bit storage</th><th>Bit-packed</th><th>Savings</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>2</td><td>1 bit</td><td>4 MB</td><td>128 KB</td><td>32x</td></tr>
+                <tr><td>4</td><td>2 bits</td><td>4 MB</td><td>256 KB</td><td>16x</td></tr>
+                <tr><td>8</td><td>3 bits</td><td>4 MB</td><td>384 KB</td><td>10.7x</td></tr>
+                <tr><td>16</td><td>4 bits</td><td>4 MB</td><td>512 KB</td><td>8x</td></tr>
+                <tr><td>64</td><td>6 bits</td><td>4 MB</td><td>768 KB</td><td>5.3x</td></tr>
+                <tr><td>256</td><td>8 bits</td><td>4 MB</td><td>1 MB</td><td>4x</td></tr>
+                <tr><td>65,536</td><td>16 bits</td><td>4 MB</td><td>2 MB</td><td>2x</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="stack">
+            <div class="panel motion">
+              <h3>3-bit values can cross byte boundaries</h3>
+              <div class="byte-boundary" style="margin-top: 18px;">
+                <div class="byte">
+                  <div class="byte-title">Byte 1</div>
+                  <div class="bit-line"><span class="bit-chip">101</span><span class="bit-chip">011</span><span class="bit-chip">10</span></div>
+                </div>
+                <div class="byte">
+                  <div class="byte-title">Byte 2</div>
+                  <div class="bit-line"><span class="bit-chip">0</span><span class="bit-chip">110</span><span class="bit-chip">001</span></div>
+                </div>
+                <div class="byte">
+                  <div class="byte-title">Byte 3</div>
+                  <div class="bit-line"><span class="bit-chip">1</span><span class="bit-chip">111</span><span class="bit-chip">000</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel soft motion">
+              <p class="body-copy">The storage engine packs for density. The query engine unpacks or compares vectors in batches.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-13" class="clip slide" data-start="96" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">5. Query Performance Benefits</div>
+            <h2 class="motion">Compression reduces bytes read, values touched, and CPU work per predicate.</h2>
+          </div>
+          <div class="slide-no motion">13 / 14</div>
+        </div>
+        <div class="stack">
+          <div class="chain motion">
+            <div class="node warn">
+              <div class="node-title">Raw strings</div>
+              <div class="node-text">"Singapore", 9 bytes per value</div>
+            </div>
+            <div class="node accent">
+              <div class="node-title">Dictionary codes</div>
+              <div class="node-text">0, 1, 0, 2... 2 bits each</div>
+            </div>
+            <div class="node accent">
+              <div class="node-title">RLE</div>
+              <div class="node-text">(0, 4), (1, 2), ...</div>
+            </div>
+            <div class="node">
+              <div class="node-title">Bit-pack</div>
+              <div class="node-text">Contiguous bit stream for scan and compare</div>
+            </div>
+          </div>
+          <div class="content-grid">
+            <div class="panel motion">
+              <h3>Four reinforcing mechanisms</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="num">1</span><span>Column elimination: read only referenced columns.</span></div>
+                <div class="item"><span class="num">2</span><span>Segment elimination: skip rowgroups by min/max metadata.</span></div>
+                <div class="item"><span class="num">3</span><span>Compressed I/O: move fewer bytes from disk and memory.</span></div>
+                <div class="item"><span class="num">4</span><span>Batch execution: compare and aggregate many values at once.</span></div>
+              </div>
+            </div>
+            <div class="codebox dark motion">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-14" class="clip slide" data-start="104" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Query Execution</div>
+            <h2 class="motion">Column and segment elimination skip work before decompression.</h2>
+          </div>
+          <div class="slide-no motion">14 / 20</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>A. Column elimination</h3>
+              <p class="small muted" style="margin-top: 8px;">The table has 12 columns; the query needs Date, Region, and Sales.</p>
+              <div class="prune-strip" style="margin-top: 18px;">
+                <div class="prune-col skip"><strong>ID</strong><span>SKIP</span></div>
+                <div class="prune-col read"><strong>Date</strong><span>READ</span></div>
+                <div class="prune-col read"><strong>Region</strong><span>READ</span></div>
+                <div class="prune-col read"><strong>Sales</strong><span>READ</span></div>
+                <div class="prune-col skip"><strong>Product</strong><span>SKIP</span></div>
+                <div class="prune-col skip"><strong>Trader</strong><span>SKIP</span></div>
+                <div class="prune-col skip"><strong>Desk</strong><span>SKIP</span></div>
+                <div class="prune-col skip"><strong>Notes</strong><span>SKIP</span></div>
+              </div>
+            </div>
+            <div class="panel callout motion">
+              <p class="body-copy">Row store reads all columns from every page. Column store reads only the referenced segments: 3 of 12 columns, about 25% of column I/O.</p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel motion">
+              <h3>B. Segment elimination</h3>
+              <p class="small muted" style="margin-top: 8px;">Predicate: Date >= 2024-01-01 and Date < 2024-04-01</p>
+              <div class="rg-grid" style="margin-top: 18px;">
+                <div class="rowgroup-card skip"><h3>RG 0</h3><p class="small muted">max < 2024-01-01</p><span class="status skip">SKIP</span></div>
+                <div class="rowgroup-card read"><h3>RG 1</h3><p class="small muted">overlaps range</p><span class="status">READ</span></div>
+                <div class="rowgroup-card skip"><h3>RG 2</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+                <div class="rowgroup-card skip"><h3>RG 3</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+              </div>
+            </div>
+            <div class="panel gold motion">
+              <p class="body-copy">Ordered CCI keeps min/max ranges tight, so elimination is precise instead of producing overlapping false positives.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-15" class="clip slide" data-start="112" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Execution Mechanics</div>
+            <h2 class="motion">Compressed I/O and batch mode turn scans into vector work.</h2>
+          </div>
+          <div class="slide-no motion">15 / 20</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel motion">
+              <h3>C. Compressed I/O</h3>
+              <table style="margin-top: 16px;">
+                <thead><tr><th>Layer</th><th>Row store</th><th>Column store</th></tr></thead>
+                <tbody>
+                  <tr><td>On disk</td><td>100 GB</td><td>10-15 GB</td></tr>
+                  <tr><td>Disk read</td><td>100 GB</td><td>10-15 GB</td></tr>
+                  <tr><td>Memory</td><td>wide pages</td><td>narrow segments</td></tr>
+                  <tr><td>Cache</td><td>low locality</td><td>high locality</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel callout motion">
+              <p class="body-copy">Engines can operate directly on dictionary codes and packed values, delaying materialization until results are needed.</p>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel motion">
+              <h3>D. Batch mode vectors</h3>
+              <div class="vector-stack" style="margin-top: 18px;">
+                <div class="vector-row"><div class="vector-label">Date[]</div><div class="segment-strip"><span class="cell date">Jan</span><span class="cell date">Jan</span><span class="cell date">Feb</span><span class="cell date">Feb</span><span class="cell date">Apr</span></div></div>
+                <div class="vector-row"><div class="vector-label">Region[]</div><div class="segment-strip"><span class="cell region">0</span><span class="cell region">0</span><span class="cell region">1</span><span class="cell region">1</span><span class="cell region">3</span></div></div>
+                <div class="vector-row"><div class="vector-label">Sales[]</div><div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">150</span></div></div>
+                <div class="vector-row"><div class="vector-label">Bitmap</div><div class="bitmap"><span>1</span><span>1</span><span>1</span><span class="zero">0</span><span class="zero">0</span></div></div>
+              </div>
+            </div>
+            <div class="panel soft motion">
+              <p class="body-copy">Instead of row-by-row branching, a batch scan evaluates about 900 rows as column vectors and aggregates surviving values.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-16" class="clip slide" data-start="120" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Aggregate Pushdown</div>
+            <h2 class="motion">Simple aggregates can be partially computed at segment scan level.</h2>
+          </div>
+          <div class="slide-no motion">16 / 20</div>
+        </div>
+        <div class="stack">
+          <div class="flow motion">
+            <div class="node accent"><div class="node-title">Segment 0</div><div class="node-text">SUM = 45,000</div></div>
+            <div class="node accent"><div class="node-title">Segment 1</div><div class="node-text">SUM = 52,000</div></div>
+            <div class="node accent"><div class="node-title">Segment 2</div><div class="node-text">SUM = 38,000</div></div>
+            <div class="node"><div class="node-title">Merge</div><div class="node-text">combine partials</div></div>
+            <div class="node warn"><div class="node-title">Final SUM</div><div class="node-text">135,000</div></div>
+          </div>
+          <div class="panel motion">
+            <table>
+              <thead><tr><th>Mechanism</th><th>Impact</th></tr></thead>
+              <tbody>
+                <tr><td>Column elimination</td><td>75% less data to consider</td></tr>
+                <tr><td>Segment elimination</td><td>75% of remaining rowgroups skipped</td></tr>
+                <tr><td>Compressed I/O</td><td>10x less data read from disk</td></tr>
+                <tr><td>Batch mode</td><td>CPU processes vector batches per call</td></tr>
+                <tr><td>Aggregate pushdown</td><td>Partial results are created during scan</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout gold motion">
+            <p class="body-copy">The net effect compounds: queries that took minutes can often complete in seconds when pruning, compression, and vector execution align.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-17" class="clip slide" data-start="128" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">6. End-to-End Pipeline</div>
+            <h2 class="motion">Compression moves from raw rows to compact segments plus metadata.</h2>
+          </div>
+          <div class="slide-no motion">17 / 20</div>
+        </div>
+        <div class="stack">
+          <div class="pipeline motion">
+            <div class="pipe-stage"><strong>Raw rows</strong><span>Incoming facts with ID, Date, Region, Sales, Product, and more.</span></div>
+            <div class="pipe-stage"><strong>Rowgroup</strong><span>Batch about 1,048,576 rows, the unit of compression and I/O.</span></div>
+            <div class="pipe-stage"><strong>Column segments</strong><span>Split each column independently: ID, Date, Region, Sales, Product.</span></div>
+            <div class="pipe-stage"><strong>Encode + compress</strong><span>Dictionary, RLE, delta, bit-pack selected per segment.</span></div>
+            <div class="pipe-stage"><strong>Metadata</strong><span>Store min, max, null count, row count, and compact segment bytes.</span></div>
+          </div>
+          <div class="content-grid">
+            <div class="panel motion">
+              <h3>Engine choices per segment</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Region: dictionary encode, RLE runs, then bit-pack codes.</span></div>
+                <div class="item"><span class="dot"></span><span>Sales: reduce value range, then bit-pack narrow integers.</span></div>
+                <div class="item"><span class="dot"></span><span>Date: convert to integer representation, then exploit repeated runs.</span></div>
+              </div>
+            </div>
+            <div class="panel gold motion">
+              <h3>Compression result</h3>
+              <p class="body-copy" style="margin-top: 16px;">Original rowgroup around 50 MB can compress to about 4 MB when order and domains are favorable.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-18" class="clip slide" data-start="136" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Query Execution Pipeline</div>
+            <h2 class="motion">The query touches only the useful columns, rowgroups, and vector lanes.</h2>
+          </div>
+          <div class="slide-no motion">18 / 20</div>
+        </div>
+        <div class="content-grid wide-left">
+          <div class="stack">
+            <div class="codebox dark motion">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+            <div class="flow two-row motion">
+              <div class="node accent"><div class="node-title">1. Columns</div><div class="node-text">Need Date, Region, Sales only.</div></div>
+              <div class="node accent"><div class="node-title">2. Segments</div><div class="node-text">Min/max skips 2 of 3 rowgroups.</div></div>
+              <div class="node accent"><div class="node-title">3. Batch scan</div><div class="node-text">Build bitmaps over vectors.</div></div>
+              <div class="node warn"><div class="node-title">4. Merge</div><div class="node-text">Partial aggregates become final result.</div></div>
+            </div>
+          </div>
+          <div class="panel motion">
+            <h3>Output table</h3>
+            <table style="margin-top: 16px;">
+              <thead><tr><th>Region</th><th>SUM(Sales)</th></tr></thead>
+              <tbody>
+                <tr><td>APAC</td><td>350</td></tr>
+                <tr><td>EMEA</td><td>380</td></tr>
+                <tr><td>AMER</td><td>150</td></tr>
+              </tbody>
+            </table>
+            <p class="body-copy muted" style="margin-top: 18px;">Late materialization means rows are assembled only after filters and aggregates shrink the work.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-19" class="clip slide" data-start="144" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">7. DAL Implementation</div>
+            <h2 class="motion">Parallel staging plus CCI rebuild produces partition-aligned compressed segments.</h2>
+          </div>
+          <div class="slide-no motion">19 / 20</div>
+        </div>
+        <div class="stack">
+          <div class="switch-flow motion">
+            <div class="month-box">
+              <div class="month-title">Staging Jan</div>
+              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+              <p class="small muted" style="margin-top: 14px;">Clustered rowstore index sorted on data_date.</p>
+            </div>
+            <div class="month-box">
+              <div class="month-title">Staging Feb</div>
+              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+              <p class="small muted" style="margin-top: 14px;">Loaded independently in parallel.</p>
+            </div>
+            <div class="month-box">
+              <div class="month-title">Staging Mar</div>
+              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+              <p class="small muted" style="margin-top: 14px;">Monthly partition boundary is explicit.</p>
+            </div>
+          </div>
+          <div class="content-grid">
+            <div class="panel teal motion">
+              <h3>Rebuild CCI per staging table</h3>
+              <p class="body-copy" style="margin-top: 16px;">The CCI builder reads pre-sorted rowstore data, creating rowgroups with tight, non-overlapping min/max metadata.</p>
+            </div>
+            <div class="panel gold motion">
+              <h3>Partition switch</h3>
+              <p class="body-copy" style="margin-top: 16px;">Truncate target partition, then switch staging partition into target. The swap is metadata-only and preserves fully compressed segments.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="slide-20" class="clip slide" data-start="152" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Implementation Playbook</div>
+            <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
+          </div>
+          <div class="slide-no motion">20 / 20</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack">
+            <div class="panel teal motion">
+              <h3>Transformation API rules</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
+                <div class="item"><span class="num">2</span><span>Push predicates before joins and aggregations whenever semantics allow.</span></div>
+                <div class="item"><span class="num">3</span><span>Select columns explicitly so engines can perform column elimination.</span></div>
+                <div class="item"><span class="num">4</span><span>Keep transformations lazy until the boundary that materializes results.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="panel gold motion">
+              <h3>Columnar storage rules</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
+                <div class="item"><span class="dot"></span><span>Sort by common filters to improve RLE and min/max segment skipping.</span></div>
+                <div class="item"><span class="dot"></span><span>Preserve low-cardinality domains for dictionary encoding and bit-packing.</span></div>
+                <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
+              </div>
+            </div>
+            <div class="panel callout rust motion">
+              <p class="body-copy">
+                The unified access layer is not just portability. It is a place to encode the habits
+                that let columnar engines avoid work.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="clicker-controls" data-layout-ignore>
+        <button class="clicker-button" type="button" data-clicker-prev aria-label="Previous slide">‹</button>
+        <span class="clicker-progress" data-clicker-progress>01 / 20</span>
+        <button class="clicker-button" type="button" data-clicker-next aria-label="Next slide">›</button>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const slideCount = 20;
+      const slideDuration = 8;
+
+      document.querySelectorAll(".slide-no").forEach((slideNo, index) => {
+        slideNo.textContent = `${String(index + 1).padStart(2, "0")} / ${slideCount}`;
+      });
+
+      tl.to("#drift-a", { x: 38, y: -22, duration: 5.6, repeat: 19, yoyo: true, ease: "sine.inOut" }, 0);
+      tl.to("#drift-b", { x: -42, y: 18, duration: 6.4, repeat: 17, yoyo: true, ease: "sine.inOut" }, 0);
+
+      for (let i = 1; i <= slideCount; i += 1) {
+        const start = (i - 1) * slideDuration;
+        const selector = `#slide-${i}`;
+
+        tl.from(`${selector} .motion`, {
+          y: 28,
+          opacity: 0,
+          duration: 0.52,
+          stagger: 0.055,
+          immediateRender: false,
+          ease: "power3.out"
+        }, start + 0.12);
+
+        const detailTargets = `${selector} .cell, ${selector} .code-token, ${selector} .bit, ${selector} .node, ${selector} .tier`;
+        if (document.querySelector(detailTargets)) {
+          tl.from(detailTargets, {
+            y: 16,
+            opacity: 0,
+            duration: 0.36,
+            stagger: 0.025,
+            immediateRender: false,
+            ease: "power2.out"
+          }, start + 0.72);
+        }
+      }
+
+      window.__timelines["main"] = tl;
+
+      const hasClickerFlag = (locationLike) => {
+        try {
+          return (
+            new URLSearchParams(locationLike.search).has("clicker") ||
+            locationLike.hash.includes("clicker")
+          );
+        } catch (error) {
+          return false;
+        }
+      };
+
+      let parentRequestedClicker = false;
+      try {
+        parentRequestedClicker =
+          window.parent &&
+          window.parent !== window &&
+          hasClickerFlag(window.parent.location);
+      } catch (error) {
+        parentRequestedClicker = false;
+      }
+
+      const clickerRequested = hasClickerFlag(window.location) || parentRequestedClicker;
+
+      if (clickerRequested) {
+        document.body.classList.add("clicker-mode");
+        tl.pause(0);
+
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const progress = document.querySelector("[data-clicker-progress]");
+        let currentSlide = 0;
+        let activeBuildTimeline = null;
+
+        const runClickerAnimation = (slide) => {
+          if (activeBuildTimeline) {
+            activeBuildTimeline.kill();
+          }
+
+          const header = slide.querySelectorAll(".slide-header .motion");
+          const panels = slide.querySelectorAll(".panel.motion, .codebox.motion, .flow.motion, .chain.motion, .store-pages.motion, .segment.motion, .pipeline.motion, .switch-flow.motion");
+          const detail = slide.querySelectorAll(
+            ".cell, .code-token, .bit, .node, .tier, .simple-list .item, .rle-section, .prune-col, .rowgroup-card, .vector-row, .pipe-stage, .month-box, tbody tr, .bit-chip"
+          );
+          const callouts = slide.querySelectorAll(".callout.motion, .gold.motion, .teal.motion, .soft.motion");
+
+          gsap.set([...header, ...panels, ...detail, ...callouts], { clearProps: "opacity,transform" });
+
+          activeBuildTimeline = gsap.timeline();
+          activeBuildTimeline.from(header, {
+            y: 22,
+            opacity: 0,
+            duration: 0.38,
+            stagger: 0.05,
+            ease: "power3.out"
+          });
+          activeBuildTimeline.from(panels, {
+            y: 18,
+            opacity: 0,
+            duration: 0.34,
+            stagger: 0.08,
+            ease: "power2.out"
+          }, "-=0.12");
+          activeBuildTimeline.from(detail, {
+            y: 10,
+            opacity: 0,
+            duration: 0.24,
+            stagger: 0.035,
+            ease: "power2.out"
+          }, "-=0.08");
+          activeBuildTimeline.from(callouts, {
+            x: -14,
+            opacity: 0,
+            duration: 0.3,
+            stagger: 0.07,
+            ease: "power2.out"
+          }, "-=0.05");
+        };
+
+        const showSlide = (index) => {
+          currentSlide = Math.max(0, Math.min(index, slides.length - 1));
+          slides.forEach((slide, slideIndex) => {
+            slide.classList.toggle("active-slide", slideIndex === currentSlide);
+          });
+          progress.textContent = `${String(currentSlide + 1).padStart(2, "0")} / ${slides.length}`;
+          window.location.hash = `slide-${currentSlide + 1}`;
+          runClickerAnimation(slides[currentSlide]);
+        };
+
+        const nextSlide = () => showSlide(currentSlide + 1);
+        const previousSlide = () => showSlide(currentSlide - 1);
+
+        document.querySelector("[data-clicker-next]").addEventListener("click", (event) => {
+          event.stopPropagation();
+          nextSlide();
+        });
+
+        document.querySelector("[data-clicker-prev]").addEventListener("click", (event) => {
+          event.stopPropagation();
+          previousSlide();
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (["ArrowRight", "PageDown", " ", "Enter"].includes(event.key)) {
+            event.preventDefault();
+            nextSlide();
+          }
+          if (["ArrowLeft", "PageUp", "Backspace"].includes(event.key)) {
+            event.preventDefault();
+            previousSlide();
+          }
+          if (event.key === "Home") {
+            event.preventDefault();
+            showSlide(0);
+          }
+          if (event.key === "End") {
+            event.preventDefault();
+            showSlide(slides.length - 1);
+          }
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!event.target.closest(".clicker-controls")) {
+            nextSlide();
+          }
+        });
+
+        try {
+          if (window.parent && window.parent !== window) {
+            const parentDocument = window.parent.document;
+            const isEditable = (target) => {
+              const tagName = target && target.tagName ? target.tagName.toLowerCase() : "";
+              return (
+                tagName === "input" ||
+                tagName === "textarea" ||
+                tagName === "select" ||
+                target?.isContentEditable
+              );
+            };
+
+            parentDocument.addEventListener("keydown", (event) => {
+              if (isEditable(event.target)) {
+                return;
+              }
+              if (["ArrowRight", "PageDown", " ", "Enter"].includes(event.key)) {
+                event.preventDefault();
+                nextSlide();
+              }
+              if (["ArrowLeft", "PageUp", "Backspace"].includes(event.key)) {
+                event.preventDefault();
+                previousSlide();
+              }
+              if (event.key === "Home") {
+                event.preventDefault();
+                showSlide(0);
+              }
+              if (event.key === "End") {
+                event.preventDefault();
+                showSlide(slides.length - 1);
+              }
+            }, true);
+
+            parentDocument.addEventListener("click", (event) => {
+              const frame = window.frameElement;
+              if (!frame) {
+                return;
+              }
+              const rect = frame.getBoundingClientRect();
+              const clickedPreview =
+                event.clientX >= rect.left &&
+                event.clientX <= rect.right &&
+                event.clientY >= rect.top &&
+                event.clientY <= rect.bottom;
+              if (clickedPreview) {
+                nextSlide();
+              }
+            }, true);
+          }
+        } catch (error) {
+          // Direct presenter mode does not need parent-window controls.
+        }
+
+        const hashMatch = window.location.hash.match(/slide-(\d+)/);
+        const initialSlide = hashMatch ? Number(hashMatch[1]) - 1 : 0;
+        showSlide(initialSlide);
+      }
+    </script>
+  </body>
+</html>
