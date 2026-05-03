@@ -1993,54 +1993,14 @@ GROUP BY Region;</div>
         </div>
       </section>
 
+      <!-- ═══════════════════════════════════════════════════ SLIDE 20 ═══ -->
       <section id="slide-20" class="clip slide" data-start="152" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Implementation Playbook</div>
-            <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
-          </div>
-          <div class="slide-no motion">20 / 20</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Transformation API rules</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
-                <div class="item"><span class="num">2</span><span>Push predicates before joins and aggregations whenever semantics allow.</span></div>
-                <div class="item"><span class="num">3</span><span>Select columns explicitly so engines can perform column elimination.</span></div>
-                <div class="item"><span class="num">4</span><span>Keep transformations lazy until the boundary that materializes results.</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Columnar storage rules</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
-                <div class="item"><span class="dot"></span><span>Sort by common filters to improve RLE and min/max segment skipping.</span></div>
-                <div class="item"><span class="dot"></span><span>Preserve low-cardinality domains for dictionary encoding and bit-packing.</span></div>
-                <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
-              </div>
-            </div>
-            <div class="panel callout rust motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">
-                The unified access layer is not just portability. It is a place to encode the habits
-                that let columnar engines avoid work.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════ SLIDE 21 ═══ -->
-      <section id="slide-21" class="clip slide" data-start="160" data-duration="8" data-track-index="1">
         <div class="slide-header" data-layout-allow-overflow>
           <div>
             <div class="kicker motion">Partition Switch</div>
             <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
           </div>
-          <div class="slide-no motion">21 / 21</div>
+          <div class="slide-no motion">20 / 25</div>
         </div>
         <div class="content-grid wide-left">
           <div class="stack">
@@ -2106,14 +2066,14 @@ ALTER TABLE staging
         </div>
       </section>
 
-      <!-- ═══ SLIDE 22 ═══ -->
-      <section id="slide-22" class="clip slide" data-start="168" data-duration="8" data-track-index="1">
+      <!-- ═══ SLIDE 21 ═══ -->
+      <section id="slide-21" class="clip slide" data-start="160" data-duration="8" data-track-index="1">
         <div class="slide-header" data-layout-allow-overflow>
           <div>
             <div class="kicker motion">Architectural Comparison</div>
             <h2 class="motion">Old (DELETE → INSERT) vs. New (staging → CCI → SWITCH)</h2>
           </div>
-          <div class="slide-no motion">22 / 22</div>
+          <div class="slide-no motion">21 / 25</div>
         </div>
         <div class="stack" style="flex: 1;">
           <div class="content-grid" style="flex: 1;">
@@ -2163,14 +2123,14 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
         </div>
       </section>
 
-      <!-- ═══ SLIDE 23 ═══ -->
-      <section id="slide-23" class="clip slide" data-start="176" data-duration="8" data-track-index="1">
+      <!-- ═══ SLIDE 22 ═══ -->
+      <section id="slide-22" class="clip slide" data-start="168" data-duration="8" data-track-index="1">
         <div class="slide-header" data-layout-allow-overflow>
           <div>
             <div class="kicker motion">8. Fragmented CCI — Segment Overlap</div>
             <h2 class="motion">Overlapping min/max ranges force the engine to scan every rowgroup.</h2>
           </div>
-          <div class="slide-no motion">23 / 23</div>
+          <div class="slide-no motion">22 / 25</div>
         </div>
         <div class="content-grid">
           <div class="stack">
@@ -2259,14 +2219,14 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
         </div>
       </section>
 
-      <!-- ═══ SLIDE 24 ═══ -->
-      <section id="slide-24" class="clip slide" data-start="184" data-duration="8" data-track-index="1">
+      <!-- ═══ SLIDE 23 ═══ -->
+      <section id="slide-23" class="clip slide" data-start="176" data-duration="8" data-track-index="1">
         <div class="slide-header" data-layout-allow-overflow>
           <div>
             <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
             <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
           </div>
-          <div class="slide-no motion">24 / 24</div>
+          <div class="slide-no motion">23 / 25</div>
         </div>
         <div class="content-grid">
           <div class="stack">
@@ -2355,14 +2315,14 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
         </div>
       </section>
 
-      <!-- ═══ SLIDE 25 ═══ -->
-      <section id="slide-25" class="clip slide" data-start="192" data-duration="8" data-track-index="1">
+      <!-- ═══ SLIDE 24 ═══ -->
+      <section id="slide-24" class="clip slide" data-start="184" data-duration="8" data-track-index="1">
         <div class="slide-header" data-layout-allow-overflow>
           <div>
             <div class="kicker motion">Final Impact from All Optimizations</div>
             <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
           </div>
-          <div class="slide-no motion">25 / 25</div>
+          <div class="slide-no motion">24 / 25</div>
         </div>
         <div class="content-grid wide-left">
           <div class="stack">
@@ -2428,6 +2388,48 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
           </div>
         </div>
       </section>
+
+      <!-- ═══ SLIDE 25 ═══ -->
+      <section id="slide-25" class="clip slide" data-start="192" data-duration="8" data-track-index="1">
+        <div class="slide-header" data-layout-allow-overflow>
+          <div>
+            <div class="kicker motion">Implementation Playbook</div>
+            <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
+          </div>
+          <div class="slide-no motion">25 / 25</div>
+        </div>
+        <div class="content-grid">
+          <div class="stack" style="flex: 1;">
+            <div class="panel teal motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+              <h3>Transformation API rules</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
+                <div class="item"><span class="num">2</span><span>Push predicates before joins and aggregations whenever semantics allow.</span></div>
+                <div class="item"><span class="num">3</span><span>Select columns explicitly so engines can perform column elimination.</span></div>
+                <div class="item"><span class="num">4</span><span>Keep transformations lazy until the boundary that materializes results.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="stack" style="flex: 1;">
+            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+              <h3>Columnar storage rules</h3>
+              <div class="simple-list" style="margin-top: 18px;">
+                <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
+                <div class="item"><span class="dot"></span><span>Sort by common filters to improve RLE and min/max segment skipping.</span></div>
+                <div class="item"><span class="dot"></span><span>Preserve low-cardinality domains for dictionary encoding and bit-packing.</span></div>
+                <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
+              </div>
+            </div>
+            <div class="panel callout rust motion" style="display: flex; flex-direction: column; justify-content: center;">
+              <p class="body-copy">
+                The unified access layer is not just portability. It is a place to encode the habits
+                that let columnar engines avoid work.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       <div class="clicker-controls" data-layout-ignore>
         <button class="clicker-button" type="button" data-clicker-prev aria-label="Previous slide">‹</button>
