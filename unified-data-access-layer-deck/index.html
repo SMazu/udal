@@ -1949,44 +1949,85 @@ GROUP BY Region;</div>
             activeBuildTimeline.kill();
           }
 
-          const header = slide.querySelectorAll(".slide-header .motion");
-          const panels = slide.querySelectorAll(".panel.motion, .codebox.motion, .flow.motion, .chain.motion, .store-pages.motion, .segment.motion, .pipeline.motion, .switch-flow.motion");
-          const detail = slide.querySelectorAll(
-            ".cell, .code-token, .bit, .node, .tier, .simple-list .item, .rle-section, .prune-col, .rowgroup-card, .vector-row, .pipe-stage, .month-box, tbody tr, .bit-chip"
+          // Collect elements into groups, deduplicating so each element belongs
+          // to exactly one group. This prevents later fromTo tweens from resetting
+          // opacity:0 on elements already fully animated by an earlier group.
+          const seen = new Set();
+
+          const collect = (selector) => {
+            const els = [];
+            slide.querySelectorAll(selector).forEach((el) => {
+              if (!seen.has(el)) {
+                seen.add(el);
+                els.push(el);
+              }
+            });
+            return els;
+          };
+
+          // Group 1: slide header items
+          const header = collect(".slide-header .motion");
+
+          // Group 2: major content blocks (panels, codeboxes, flow diagrams, etc.)
+          const panels = collect(
+            ".panel.motion, .codebox.motion, .flow.motion, .chain.motion, " +
+            ".store-pages.motion, .segment.motion, .pipeline.motion, .switch-flow.motion"
           );
-          const callouts = slide.querySelectorAll(".callout.motion, .gold.motion, .teal.motion, .soft.motion");
 
-          gsap.set([...header, ...panels, ...detail, ...callouts], { clearProps: "opacity,transform" });
+          // Group 3: inline detail items (cells, bits, nodes, rows, etc.)
+          const detail = collect(
+            ".cell, .code-token, .bit, .node, .tier, .simple-list .item, " +
+            ".rle-section, .prune-col, .rowgroup-card, .vector-row, " +
+            ".pipe-stage, .month-box, tbody tr, .bit-chip"
+          );
 
+          // Group 4: callout / accent panels — collected last so overlapping
+          // elements (e.g. .panel.callout.motion) are already claimed by group 2.
+          const callouts = collect(".callout.motion, .gold.motion, .teal.motion, .soft.motion");
+
+          // Clear any lingering inline styles so every element starts clean.
+          const allEls = [...header, ...panels, ...detail, ...callouts];
+          gsap.set(allEls, { clearProps: "all" });
+
+          // Use fromTo so the end state (opacity:1, y/x:0) is always explicit.
+          // This guarantees elements stay fully visible once their tween completes,
+          // regardless of when other tweens start.
           activeBuildTimeline = gsap.timeline();
-          activeBuildTimeline.from(header, {
-            y: 22,
-            opacity: 0,
-            duration: 0.38,
-            stagger: 0.05,
-            ease: "power3.out"
-          });
-          activeBuildTimeline.from(panels, {
-            y: 18,
-            opacity: 0,
-            duration: 0.34,
-            stagger: 0.08,
-            ease: "power2.out"
-          }, "-=0.12");
-          activeBuildTimeline.from(detail, {
-            y: 10,
-            opacity: 0,
-            duration: 0.24,
-            stagger: 0.035,
-            ease: "power2.out"
-          }, "-=0.08");
-          activeBuildTimeline.from(callouts, {
-            x: -14,
-            opacity: 0,
-            duration: 0.3,
-            stagger: 0.07,
-            ease: "power2.out"
-          }, "-=0.05");
+
+          if (header.length) {
+            activeBuildTimeline.fromTo(
+              header,
+              { y: 26, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.46, stagger: 0.06, ease: "power3.out" }
+            );
+          }
+
+          if (panels.length) {
+            activeBuildTimeline.fromTo(
+              panels,
+              { y: 22, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.42, stagger: 0.09, ease: "power2.out" },
+              "-=0.18"
+            );
+          }
+
+          if (detail.length) {
+            activeBuildTimeline.fromTo(
+              detail,
+              { y: 12, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.30, stagger: 0.04, ease: "power2.out" },
+              "-=0.12"
+            );
+          }
+
+          if (callouts.length) {
+            activeBuildTimeline.fromTo(
+              callouts,
+              { x: -16, opacity: 0 },
+              { x: 0, opacity: 1, duration: 0.36, stagger: 0.08, ease: "power2.out" },
+              "-=0.08"
+            );
+          }
         };
 
         const showSlide = (index) => {
