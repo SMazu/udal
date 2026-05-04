@@ -2259,10 +2259,108 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       <section class="slide" data-composition-id="slide-23" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
+          <div class="kicker motion">SCD Type 2</div>
+          <h2 class="motion">Slowly Changing Dimensions preserve history by versioning records.</h2>
+        </div>
+        <div class="slide-no motion">23 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Example: Track amount changes over time</h3>
+            <table style="margin-top:16px;" class="dense-table">
+              <thead>
+                <tr><th>portfolio_code</th><th>benchmark</th><th>amount</th><th>valid_from</th><th>valid_to</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>PORT_US_GROWTH</strong></td><td>SP500 Growth</td><td>1,000,000</td><td>2024-01-01</td><td>2024-06-15</td></tr>
+                <tr><td><strong>PORT_US_GROWTH</strong></td><td>SP500 Growth</td><td>1,250,000</td><td>2024-06-15</td><td>9999-12-31</td></tr>
+              </tbody>
+            </table>
+            <p class="small muted" style="margin-top:14px;">The latest row stays open with <span style="font-family:var(--mono);">valid_to = 9999-12-31</span>. Prior versions remain queryable for historical joins.</p>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">History is tracked per <strong>portfolio_code</strong>. When an attribute like amount changes, the current row is closed on the change date and a new version is opened.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>Change lifecycle in ingestion</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item"><span class="num">1</span><span>Detect upstream change for <strong>PORT_US_GROWTH</strong> (e.g., new target amount).</span></div>
+              <div class="item"><span class="num">2</span><span>Identify the active row where <span style="font-family:var(--mono);">valid_to = 9999-12-31</span>.</span></div>
+              <div class="item"><span class="num">3</span><span>Close it by setting <span style="font-family:var(--mono);">valid_to</span> to the change date.</span></div>
+              <div class="item"><span class="num">4</span><span>Insert new row with updated amount, <span style="font-family:var(--mono);">valid_from = change_date</span>, and <span style="font-family:var(--mono);">valid_to = 9999-12-31</span>.</span></div>
+            </div>
+          </div>
+          <div class="codebox dark motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">portfolio_code = PORT_US_GROWTH
+old row: valid_from = 2024-01-01
+         valid_to   = 2024-06-15
+
+new row: valid_from = 2024-06-15
+         valid_to   = 9999-12-31</div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Point-in-time</div>
+          <h2 class="motion">Point-in-time joins align fact data with the dimension version active on that date.</h2>
+        </div>
+        <div class="slide-no motion">24 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="codebox dark motion" style="padding: 24px;">SELECT f.data_date, f.portfolio_code, f.returns, b.amount
+FROM port_perf f
+JOIN benchmark b
+  ON f.portfolio_code = b.portfolio_code
+ AND f.data_date >= b.valid_from
+ AND f.data_date <= b.valid_to
+WHERE f.portfolio_code = 'PORT_US_GROWTH'</div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Join facts to historical attributes</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item"><span class="num">1</span><span>A March <span style="font-family:var(--mono);">port_perf</span> fact joins the version valid before the June change.</span></div>
+              <div class="item"><span class="num">2</span><span>A July <span style="font-family:var(--mono);">port_perf</span> fact joins the new version with the increased amount.</span></div>
+              <div class="item"><span class="num">3</span><span>Historical attribution remains locked to the settings active at that specific point in time.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>Join Result: PORT_US_GROWTH</h3>
+            <table style="margin-top:16px;" class="dense-table">
+              <thead>
+                <tr><th>data_date</th><th>portfolio_code</th><th>returns</th><th>amount</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>2024-03-10</td><td>PORT_US_GROWTH</td><td>+1.2%</td><td><strong>1,000,000</strong></td></tr>
+                <tr><td>2024-05-20</td><td>PORT_US_GROWTH</td><td>+0.8%</td><td><strong>1,000,000</strong></td></tr>
+                <tr style="background:rgba(255,255,255,0.05); border-top: 1px dashed var(--rust); border-bottom: 1px dashed var(--rust);">
+                  <td colspan="4" style="text-align:center; font-size:12px; color:var(--rust); padding: 4px;">--- Threshold changed to 1.25M on 2024-06-15 ---</td>
+                </tr>
+                <tr><td>2024-07-20</td><td>PORT_US_GROWTH</td><td>-0.5%</td><td><strong>1,250,000</strong></td></tr>
+                <tr><td>2024-09-15</td><td>PORT_US_GROWTH</td><td>+2.1%</td><td><strong>1,250,000</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">The <strong>data_date</strong> acts as the join key against the dimension's <strong>validity range</strong>. This ensures facts are always measured against the correct, historically accurate metadata.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-25" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
           <div class="kicker motion">The Integration Problem</div>
           <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
         </div>
-        <div class="slide-no motion">23 / 25</div>
+        <div class="slide-no motion">25 / 27</div>
       </div>
       <div class="content-grid">
         <div class="stack center-stack">
@@ -2304,13 +2402,13 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-26" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Ibis As The Core</div>
           <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
         </div>
-        <div class="slide-no motion">24 / 25</div>
+        <div class="slide-no motion">26 / 27</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -2359,13 +2457,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-25" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-27" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Reference Architecture</div>
           <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
         </div>
-        <div class="slide-no motion">25 / 25</div>
+        <div class="slide-no motion">27 / 27</div>
       </div>
       <div class="stack">
         <div class="flow motion">
@@ -2413,7 +2511,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
 
       <div class="clicker-controls" data-layout-ignore>
         <button class="clicker-button" type="button" data-clicker-prev aria-label="Previous slide">‹</button>
-        <span class="clicker-progress" data-clicker-progress>01 / 25</span>
+        <span class="clicker-progress" data-clicker-progress>01 / 27</span>
         <button class="clicker-button" type="button" data-clicker-next aria-label="Next slide">›</button>
       </div>
     </div>
@@ -2421,7 +2519,7 @@ result = trade_pnl(con.table("fact_trades"))</div>
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      const slideCount = 25;
+      const slideCount = 27;
       const slideDuration = 8;
 
       document.querySelectorAll(".slide-no").forEach((slideNo, index) => {
