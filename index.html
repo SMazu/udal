@@ -1174,164 +1174,10 @@
       <section class="slide" data-composition-id="slide-02" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
-          <div class="kicker motion">The Integration Problem</div>
-          <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
-        </div>
-        <div class="slide-no motion">02 / 25</div>
-      </div>
-      <div class="content-grid">
-        <div class="stack center-stack">
-          <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
-            <h3>Without a shared layer</h3>
-            <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
-              <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
-              <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
-              <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="stack">
-          <div class="flow two-row motion">
-            <div class="node warn">
-              <div class="node-title">pandas notebook</div>
-              <div class="node-text">Fast exploration, limited pushdown</div>
-            </div>
-            <div class="node warn">
-              <div class="node-title">Warehouse SQL</div>
-              <div class="node-text">Powerful execution, dialect drift</div>
-            </div>
-            <div class="node warn">
-              <div class="node-title">Spark job</div>
-              <div class="node-text">Scale, but separate code path</div>
-            </div>
-            <div class="node warn">
-              <div class="node-title">BI semantic layer</div>
-              <div class="node-text">Metrics after the fact</div>
-            </div>
-          </div>
-          <div class="panel soft motion">
-            <p class="body-copy">
-              The access layer should turn transformation code into a portable query plan,
-              while keeping storage-aware choices visible to engineers.
-            </p>
-          </div>
-        </div>
-      </div>
-  </section>
-
-      <section class="slide" data-composition-id="slide-03" data-width="1920" data-height="1080">
-      <div class="slide-header" data-layout-allow-overflow>
-        <div>
-          <div class="kicker motion">Ibis As The Core</div>
-          <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
-        </div>
-        <div class="slide-no motion">03 / 25</div>
-      </div>
-      <div class="content-grid wide-left">
-        <div class="stack">
-          <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
-
-def trade_pnl(trades):
-  return (
-      trades
-      .filter(trades.trade_date >= "2024-01-01")
-      .mutate(notional=trades.qty * trades.price)
-      .group_by(["region", "product"])
-      .aggregate(
-          sales=trades.notional.sum(),
-          trades=trades.trade_id.nunique(),
-      )
-  )
-
-# Same expression, different execution target.
-result = trade_pnl(con.table("fact_trades"))</div>
-          <div class="pill-row motion">
-            <span class="pill">DuckDB</span>
-            <span class="pill">Snowflake</span>
-            <span class="pill">BigQuery</span>
-            <span class="pill">PostgreSQL</span>
-            <span class="pill">Spark</span>
-            <span class="pill">Polars</span>
-            <span class="pill">DataFusion</span>
-          </div>
-        </div>
-        <div class="stack">
-          <div class="panel teal motion">
-            <h3>Library contract</h3>
-            <div class="simple-list" style="margin-top: 18px;">
-              <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
-              <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
-              <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
-            </div>
-          </div>
-          <div class="panel motion">
-            <p class="small muted">
-              Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
-              expressions to SQL, while DataFrame backends execute expression plans natively.
-            </p>
-          </div>
-        </div>
-      </div>
-  </section>
-
-      <section class="slide" data-composition-id="slide-04" data-width="1920" data-height="1080">
-      <div class="slide-header" data-layout-allow-overflow>
-        <div>
-          <div class="kicker motion">Reference Architecture</div>
-          <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
-        </div>
-        <div class="slide-no motion">04 / 25</div>
-      </div>
-      <div class="stack">
-        <div class="flow motion">
-          <div class="node">
-            <div class="node-title">Sources</div>
-            <div class="node-text">OLTP, events, reference data, market data</div>
-          </div>
-          <div class="node accent">
-            <div class="node-title">Columnar zone</div>
-            <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
-          </div>
-          <div class="node accent">
-            <div class="node-title">Ibis library</div>
-            <div class="node-text">Typed expressions, metrics, reusable transformations</div>
-          </div>
-          <div class="node">
-            <div class="node-title">Compiler</div>
-            <div class="node-text">SQL or dataframe plan for the chosen backend</div>
-          </div>
-          <div class="node">
-            <div class="node-title">Consumers</div>
-            <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
-          </div>
-        </div>
-        <div class="content-grid" style="flex: 1;">
-          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
-            <h3>Governance surface</h3>
-            <div class="simple-list" style="margin-top: 18px;">
-              <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
-              <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
-              <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
-            </div>
-          </div>
-          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
-            <h3>Optimization surface</h3>
-            <p class="body-copy" style="margin-top: 16px;">
-              The same library can make projection, predicates, grouping keys, date windows,
-              and sort keys explicit enough for columnar engines to skip data and stay compressed.
-            </p>
-          </div>
-        </div>
-      </div>
-  </section>
-
-      <section class="slide" data-composition-id="slide-05" data-width="1920" data-height="1080">
-      <div class="slide-header" data-layout-allow-overflow>
-        <div>
           <div class="kicker motion">1. Row Store vs Column Store</div>
           <h2 class="motion">Columnstores compress better because similar values are stored together.</h2>
         </div>
-        <div class="slide-no motion">05 / 25</div>
+        <div class="slide-no motion">02 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -1383,13 +1229,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-06" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-03" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">The Column Store Layout</div>
           <h2 class="motion">Each column is stored independently in its own segment.</h2>
         </div>
-        <div class="slide-no motion">06 / 25</div>
+        <div class="slide-no motion">03 / 25</div>
       </div>
       <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly;">
         <div class="segment motion">
@@ -1421,13 +1267,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-07" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-04" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">2. Run-Length Encoding</div>
           <h2 class="motion">RLE replaces consecutive repeated values with value-count pairs.</h2>
         </div>
-        <div class="slide-no motion">07 / 25</div>
+        <div class="slide-no motion">04 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -1471,13 +1317,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-08" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-05" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">RLE Effectiveness And Sorting</div>
           <h2 class="motion">RLE works best when physical order creates long runs.</h2>
         </div>
-        <div class="slide-no motion">08 / 25</div>
+        <div class="slide-no motion">05 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -1518,13 +1364,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-09" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-06" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">3. Dictionary Encoding</div>
           <h2 class="motion">Repeated strings become compact integer codes plus one lookup table.</h2>
         </div>
-        <div class="slide-no motion">09 / 25</div>
+        <div class="slide-no motion">06 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -1569,13 +1415,13 @@ result = trade_pnl(con.table("fact_trades"))</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-10" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-07" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Dictionary Encoding Benefits</div>
           <h2 class="motion">Storage savings also become CPU and cache advantages.</h2>
         </div>
-        <div class="slide-no motion">10 / 25</div>
+        <div class="slide-no motion">07 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -1609,13 +1455,13 @@ bits:  values 0-3 need only 2 bits each</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-11" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-08" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">4. Bit-Packing</div>
           <h2 class="motion">Store integers using only the minimum number of bits required.</h2>
         </div>
-        <div class="slide-no motion">11 / 25</div>
+        <div class="slide-no motion">08 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -1651,13 +1497,13 @@ Savings in this example: 16x</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-12" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-09" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Bit-Packing At Segment Scale</div>
           <h2 class="motion">The fewer distinct values, the more rows per byte, cache line, and memory page.</h2>
         </div>
-        <div class="slide-no motion">12 / 25</div>
+        <div class="slide-no motion">09 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="panel motion">
@@ -1701,13 +1547,13 @@ Savings in this example: 16x</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-13" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-10" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">5. Query Performance Benefits</div>
           <h2 class="motion">Compression reduces bytes read, values touched, and CPU work per predicate.</h2>
         </div>
-        <div class="slide-no motion">13 / 25</div>
+        <div class="slide-no motion">10 / 25</div>
       </div>
       <div class="stack">
         <div class="chain motion">
@@ -1747,13 +1593,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-14" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-11" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Query Execution</div>
           <h2 class="motion">Column and segment elimination skip work before decompression.</h2>
         </div>
-        <div class="slide-no motion">14 / 25</div>
+        <div class="slide-no motion">11 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -1793,13 +1639,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-15" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-12" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Execution Mechanics</div>
           <h2 class="motion">Compressed I/O and batch mode turn scans into vector work.</h2>
         </div>
-        <div class="slide-no motion">15 / 25</div>
+        <div class="slide-no motion">12 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -1836,13 +1682,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-16" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-13" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Aggregate Pushdown</div>
           <h2 class="motion">Simple aggregates can be partially computed at segment scan level.</h2>
         </div>
-        <div class="slide-no motion">16 / 25</div>
+        <div class="slide-no motion">13 / 25</div>
       </div>
       <div class="stack">
         <div class="flow motion">
@@ -1870,13 +1716,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-17" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-14" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">6. End-to-End Pipeline</div>
           <h2 class="motion">Compression moves from raw rows to compact segments plus metadata.</h2>
         </div>
-        <div class="slide-no motion">17 / 25</div>
+        <div class="slide-no motion">14 / 25</div>
       </div>
       <div class="stack">
         <div class="pipeline motion">
@@ -1903,13 +1749,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-18" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-15" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Query Execution Pipeline</div>
           <h2 class="motion">The query touches only the useful columns, rowgroups, and vector lanes.</h2>
         </div>
-        <div class="slide-no motion">18 / 25</div>
+        <div class="slide-no motion">15 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -1940,13 +1786,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <section class="slide" data-composition-id="slide-19" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-16" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">7. DAL Implementation</div>
           <h2 class="motion">Parallel staging plus CCI rebuild produces partition-aligned compressed segments.</h2>
         </div>
-        <div class="slide-no motion">19 / 25</div>
+        <div class="slide-no motion">16 / 25</div>
       </div>
       <div class="stack">
         <div class="switch-flow motion">
@@ -1979,14 +1825,13 @@ GROUP BY Region;</div>
       </div>
   </section>
 
-      <!-- ═══════════════════════════════════════════════════ SLIDE 20 ═══ -->
-      <section class="slide" data-composition-id="slide-20" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-17" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Partition Switch</div>
           <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
         </div>
-        <div class="slide-no motion">20 / 25</div>
+        <div class="slide-no motion">17 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -2052,14 +1897,13 @@ ALTER TABLE staging
       </div>
   </section>
 
-      <!-- ═══ SLIDE 21 ═══ -->
-      <section class="slide" data-composition-id="slide-21" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-18" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Architectural Comparison</div>
           <h2 class="motion">Old (DELETE → INSERT) vs. New (staging → CCI → SWITCH)</h2>
         </div>
-        <div class="slide-no motion">21 / 25</div>
+        <div class="slide-no motion">18 / 25</div>
       </div>
       <div class="stack" style="flex: 1;">
         <div class="content-grid" style="flex: 1;">
@@ -2109,14 +1953,13 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       </div>
   </section>
 
-      <!-- ═══ SLIDE 22 ═══ -->
-      <section class="slide" data-composition-id="slide-22" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-19" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">8. Fragmented CCI — Segment Overlap</div>
           <h2 class="motion">Overlapping min/max ranges force the engine to scan every rowgroup.</h2>
         </div>
-        <div class="slide-no motion">22 / 25</div>
+        <div class="slide-no motion">19 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -2205,14 +2048,13 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       </div>
   </section>
 
-      <!-- ═══ SLIDE 23 ═══ -->
-      <section class="slide" data-composition-id="slide-23" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-20" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
           <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
         </div>
-        <div class="slide-no motion">23 / 25</div>
+        <div class="slide-no motion">20 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack">
@@ -2301,14 +2143,13 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       </div>
   </section>
 
-      <!-- ═══ SLIDE 24 ═══ -->
-      <section class="slide" data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-21" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Final Impact from All Optimizations</div>
           <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
         </div>
-        <div class="slide-no motion">24 / 25</div>
+        <div class="slide-no motion">21 / 25</div>
       </div>
       <div class="content-grid wide-left">
         <div class="stack">
@@ -2375,14 +2216,13 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
       </div>
   </section>
 
-      <!-- ═══ SLIDE 25 ═══ -->
-      <section class="slide" data-composition-id="slide-25" data-width="1920" data-height="1080">
+      <section class="slide" data-composition-id="slide-22" data-width="1920" data-height="1080">
       <div class="slide-header" data-layout-allow-overflow>
         <div>
           <div class="kicker motion">Implementation Playbook</div>
           <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
         </div>
-        <div class="slide-no motion">25 / 25</div>
+        <div class="slide-no motion">22 / 25</div>
       </div>
       <div class="content-grid">
         <div class="stack" style="flex: 1;">
@@ -2410,6 +2250,160 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
             <p class="body-copy">
               The unified access layer is not just portability. It is a place to encode the habits
               that let columnar engines avoid work.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-23" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">The Integration Problem</div>
+          <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
+        </div>
+        <div class="slide-no motion">23 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack center-stack">
+          <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
+            <h3>Without a shared layer</h3>
+            <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
+              <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
+              <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
+              <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="flow two-row motion">
+            <div class="node warn">
+              <div class="node-title">pandas notebook</div>
+              <div class="node-text">Fast exploration, limited pushdown</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">Warehouse SQL</div>
+              <div class="node-text">Powerful execution, dialect drift</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">Spark job</div>
+              <div class="node-text">Scale, but separate code path</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">BI semantic layer</div>
+              <div class="node-text">Metrics after the fact</div>
+            </div>
+          </div>
+          <div class="panel soft motion">
+            <p class="body-copy">
+              The access layer should turn transformation code into a portable query plan,
+              while keeping storage-aware choices visible to engineers.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Ibis As The Core</div>
+          <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
+        </div>
+        <div class="slide-no motion">24 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
+
+def trade_pnl(trades):
+  return (
+      trades
+      .filter(trades.trade_date >= "2024-01-01")
+      .mutate(notional=trades.qty * trades.price)
+      .group_by(["region", "product"])
+      .aggregate(
+          sales=trades.notional.sum(),
+          trades=trades.trade_id.nunique(),
+      )
+  )
+
+# Same expression, different execution target.
+result = trade_pnl(con.table("fact_trades"))</div>
+          <div class="pill-row motion">
+            <span class="pill">DuckDB</span>
+            <span class="pill">Snowflake</span>
+            <span class="pill">BigQuery</span>
+            <span class="pill">PostgreSQL</span>
+            <span class="pill">Spark</span>
+            <span class="pill">Polars</span>
+            <span class="pill">DataFusion</span>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>Library contract</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
+              <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
+              <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
+            </div>
+          </div>
+          <div class="panel motion">
+            <p class="small muted">
+              Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
+              expressions to SQL, while DataFrame backends execute expression plans natively.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-25" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Reference Architecture</div>
+          <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
+        </div>
+        <div class="slide-no motion">25 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="flow motion">
+          <div class="node">
+            <div class="node-title">Sources</div>
+            <div class="node-text">OLTP, events, reference data, market data</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Columnar zone</div>
+            <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Ibis library</div>
+            <div class="node-text">Typed expressions, metrics, reusable transformations</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Compiler</div>
+            <div class="node-text">SQL or dataframe plan for the chosen backend</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Consumers</div>
+            <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Governance surface</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
+              <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
+              <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Optimization surface</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              The same library can make projection, predicates, grouping keys, date windows,
+              and sort keys explicit enough for columnar engines to skip data and stay compressed.
             </p>
           </div>
         </div>
