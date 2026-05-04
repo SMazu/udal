@@ -1,0 +1,78 @@
+<template>
+<section data-composition-id="slide-12" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Bit-Packing At Segment Scale</div>
+          <h2 class="motion">The fewer distinct values, the more rows per byte, cache line, and memory page.</h2>
+        </div>
+        <div class="slide-no motion">12 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="panel motion">
+          <table class="dense-table">
+            <thead>
+              <tr><th>Distinct values</th><th>Bits/value</th><th>32-bit storage</th><th>Bit-packed</th><th>Savings</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>2</td><td>1 bit</td><td>4 MB</td><td>128 KB</td><td>32x</td></tr>
+              <tr><td>4</td><td>2 bits</td><td>4 MB</td><td>256 KB</td><td>16x</td></tr>
+              <tr><td>8</td><td>3 bits</td><td>4 MB</td><td>384 KB</td><td>10.7x</td></tr>
+              <tr><td>16</td><td>4 bits</td><td>4 MB</td><td>512 KB</td><td>8x</td></tr>
+              <tr><td>64</td><td>6 bits</td><td>4 MB</td><td>768 KB</td><td>5.3x</td></tr>
+              <tr><td>256</td><td>8 bits</td><td>4 MB</td><td>1 MB</td><td>4x</td></tr>
+              <tr><td>65,536</td><td>16 bits</td><td>4 MB</td><td>2 MB</td><td>2x</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel motion">
+            <h3>3-bit values can cross byte boundaries</h3>
+            <div class="byte-boundary" style="margin-top: 18px;">
+              <div class="byte">
+                <div class="byte-title">Byte 1</div>
+                <div class="bit-line"><span class="bit-chip">101</span><span class="bit-chip">011</span><span class="bit-chip">10</span></div>
+              </div>
+              <div class="byte">
+                <div class="byte-title">Byte 2</div>
+                <div class="bit-line"><span class="bit-chip">0</span><span class="bit-chip">110</span><span class="bit-chip">001</span></div>
+              </div>
+              <div class="byte">
+                <div class="byte-title">Byte 3</div>
+                <div class="bit-line"><span class="bit-chip">1</span><span class="bit-chip">111</span><span class="bit-chip">000</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">The storage engine packs for density. The query engine unpacks or compares vectors in batches.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-12"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-12"] .cell, [data-composition-id="slide-12"] .code-token, [data-composition-id="slide-12"] .bit, [data-composition-id="slide-12"] .node, [data-composition-id="slide-12"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-12"] = tl;
+  </script>
+</template>

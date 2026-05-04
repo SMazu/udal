@@ -1,0 +1,101 @@
+<template>
+<section data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Final Impact from All Optimizations</div>
+          <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
+        </div>
+        <div class="slide-no motion">24 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>How strict ordering is achieved</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item motion">
+                <span class="num">1</span>
+                <span><strong>Create staging table with clustered rowstore index</strong><br>
+                  <span class="muted small">ON (data_date, ...) — B-tree guarantees physical sort order on disk</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">2</span>
+                <span><strong>Load data into staging table</strong><br>
+                  <span class="muted small">Rows stored in date order; arrival sequence doesn’t matter</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">3</span>
+                <span><strong>Build CCI on the sorted staging table</strong><br>
+                  <span class="muted small">CCI builder reads sequentially — each rowgroup gets a contiguous date range with tight min/max</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">4</span>
+                <span><strong>Partition switch into target table</strong><br>
+                  <span class="muted small">Target inherits perfectly ordered segments — metadata-only, milliseconds</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Column elimination × segment elimination × compressed I/O × batch mode — each layer compounds the benefit of the one before it.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Impact on query performance</h3>
+            <table style="margin-top:16px;" class="dense-table">
+              <thead>
+                <tr><th>Metric</th><th style="color:var(--rust);">Fragmented CCI</th><th style="color:var(--teal);">Unfragmented CCI</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Segments scanned</strong></td><td style="color:var(--rust);">ALL</td><td style="color:var(--teal);">Only matching</td></tr>
+                <tr><td><strong>Decompression work</strong></td><td style="color:var(--rust);">100%</td><td style="color:var(--teal);">~25%</td></tr>
+                <tr><td><strong>I/O from disk</strong></td><td style="color:var(--rust);">Full table</td><td style="color:var(--teal);">1 rowgroup</td></tr>
+                <tr><td><strong>Segment elimination</strong></td><td style="color:var(--rust);">0%</td><td style="color:var(--teal);">75%</td></tr>
+                <tr><td><strong>Query speed</strong></td><td style="color:var(--rust);">Slow</td><td style="color:var(--teal);">Fast</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="metric-row">
+            <div class="metric motion">
+              <div class="value">75%</div>
+              <div class="label">Rowgroups eliminated by min/max metadata</div>
+            </div>
+            <div class="metric motion">
+              <div class="value">~10x</div>
+              <div class="label">Typical end-to-end query speed improvement</div>
+            </div>
+            <div class="metric motion">
+              <div class="value">ms</div>
+              <div class="label">SWITCH duration — zero data movement</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-24"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-24"] .cell, [data-composition-id="slide-24"] .code-token, [data-composition-id="slide-24"] .bit, [data-composition-id="slide-24"] .node, [data-composition-id="slide-24"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-24"] = tl;
+  </script>
+</template>

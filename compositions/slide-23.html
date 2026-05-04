@@ -1,0 +1,123 @@
+<template>
+<section data-composition-id="slide-23" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
+          <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
+        </div>
+        <div class="slide-no motion">23 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>data_date segments — ordered CCI</h3>
+            <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
+            <div class="rg-timeline" style="margin-top:18px;">
+              <div class="rg-axis-row">
+                <div></div>
+                <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span></div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 0</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:0%;width:25%;">Jan 1—31</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"><div class="rg-query-label">Feb 15</div></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 1</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill match" style="left:25%;width:23%;">Feb 1—28</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 2</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:48%;width:26%;">Mar 1—31</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 3</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:74%;width:25%;">Apr 1—30</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Only <strong>RG 1</strong> overlaps Feb 15. RG 0, 2, 3 are skipped by min/max metadata — <strong>75% elimination before decompression.</strong></p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>How ordering enables elimination</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item"><span class="num">1</span><span>Staging table sorted on data_date — B-tree guarantees physical order</span></div>
+              <div class="item"><span class="num">2</span><span>CCI builder reads rows sequentially: each rowgroup receives a contiguous date range</span></div>
+              <div class="item"><span class="num">3</span><span>Segment min/max spans only ~30 days, not 90</span></div>
+              <div class="item"><span class="num">4</span><span>Query engine checks metadata first — skips non-overlapping segments entirely</span></div>
+            </div>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Rowgroup status at query time</h3>
+            <div class="rg-grid" style="margin-top:14px;">
+              <div class="rowgroup-card skip">
+                <h3>RG 0</h3><p class="small muted">Jan 1 → Jan 31</p>
+                <span class="status skip">SKIP</span>
+              </div>
+              <div class="rowgroup-card read">
+                <h3>RG 1</h3><p class="small muted">Feb 1 → Feb 28</p>
+                <span class="status">READ</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 2</h3><p class="small muted">Mar 1 → Mar 31</p>
+                <span class="status skip">SKIP</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 3</h3><p class="small muted">Apr 1 → Apr 30</p>
+                <span class="status skip">SKIP</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-23"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-23"] .cell, [data-composition-id="slide-23"] .code-token, [data-composition-id="slide-23"] .bit, [data-composition-id="slide-23"] .node, [data-composition-id="slide-23"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-23"] = tl;
+  </script>
+</template>

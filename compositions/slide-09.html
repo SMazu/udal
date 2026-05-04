@@ -1,0 +1,79 @@
+<template>
+<section data-composition-id="slide-09" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">3. Dictionary Encoding</div>
+          <h2 class="motion">Repeated strings become compact integer codes plus one lookup table.</h2>
+        </div>
+        <div class="slide-no motion">09 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Step 1: build dictionary once per segment</h3>
+            <table style="margin-top: 16px;">
+              <thead>
+                <tr><th>Code</th><th>Value</th><th>Original size</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>Singapore</td><td>9 bytes x 400,000 occurrences</td></tr>
+                <tr><td>1</td><td>London</td><td>6 bytes x 300,000 occurrences</td></tr>
+                <tr><td>2</td><td>Tokyo</td><td>5 bytes x 200,000 occurrences</td></tr>
+                <tr><td>3</td><td>New York</td><td>8 bytes x 148,576 occurrences</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Step 2: replace strings with codes</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="code-token">0</span><span class="code-token">1</span><span class="code-token">0</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="ellipsis">...</span>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>Why it compresses</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              Four distinct values need only 2 bits per row. The strings stay in a small dictionary;
+              the segment stores a dense stream of integers.
+            </p>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Storage impact</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Before: 1,048,576 rows x avg 7 bytes = about 7.3 MB.</span></div>
+              <div class="item"><span class="dot"></span><span>After: about 40 bytes dictionary + 256 KB codes.</span></div>
+              <div class="item"><span class="dot"></span><span>Compression ratio: about 29:1 before other encodings.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-09"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-09"] .cell, [data-composition-id="slide-09"] .code-token, [data-composition-id="slide-09"] .bit, [data-composition-id="slide-09"] .node, [data-composition-id="slide-09"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-09"] = tl;
+  </script>
+</template>

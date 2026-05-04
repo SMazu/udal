@@ -1,0 +1,70 @@
+<template>
+<section data-composition-id="slide-11" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">4. Bit-Packing</div>
+          <h2 class="motion">Store integers using only the minimum number of bits required.</h2>
+        </div>
+        <div class="slide-no motion">11 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Dictionary codes from Region</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">1</span><span class="code-token">3</span><span class="code-token">0</span><span class="code-token">2</span>
+            </div>
+            <p class="body-copy muted" style="margin-top: 18px;">Max value = 3, so ceil(log2(4)) = 2 bits per value.</p>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Bit-packed stream</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="bit teal">11</span><span class="bit">01</span><span class="bit rust">10</span><span class="bit">00</span><span class="bit">01</span><span class="bit teal">11</span><span class="bit">00</span><span class="bit rust">10</span>
+            </div>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="codebox dark motion">Standard 32-bit storage:
+8 values x 32 bits = 256 bits = 32 bytes
+
+Bit-packed storage:
+8 values x 2 bits = 16 bits = 2 bytes
+
+Savings in this example: 16x</div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              The access layer helps by preserving low-cardinality domains, projecting only needed
+              columns, and avoiding transformations that explode values before filters run.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-11"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-11"] .cell, [data-composition-id="slide-11"] .code-token, [data-composition-id="slide-11"] .bit, [data-composition-id="slide-11"] .node, [data-composition-id="slide-11"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-11"] = tl;
+  </script>
+</template>

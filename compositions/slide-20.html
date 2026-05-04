@@ -1,0 +1,100 @@
+<template>
+<section data-composition-id="slide-20" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Partition Switch</div>
+          <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
+        </div>
+        <div class="slide-no motion">20 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion" style="padding: 22px;">
+            <h3 style="margin-bottom: 16px;">d. Metadata-only switch — no data movement</h3>
+            <div class="switch-diagram">
+              <div class="switch-col">
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Jan</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">CCI pre-sorted on data_date</p>
+                </div>
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Feb</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">Loaded independently, in parallel</p>
+                </div>
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Mar</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">Monthly partition boundary explicit</p>
+                </div>
+              </div>
+              <div class="switch-mid motion">
+                <div class="sw-chevron">→</div>
+                <div class="sw-chevron">→</div>
+                <div class="sw-chevron">→</div>
+                <div style="margin-top:4px;">SWITCH</div>
+              </div>
+              <div class="switch-col">
+                <div class="month-box motion">
+                  <div class="month-title">Part 1 — Jan CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+                <div class="month-box motion">
+                  <div class="month-title">Part 2 — Feb CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+                <div class="month-box motion">
+                  <div class="month-title">Part 3 — Mar CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="codebox dark motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">TRUNCATE target PARTITION N
+ALTER TABLE staging
+  SWITCH PARTITION N TO target PARTITION N</div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>e. Result: Fully compressed segments</h3>
+            <div class="simple-list" style="margin-top: 16px;">
+              <div class="item"><span class="num">1</span><span>Full rowgroups (~1 M rows each, maximally compressed)</span></div>
+              <div class="item"><span class="num">2</span><span>Ordered CCI segments with tight, non-overlapping min/max</span></div>
+              <div class="item"><span class="num">3</span><span>No delta stores, no open rowgroups, no fragmentation</span></div>
+            </div>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">The swap is metadata-only — only internal page pointers are reassigned. No rows move on disk. Completes in milliseconds regardless of table size.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-20"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-20"] .cell, [data-composition-id="slide-20"] .code-token, [data-composition-id="slide-20"] .bit, [data-composition-id="slide-20"] .node, [data-composition-id="slide-20"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-20"] = tl;
+  </script>
+</template>

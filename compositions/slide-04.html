@@ -1,0 +1,79 @@
+<template>
+<section data-composition-id="slide-04" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Reference Architecture</div>
+          <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
+        </div>
+        <div class="slide-no motion">04 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="flow motion">
+          <div class="node">
+            <div class="node-title">Sources</div>
+            <div class="node-text">OLTP, events, reference data, market data</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Columnar zone</div>
+            <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Ibis library</div>
+            <div class="node-text">Typed expressions, metrics, reusable transformations</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Compiler</div>
+            <div class="node-text">SQL or dataframe plan for the chosen backend</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Consumers</div>
+            <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Governance surface</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
+              <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
+              <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Optimization surface</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              The same library can make projection, predicates, grouping keys, date windows,
+              and sort keys explicit enough for columnar engines to skip data and stay compressed.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-04"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-04"] .cell, [data-composition-id="slide-04"] .code-token, [data-composition-id="slide-04"] .bit, [data-composition-id="slide-04"] .node, [data-composition-id="slide-04"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-04"] = tl;
+  </script>
+</template>

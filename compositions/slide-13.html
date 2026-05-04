@@ -1,0 +1,74 @@
+<template>
+<section data-composition-id="slide-13" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">5. Query Performance Benefits</div>
+          <h2 class="motion">Compression reduces bytes read, values touched, and CPU work per predicate.</h2>
+        </div>
+        <div class="slide-no motion">13 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="chain motion">
+          <div class="node warn">
+            <div class="node-title">Raw strings</div>
+            <div class="node-text">"Singapore", 9 bytes per value</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Dictionary codes</div>
+            <div class="node-text">0, 1, 0, 2... 2 bits each</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">RLE</div>
+            <div class="node-text">(0, 4), (1, 2), ...</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Bit-pack</div>
+            <div class="node-text">Contiguous bit stream for scan and compare</div>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Four reinforcing mechanisms</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Column elimination: read only referenced columns.</span></div>
+              <div class="item"><span class="num">2</span><span>Segment elimination: skip rowgroups by min/max metadata.</span></div>
+              <div class="item"><span class="num">3</span><span>Compressed I/O: move fewer bytes from disk and memory.</span></div>
+              <div class="item"><span class="num">4</span><span>Batch execution: compare and aggregate many values at once.</span></div>
+            </div>
+          </div>
+          <div class="codebox dark motion" style="display: flex; flex-direction: column; justify-content: center;">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-13"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-13"] .cell, [data-composition-id="slide-13"] .code-token, [data-composition-id="slide-13"] .bit, [data-composition-id="slide-13"] .node, [data-composition-id="slide-13"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-13"] = tl;
+  </script>
+</template>

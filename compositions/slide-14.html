@@ -1,0 +1,74 @@
+<template>
+<section data-composition-id="slide-14" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Query Execution</div>
+          <h2 class="motion">Column and segment elimination skip work before decompression.</h2>
+        </div>
+        <div class="slide-no motion">14 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>A. Column elimination</h3>
+            <p class="small muted" style="margin-top: 8px;">The table has 12 columns; the query needs Date, Region, and Sales.</p>
+            <div class="prune-strip" style="margin-top: 18px;">
+              <div class="prune-col skip"><strong>ID</strong><span>SKIP</span></div>
+              <div class="prune-col read"><strong>Date</strong><span>READ</span></div>
+              <div class="prune-col read"><strong>Region</strong><span>READ</span></div>
+              <div class="prune-col read"><strong>Sales</strong><span>READ</span></div>
+              <div class="prune-col skip"><strong>Product</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Trader</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Desk</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Notes</strong><span>SKIP</span></div>
+            </div>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Row store reads all columns from every page. Column store reads only the referenced segments: 3 of 12 columns, about 25% of column I/O.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel motion">
+            <h3>B. Segment elimination</h3>
+            <p class="small muted" style="margin-top: 8px;">Predicate: Date >= 2024-01-01 and Date < 2024-04-01</p>
+            <div class="rg-grid" style="margin-top: 18px;">
+              <div class="rowgroup-card skip"><h3>RG 0</h3><p class="small muted">max < 2024-01-01</p><span class="status skip">SKIP</span></div>
+              <div class="rowgroup-card read"><h3>RG 1</h3><p class="small muted">overlaps range</p><span class="status">READ</span></div>
+              <div class="rowgroup-card skip"><h3>RG 2</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+              <div class="rowgroup-card skip"><h3>RG 3</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Ordered CCI keeps min/max ranges tight, so elimination is precise instead of producing overlapping false positives.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-14"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-14"] .cell, [data-composition-id="slide-14"] .code-token, [data-composition-id="slide-14"] .bit, [data-composition-id="slide-14"] .node, [data-composition-id="slide-14"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-14"] = tl;
+  </script>
+</template>

@@ -1,0 +1,75 @@
+<template>
+<section data-composition-id="slide-08" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">RLE Effectiveness And Sorting</div>
+          <h2 class="motion">RLE works best when physical order creates long runs.</h2>
+        </div>
+        <div class="slide-no motion">08 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Date column: partially sorted</h3>
+            <div class="segment-strip" style="margin-top: 18px;">
+              <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span>
+            </div>
+            <div class="codebox" style="margin-top: 18px;">After RLE:
+[(2024-01-15, 3) | (2024-02-10, 2)]</div>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              Ordered columnstore indexes reduce segment overlap by sorting order-key values before compression,
+              improving both RLE opportunities and segment elimination.
+            </p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="tier motion">
+            <div class="tier-label">BEST</div>
+            <p class="body-copy">Sorted columns with long consecutive runs, such as APAC... EMEA... AMER...</p>
+          </div>
+          <div class="tier good motion">
+            <div class="tier-label">GOOD</div>
+            <p class="body-copy">Naturally clustered batches, such as one trade date appearing 50,000 times.</p>
+          </div>
+          
+          <div class="tier motion" style="margin-top: 24px; background: var(--soft); border: 1px solid var(--line);">
+            <div class="tier-label" style="background: var(--teal);">PRO TIP</div>
+            <p class="body-copy">Use <strong>Clustered Columnstore Indexes</strong> to enforce physical order on your most important filter columns.</p>
+          </div>
+          <div class="tier poor motion">
+            <div class="tier-label">POOR</div>
+            <p class="body-copy">Random high-cardinality columns, such as unique trade IDs or event UUIDs.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-08"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-08"] .cell, [data-composition-id="slide-08"] .code-token, [data-composition-id="slide-08"] .bit, [data-composition-id="slide-08"] .node, [data-composition-id="slide-08"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-08"] = tl;
+  </script>
+</template>

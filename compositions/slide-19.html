@@ -1,0 +1,67 @@
+<template>
+<section data-composition-id="slide-19" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">7. DAL Implementation</div>
+          <h2 class="motion">Parallel staging plus CCI rebuild produces partition-aligned compressed segments.</h2>
+        </div>
+        <div class="slide-no motion">19 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="switch-flow motion">
+          <div class="month-box">
+            <div class="month-title">Staging Jan</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Clustered rowstore index sorted on data_date.</p>
+          </div>
+          <div class="month-box">
+            <div class="month-title">Staging Feb</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Loaded independently in parallel.</p>
+          </div>
+          <div class="month-box">
+            <div class="month-title">Staging Mar</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Monthly partition boundary is explicit.</p>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel teal motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Rebuild CCI per staging table</h3>
+            <p class="body-copy" style="margin-top: 16px;">The CCI builder reads pre-sorted rowstore data, creating rowgroups with tight, non-overlapping min/max metadata.</p>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Partition switch</h3>
+            <p class="body-copy" style="margin-top: 16px;">Truncate target partition, then switch staging partition into target. The swap is metadata-only and preserves fully compressed segments.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-19"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-19"] .cell, [data-composition-id="slide-19"] .code-token, [data-composition-id="slide-19"] .bit, [data-composition-id="slide-19"] .node, [data-composition-id="slide-19"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-19"] = tl;
+  </script>
+</template>

@@ -1,0 +1,86 @@
+<template>
+<section data-composition-id="slide-05" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">1. Row Store vs Column Store</div>
+          <h2 class="motion">Columnstores compress better because similar values are stored together.</h2>
+        </div>
+        <div class="slide-no motion">05 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <table class="source-table">
+              <thead>
+                <tr><th>ID</th><th>Date</th><th>Region</th><th>Sales</th><th>Product</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>2024-01-15</td><td>APAC</td><td>100</td><td>Bond</td></tr>
+                <tr><td>2</td><td>2024-01-15</td><td>APAC</td><td>120</td><td>Bond</td></tr>
+                <tr><td>3</td><td>2024-02-10</td><td>APAC</td><td>130</td><td>Equity</td></tr>
+                <tr><td>4</td><td>2024-02-10</td><td>EMEA</td><td>200</td><td>Equity</td></tr>
+                <tr><td>5</td><td>2024-03-05</td><td>EMEA</td><td>180</td><td>Bond</td></tr>
+                <tr><td>6</td><td>2024-03-05</td><td>AMER</td><td>150</td><td>Bond</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout motion">
+            <p class="body-copy">
+              Row store pages interleave int, date, varchar, and numeric values. Reading one column
+              still drags every other column through I/O and cache.
+            </p>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="store-pages motion">
+            <div class="page-block">
+              <div class="page-label">Page 1: entire rows packed together</div>
+              <div class="row-strip">
+                <span class="cell">1</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="cell sales">100</span><span class="cell product">Bond</span><span class="cell">2</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="ellipsis">...</span>
+              </div>
+            </div>
+            <div class="page-block">
+              <div class="page-label">Page 2: unrelated types continue</div>
+              <div class="row-strip">
+                <span class="ellipsis">...</span><span class="cell product">Bond</span><span class="cell">3</span><span class="cell date">2024-02-10</span><span class="cell region">APAC</span><span class="cell sales">130</span><span class="cell product">Equity</span><span class="cell">4</span><span class="ellipsis">...</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div class="simple-list">
+              <div class="item"><span class="dot"></span><span>Repeated APAC values are scattered across pages with other columns.</span></div>
+              <div class="item"><span class="dot"></span><span>Compression cannot exploit repetition across unrelated types.</span></div>
+              <div class="item"><span class="dot"></span><span>Projection pushdown matters because columnar layouts can avoid unused columns.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-05"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-05"] .cell, [data-composition-id="slide-05"] .code-token, [data-composition-id="slide-05"] .bit, [data-composition-id="slide-05"] .node, [data-composition-id="slide-05"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-05"] = tl;
+  </script>
+</template>

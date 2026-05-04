@@ -1,0 +1,71 @@
+<template>
+<section data-composition-id="slide-15" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Execution Mechanics</div>
+          <h2 class="motion">Compressed I/O and batch mode turn scans into vector work.</h2>
+        </div>
+        <div class="slide-no motion">15 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>C. Compressed I/O</h3>
+            <table style="margin-top: 16px;">
+              <thead><tr><th>Layer</th><th>Row store</th><th>Column store</th></tr></thead>
+              <tbody>
+                <tr><td>On disk</td><td>100 GB</td><td>10-15 GB</td></tr>
+                <tr><td>Disk read</td><td>100 GB</td><td>10-15 GB</td></tr>
+                <tr><td>Memory</td><td>wide pages</td><td>narrow segments</td></tr>
+                <tr><td>Cache</td><td>low locality</td><td>high locality</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Engines can operate directly on dictionary codes and packed values, delaying materialization until results are needed.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel motion">
+            <h3>D. Batch mode vectors</h3>
+            <div class="vector-stack" style="margin-top: 18px;">
+              <div class="vector-row"><div class="vector-label">Date[]</div><div class="segment-strip"><span class="cell date">Jan</span><span class="cell date">Jan</span><span class="cell date">Feb</span><span class="cell date">Feb</span><span class="cell date">Apr</span></div></div>
+              <div class="vector-row"><div class="vector-label">Region[]</div><div class="segment-strip"><span class="cell region">0</span><span class="cell region">0</span><span class="cell region">1</span><span class="cell region">1</span><span class="cell region">3</span></div></div>
+              <div class="vector-row"><div class="vector-label">Sales[]</div><div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">150</span></div></div>
+              <div class="vector-row"><div class="vector-label">Bitmap</div><div class="bitmap"><span>1</span><span>1</span><span>1</span><span class="zero">0</span><span class="zero">0</span></div></div>
+            </div>
+          </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Instead of row-by-row branching, a batch scan evaluates about 900 rows as column vectors and aggregates surviving values.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-15"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-15"] .cell, [data-composition-id="slide-15"] .code-token, [data-composition-id="slide-15"] .bit, [data-composition-id="slide-15"] .node, [data-composition-id="slide-15"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-15"] = tl;
+  </script>
+</template>

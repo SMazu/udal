@@ -1,0 +1,62 @@
+<template>
+<section data-composition-id="slide-16" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Aggregate Pushdown</div>
+          <h2 class="motion">Simple aggregates can be partially computed at segment scan level.</h2>
+        </div>
+        <div class="slide-no motion">16 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="flow motion">
+          <div class="node accent"><div class="node-title">Segment 0</div><div class="node-text">SUM = 45,000</div></div>
+          <div class="node accent"><div class="node-title">Segment 1</div><div class="node-text">SUM = 52,000</div></div>
+          <div class="node accent"><div class="node-title">Segment 2</div><div class="node-text">SUM = 38,000</div></div>
+          <div class="node"><div class="node-title">Merge</div><div class="node-text">combine partials</div></div>
+          <div class="node warn"><div class="node-title">Final SUM</div><div class="node-text">135,000</div></div>
+        </div>
+        <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <table>
+            <thead><tr><th>Mechanism</th><th>Impact</th></tr></thead>
+            <tbody>
+              <tr><td>Column elimination</td><td>75% less data to consider</td></tr>
+              <tr><td>Segment elimination</td><td>75% of remaining rowgroups skipped</td></tr>
+              <tr><td>Compressed I/O</td><td>10x less data read from disk</td></tr>
+              <tr><td>Batch mode</td><td>CPU processes vector batches per call</td></tr>
+              <tr><td>Aggregate pushdown</td><td>Partial results are created during scan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel callout gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+          <p class="body-copy">The net effect compounds: queries that took minutes can often complete in seconds when pruning, compression, and vector execution align.</p>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-16"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-16"] .cell, [data-composition-id="slide-16"] .code-token, [data-composition-id="slide-16"] .bit, [data-composition-id="slide-16"] .node, [data-composition-id="slide-16"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-16"] = tl;
+  </script>
+</template>

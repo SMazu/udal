@@ -1,0 +1,83 @@
+<template>
+<section data-composition-id="slide-03" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Ibis As The Core</div>
+          <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
+        </div>
+        <div class="slide-no motion">03 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
+
+def trade_pnl(trades):
+  return (
+      trades
+      .filter(trades.trade_date >= "2024-01-01")
+      .mutate(notional=trades.qty * trades.price)
+      .group_by(["region", "product"])
+      .aggregate(
+          sales=trades.notional.sum(),
+          trades=trades.trade_id.nunique(),
+      )
+  )
+
+# Same expression, different execution target.
+result = trade_pnl(con.table("fact_trades"))</div>
+          <div class="pill-row motion">
+            <span class="pill">DuckDB</span>
+            <span class="pill">Snowflake</span>
+            <span class="pill">BigQuery</span>
+            <span class="pill">PostgreSQL</span>
+            <span class="pill">Spark</span>
+            <span class="pill">Polars</span>
+            <span class="pill">DataFusion</span>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>Library contract</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
+              <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
+              <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
+            </div>
+          </div>
+          <div class="panel motion">
+            <p class="small muted">
+              Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
+              expressions to SQL, while DataFrame backends execute expression plans natively.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-03"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-03"] .cell, [data-composition-id="slide-03"] .code-token, [data-composition-id="slide-03"] .bit, [data-composition-id="slide-03"] .node, [data-composition-id="slide-03"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-03"] = tl;
+  </script>
+</template>

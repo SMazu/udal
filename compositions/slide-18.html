@@ -1,0 +1,65 @@
+<template>
+<section data-composition-id="slide-18" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Query Execution Pipeline</div>
+          <h2 class="motion">The query touches only the useful columns, rowgroups, and vector lanes.</h2>
+        </div>
+        <div class="slide-no motion">18 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="codebox dark motion">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+          <div class="flow two-row motion" style="flex: 1; align-content: space-evenly;">
+            <div class="node accent"><div class="node-title">1. Columns</div><div class="node-text">Need Date, Region, Sales only.</div></div>
+            <div class="node accent"><div class="node-title">2. Segments</div><div class="node-text">Min/max skips 2 of 3 rowgroups.</div></div>
+            <div class="node accent"><div class="node-title">3. Batch scan</div><div class="node-text">Build bitmaps over vectors.</div></div>
+            <div class="node warn"><div class="node-title">4. Merge</div><div class="node-text">Partial aggregates become final result.</div></div>
+          </div>
+        </div>
+        <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <h3>Output table</h3>
+          <table style="margin-top: 16px;">
+            <thead><tr><th>Region</th><th>SUM(Sales)</th></tr></thead>
+            <tbody>
+              <tr><td>APAC</td><td>350</td></tr>
+              <tr><td>EMEA</td><td>380</td></tr>
+              <tr><td>AMER</td><td>150</td></tr>
+            </tbody>
+          </table>
+          <p class="body-copy muted" style="margin-top: 18px;">Late materialization means rows are assembled only after filters and aggregates shrink the work.</p>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-18"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-18"] .cell, [data-composition-id="slide-18"] .code-token, [data-composition-id="slide-18"] .bit, [data-composition-id="slide-18"] .node, [data-composition-id="slide-18"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-18"] = tl;
+  </script>
+</template>

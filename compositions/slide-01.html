@@ -1,0 +1,62 @@
+<template>
+<section data-composition-id="slide-01" data-width="1920" data-height="1080">
+    <div class="slide-header" data-layout-allow-overflow>
+      <div>
+        <div class="kicker motion">Unified Data Access Layer</div>
+        <h1 class="large-emphasis motion">One transformation library. Many execution engines.</h1>
+      </div>
+      <div class="slide-no motion">01 / 25</div>
+    </div>
+    <div class="hero-band">
+      <p class="subhead motion">
+        A Python abstraction built on Ibis lets teams define governed transformations once,
+        then execute them where the data lives: embedded analytics, warehouses, lakehouses,
+        or distributed engines.
+      </p>
+      <div class="panel motion">
+        <div class="metric-row">
+          <div class="metric">
+            <div class="value">1</div>
+            <div class="label">Canonical transformation API</div>
+          </div>
+          <div class="metric">
+            <div class="value">20+</div>
+            <div class="label">Backend classes through Ibis</div>
+          </div>
+          <div class="metric">
+            <div class="value">10x</div>
+            <div class="label">Typical columnstore compression target</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-note motion">Scope: Ibis expressions, reusable metrics, columnar storage, predicate and segment elimination.</div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-01"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-01"] .cell, [data-composition-id="slide-01"] .code-token, [data-composition-id="slide-01"] .bit, [data-composition-id="slide-01"] .node, [data-composition-id="slide-01"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-01"] = tl;
+  </script>
+</template>

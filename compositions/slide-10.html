@@ -1,0 +1,68 @@
+<template>
+<section data-composition-id="slide-10" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Dictionary Encoding Benefits</div>
+          <h2 class="motion">Storage savings also become CPU and cache advantages.</h2>
+        </div>
+        <div class="slide-no motion">10 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <div class="simple-list">
+              <div class="item"><span class="num">1</span><span>Cache efficiency: integer codes fit more rows into L1/L2 cache.</span></div>
+              <div class="item"><span class="num">2</span><span>Faster comparisons: WHERE Region = 'Singapore' becomes code lookup plus integer scan.</span></div>
+              <div class="item"><span class="num">3</span><span>Composable compression: codes can be RLE compressed and bit-packed.</span></div>
+            </div>
+          </div>
+          <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">codes: [0, 0, 0, 0, 1, 1, 2]
+RLE:   [(0, 4), (1, 2), (2, 1)]
+bits:  values 0-3 need only 2 bits each</div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel callout rust motion">
+            <h3>SQL Server specifics</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Column segments can use local dictionaries within a rowgroup segment.</span></div>
+              <div class="item"><span class="dot"></span><span>Segment metadata exposes encoding type, dictionary IDs, row counts, and min/max statistics.</span></div>
+              <div class="item"><span class="dot"></span><span>String columns and repeated values benefit most when segments are well ordered.</span></div>
+            </div>
+          </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              In the access layer, prefer constrained categorical columns and stable domain values
+              over free-form strings in high-volume analytical tables.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-10"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-10"] .cell, [data-composition-id="slide-10"] .code-token, [data-composition-id="slide-10"] .bit, [data-composition-id="slide-10"] .node, [data-composition-id="slide-10"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-10"] = tl;
+  </script>
+</template>

@@ -1,0 +1,61 @@
+<template>
+<section data-composition-id="slide-17" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">6. End-to-End Pipeline</div>
+          <h2 class="motion">Compression moves from raw rows to compact segments plus metadata.</h2>
+        </div>
+        <div class="slide-no motion">17 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="pipeline motion">
+          <div class="pipe-stage"><strong>Raw rows</strong><span>Incoming facts with ID, Date, Region, Sales, Product, and more.</span></div>
+          <div class="pipe-stage"><strong>Rowgroup</strong><span>Batch about 1,048,576 rows, the unit of compression and I/O.</span></div>
+          <div class="pipe-stage"><strong>Column segments</strong><span>Split each column independently: ID, Date, Region, Sales, Product.</span></div>
+          <div class="pipe-stage"><strong>Encode + compress</strong><span>Dictionary, RLE, delta, bit-pack selected per segment.</span></div>
+          <div class="pipe-stage"><strong>Metadata</strong><span>Store min, max, null count, row count, and compact segment bytes.</span></div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Engine choices per segment</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Region: dictionary encode, RLE runs, then bit-pack codes.</span></div>
+              <div class="item"><span class="dot"></span><span>Sales: reduce value range, then bit-pack narrow integers.</span></div>
+              <div class="item"><span class="dot"></span><span>Date: convert to integer representation, then exploit repeated runs.</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Compression result</h3>
+            <p class="body-copy" style="margin-top: 16px;">Original rowgroup around 50 MB can compress to about 4 MB when order and domains are favorable.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-17"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-17"] .cell, [data-composition-id="slide-17"] .code-token, [data-composition-id="slide-17"] .bit, [data-composition-id="slide-17"] .node, [data-composition-id="slide-17"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-17"] = tl;
+  </script>
+</template>

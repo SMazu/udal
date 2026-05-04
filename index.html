@@ -727,33 +727,19 @@
         height: 58%;
       }
 
-      body.clicker-mode .clip {
+      body.clicker-mode .slide {
         display: none !important;
         visibility: hidden !important;
         opacity: 1 !important;
         transform: none !important;
       }
 
-      body.clicker-mode .clip.active-slide {
+      body.clicker-mode .slide.active-slide {
         display: flex !important;
         visibility: visible !important;
       }
 
-      body.clicker-mode .clip.active-slide * {
-        visibility: visible !important;
-      }
-
-      body.clicker-mode .motion,
-      body.clicker-mode .cell,
-      body.clicker-mode .code-token,
-      body.clicker-mode .bit,
-      body.clicker-mode .node,
-      body.clicker-mode .tier,
-      body.clicker-mode .prune-col,
-      body.clicker-mode .rowgroup-card,
-      body.clicker-mode .vector-row,
-      body.clicker-mode .pipe-stage,
-      body.clicker-mode .month-box {
+      body.clicker-mode .slide.active-slide * {
         visibility: visible !important;
       }
 
@@ -1151,1289 +1137,1289 @@
       <div id="drift-a" class="bg-mark" data-layout-ignore></div>
       <div id="drift-b" class="bg-mark" data-layout-ignore></div>
 
-      <section id="slide-1" class="clip slide" data-start="0" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Unified Data Access Layer</div>
-            <h1 class="large-emphasis motion">One transformation library. Many execution engines.</h1>
+      <section class="slide" data-composition-id="slide-01" data-width="1920" data-height="1080">
+    <div class="slide-header" data-layout-allow-overflow>
+      <div>
+        <div class="kicker motion">Unified Data Access Layer</div>
+        <h1 class="large-emphasis motion">One transformation library. Many execution engines.</h1>
+      </div>
+      <div class="slide-no motion">01 / 25</div>
+    </div>
+    <div class="hero-band">
+      <p class="subhead motion">
+        A Python abstraction built on Ibis lets teams define governed transformations once,
+        then execute them where the data lives: embedded analytics, warehouses, lakehouses,
+        or distributed engines.
+      </p>
+      <div class="panel motion">
+        <div class="metric-row">
+          <div class="metric">
+            <div class="value">1</div>
+            <div class="label">Canonical transformation API</div>
           </div>
-          <div class="slide-no motion">01 / 14</div>
-        </div>
-        <div class="hero-band">
-          <p class="subhead motion">
-            A Python abstraction built on Ibis lets teams define governed transformations once,
-            then execute them where the data lives: embedded analytics, warehouses, lakehouses,
-            or distributed engines.
-          </p>
-          <div class="panel motion">
-            <div class="metric-row">
-              <div class="metric">
-                <div class="value">1</div>
-                <div class="label">Canonical transformation API</div>
-              </div>
-              <div class="metric">
-                <div class="value">20+</div>
-                <div class="label">Backend classes through Ibis</div>
-              </div>
-              <div class="metric">
-                <div class="value">10x</div>
-                <div class="label">Typical columnstore compression target</div>
-              </div>
-            </div>
+          <div class="metric">
+            <div class="value">20+</div>
+            <div class="label">Backend classes through Ibis</div>
+          </div>
+          <div class="metric">
+            <div class="value">10x</div>
+            <div class="label">Typical columnstore compression target</div>
           </div>
         </div>
-        <div class="footer-note motion">Scope: Ibis expressions, reusable metrics, columnar storage, predicate and segment elimination.</div>
-      </section>
+      </div>
+    </div>
+    <div class="footer-note motion">Scope: Ibis expressions, reusable metrics, columnar storage, predicate and segment elimination.</div>
+  </section>
 
-      <section id="slide-2" class="clip slide" data-start="8" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">The Integration Problem</div>
-            <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
-          </div>
-          <div class="slide-no motion">02 / 14</div>
+      <section class="slide" data-composition-id="slide-02" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">The Integration Problem</div>
+          <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
         </div>
-        <div class="content-grid">
-          <div class="stack center-stack">
-            <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
-              <h3>Without a shared layer</h3>
-              <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
-                <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
-                <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
-                <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
-              </div>
+        <div class="slide-no motion">02 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack center-stack">
+          <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
+            <h3>Without a shared layer</h3>
+            <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
+              <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
+              <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
+              <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
             </div>
           </div>
-          <div class="stack">
-            <div class="flow two-row motion">
-              <div class="node warn">
-                <div class="node-title">pandas notebook</div>
-                <div class="node-text">Fast exploration, limited pushdown</div>
-              </div>
-              <div class="node warn">
-                <div class="node-title">Warehouse SQL</div>
-                <div class="node-text">Powerful execution, dialect drift</div>
-              </div>
-              <div class="node warn">
-                <div class="node-title">Spark job</div>
-                <div class="node-text">Scale, but separate code path</div>
-              </div>
-              <div class="node warn">
-                <div class="node-title">BI semantic layer</div>
-                <div class="node-text">Metrics after the fact</div>
-              </div>
-            </div>
-            <div class="panel soft motion">
-              <p class="body-copy">
-                The access layer should turn transformation code into a portable query plan,
-                while keeping storage-aware choices visible to engineers.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-3" class="clip slide" data-start="16" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Ibis As The Core</div>
-            <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
-          </div>
-          <div class="slide-no motion">03 / 14</div>
-        </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
-
-def trade_pnl(trades):
-    return (
-        trades
-        .filter(trades.trade_date >= "2024-01-01")
-        .mutate(notional=trades.qty * trades.price)
-        .group_by(["region", "product"])
-        .aggregate(
-            sales=trades.notional.sum(),
-            trades=trades.trade_id.nunique(),
-        )
-    )
-
-# Same expression, different execution target.
-result = trade_pnl(con.table("fact_trades"))</div>
-            <div class="pill-row motion">
-              <span class="pill">DuckDB</span>
-              <span class="pill">Snowflake</span>
-              <span class="pill">BigQuery</span>
-              <span class="pill">PostgreSQL</span>
-              <span class="pill">Spark</span>
-              <span class="pill">Polars</span>
-              <span class="pill">DataFusion</span>
-            </div>
-          </div>
-          <div class="stack">
-            <div class="panel teal motion">
-              <h3>Library contract</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
-                <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
-                <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
-              </div>
-            </div>
-            <div class="panel motion">
-              <p class="small muted">
-                Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
-                expressions to SQL, while DataFrame backends execute expression plans natively.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-4" class="clip slide" data-start="24" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Reference Architecture</div>
-            <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
-          </div>
-          <div class="slide-no motion">04 / 14</div>
         </div>
         <div class="stack">
-          <div class="flow motion">
-            <div class="node">
-              <div class="node-title">Sources</div>
-              <div class="node-text">OLTP, events, reference data, market data</div>
+          <div class="flow two-row motion">
+            <div class="node warn">
+              <div class="node-title">pandas notebook</div>
+              <div class="node-text">Fast exploration, limited pushdown</div>
             </div>
-            <div class="node accent">
-              <div class="node-title">Columnar zone</div>
-              <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
+            <div class="node warn">
+              <div class="node-title">Warehouse SQL</div>
+              <div class="node-text">Powerful execution, dialect drift</div>
             </div>
-            <div class="node accent">
-              <div class="node-title">Ibis library</div>
-              <div class="node-text">Typed expressions, metrics, reusable transformations</div>
+            <div class="node warn">
+              <div class="node-title">Spark job</div>
+              <div class="node-text">Scale, but separate code path</div>
             </div>
-            <div class="node">
-              <div class="node-title">Compiler</div>
-              <div class="node-text">SQL or dataframe plan for the chosen backend</div>
-            </div>
-            <div class="node">
-              <div class="node-title">Consumers</div>
-              <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
+            <div class="node warn">
+              <div class="node-title">BI semantic layer</div>
+              <div class="node-text">Metrics after the fact</div>
             </div>
           </div>
-          <div class="content-grid" style="flex: 1;">
-            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Governance surface</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
-                <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
-                <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
-              </div>
-            </div>
-            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Optimization surface</h3>
-              <p class="body-copy" style="margin-top: 16px;">
-                The same library can make projection, predicates, grouping keys, date windows,
-                and sort keys explicit enough for columnar engines to skip data and stay compressed.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-5" class="clip slide" data-start="32" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">1. Row Store vs Column Store</div>
-            <h2 class="motion">Columnstores compress better because similar values are stored together.</h2>
-          </div>
-          <div class="slide-no motion">05 / 14</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <table class="source-table">
-                <thead>
-                  <tr><th>ID</th><th>Date</th><th>Region</th><th>Sales</th><th>Product</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>1</td><td>2024-01-15</td><td>APAC</td><td>100</td><td>Bond</td></tr>
-                  <tr><td>2</td><td>2024-01-15</td><td>APAC</td><td>120</td><td>Bond</td></tr>
-                  <tr><td>3</td><td>2024-02-10</td><td>APAC</td><td>130</td><td>Equity</td></tr>
-                  <tr><td>4</td><td>2024-02-10</td><td>EMEA</td><td>200</td><td>Equity</td></tr>
-                  <tr><td>5</td><td>2024-03-05</td><td>EMEA</td><td>180</td><td>Bond</td></tr>
-                  <tr><td>6</td><td>2024-03-05</td><td>AMER</td><td>150</td><td>Bond</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="panel callout motion">
-              <p class="body-copy">
-                Row store pages interleave int, date, varchar, and numeric values. Reading one column
-                still drags every other column through I/O and cache.
-              </p>
-            </div>
-          </div>
-          <div class="stack">
-            <div class="store-pages motion">
-              <div class="page-block">
-                <div class="page-label">Page 1: entire rows packed together</div>
-                <div class="row-strip">
-                  <span class="cell">1</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="cell sales">100</span><span class="cell product">Bond</span><span class="cell">2</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="ellipsis">...</span>
-                </div>
-              </div>
-              <div class="page-block">
-                <div class="page-label">Page 2: unrelated types continue</div>
-                <div class="row-strip">
-                  <span class="ellipsis">...</span><span class="cell product">Bond</span><span class="cell">3</span><span class="cell date">2024-02-10</span><span class="cell region">APAC</span><span class="cell sales">130</span><span class="cell product">Equity</span><span class="cell">4</span><span class="ellipsis">...</span>
-                </div>
-              </div>
-            </div>
-            <div class="panel motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
-              <div class="simple-list">
-                <div class="item"><span class="dot"></span><span>Repeated APAC values are scattered across pages with other columns.</span></div>
-                <div class="item"><span class="dot"></span><span>Compression cannot exploit repetition across unrelated types.</span></div>
-                <div class="item"><span class="dot"></span><span>Projection pushdown matters because columnar layouts can avoid unused columns.</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-6" class="clip slide" data-start="40" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">The Column Store Layout</div>
-            <h2 class="motion">Each column is stored independently in its own segment.</h2>
-          </div>
-          <div class="slide-no motion">06 / 14</div>
-        </div>
-        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly;">
-          <div class="segment motion">
-            <div class="segment-name">Segment: ID</div>
-            <div class="segment-strip"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span></div>
-            <div class="segment-note">Monotonic integers bit-pack well.</div>
-          </div>
-          <div class="segment motion">
-            <div class="segment-name">Segment: Date</div>
-            <div class="segment-strip"><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-05</span></div>
-            <div class="segment-note">Repeats cluster, so RLE compresses pairs.</div>
-          </div>
-          <div class="segment motion">
-            <div class="segment-name">Segment: Region</div>
-            <div class="segment-strip"><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">EMEA</span><span class="cell region">EMEA</span><span class="cell region">AMER</span></div>
-            <div class="segment-note">3 values can be dictionary encoded to 2 bits.</div>
-          </div>
-          <div class="segment motion">
-            <div class="segment-name">Segment: Sales</div>
-            <div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">180</span><span class="cell sales">150</span></div>
-            <div class="segment-note">Small range, few bits per value.</div>
-          </div>
-          <div class="panel callout gold motion">
+          <div class="panel soft motion">
             <p class="body-copy">
-              Same type per segment, clustered values, low cardinality dictionaries, bit-packing,
-              and min/max metadata combine into typical 5x to 10x compression over row-oriented storage.
+              The access layer should turn transformation code into a portable query plan,
+              while keeping storage-aware choices visible to engineers.
             </p>
           </div>
         </div>
-      </section>
+      </div>
+  </section>
 
-      <section id="slide-7" class="clip slide" data-start="48" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">2. Run-Length Encoding</div>
-            <h2 class="motion">RLE replaces consecutive repeated values with value-count pairs.</h2>
-          </div>
-          <div class="slide-no motion">07 / 14</div>
+      <section class="slide" data-composition-id="slide-03" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Ibis As The Core</div>
+          <h2 class="motion">Write transformations as lazy Python expressions, then compile them to the target backend.</h2>
         </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>Original region segment in one rowgroup</h3>
-              <div class="rle-band" style="margin-top: 18px;">
-                <div class="rle-section">
-                  <div class="value">APAC</div>
-                  <div class="count">350,000 identical values</div>
-                </div>
-                <div class="rle-section">
-                  <div class="value">EMEA</div>
-                  <div class="count">350,000 identical values</div>
-                </div>
-                <div class="rle-section">
-                  <div class="value">AMER</div>
-                  <div class="count">348,576 identical values</div>
-                </div>
+        <div class="slide-no motion">03 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="codebox dark motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">import ibis
+
+def trade_pnl(trades):
+  return (
+      trades
+      .filter(trades.trade_date >= "2024-01-01")
+      .mutate(notional=trades.qty * trades.price)
+      .group_by(["region", "product"])
+      .aggregate(
+          sales=trades.notional.sum(),
+          trades=trades.trade_id.nunique(),
+      )
+  )
+
+# Same expression, different execution target.
+result = trade_pnl(con.table("fact_trades"))</div>
+          <div class="pill-row motion">
+            <span class="pill">DuckDB</span>
+            <span class="pill">Snowflake</span>
+            <span class="pill">BigQuery</span>
+            <span class="pill">PostgreSQL</span>
+            <span class="pill">Spark</span>
+            <span class="pill">Polars</span>
+            <span class="pill">DataFusion</span>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>Library contract</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Inputs are typed table expressions, not in-memory rows.</span></div>
+              <div class="item"><span class="num">2</span><span>Functions return expressions, so transformations remain composable and lazy.</span></div>
+              <div class="item"><span class="num">3</span><span>Backend adapters own connection, SQL generation, materialization, and testing.</span></div>
+            </div>
+          </div>
+          <div class="panel motion">
+            <p class="small muted">
+              Ibis decouples a Python dataframe-style API from execution. Most SQL backends compile
+              expressions to SQL, while DataFrame backends execute expression plans natively.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-04" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Reference Architecture</div>
+          <h2 class="motion">The access layer is a query-plan factory with storage-aware defaults.</h2>
+        </div>
+        <div class="slide-no motion">04 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="flow motion">
+          <div class="node">
+            <div class="node-title">Sources</div>
+            <div class="node-text">OLTP, events, reference data, market data</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Columnar zone</div>
+            <div class="node-text">Parquet, Arrow, Delta, warehouse columnstore</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Ibis library</div>
+            <div class="node-text">Typed expressions, metrics, reusable transformations</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Compiler</div>
+            <div class="node-text">SQL or dataframe plan for the chosen backend</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Consumers</div>
+            <div class="node-text">BI, batch jobs, notebooks, APIs, feature pipelines</div>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Governance surface</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Schema contracts and semantic names live beside the transformation code.</span></div>
+              <div class="item"><span class="dot"></span><span>Golden tests compare outputs across representative backends.</span></div>
+              <div class="item"><span class="dot"></span><span>Generated SQL is inspectable before deployment.</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Optimization surface</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              The same library can make projection, predicates, grouping keys, date windows,
+              and sort keys explicit enough for columnar engines to skip data and stay compressed.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-05" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">1. Row Store vs Column Store</div>
+          <h2 class="motion">Columnstores compress better because similar values are stored together.</h2>
+        </div>
+        <div class="slide-no motion">05 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <table class="source-table">
+              <thead>
+                <tr><th>ID</th><th>Date</th><th>Region</th><th>Sales</th><th>Product</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>2024-01-15</td><td>APAC</td><td>100</td><td>Bond</td></tr>
+                <tr><td>2</td><td>2024-01-15</td><td>APAC</td><td>120</td><td>Bond</td></tr>
+                <tr><td>3</td><td>2024-02-10</td><td>APAC</td><td>130</td><td>Equity</td></tr>
+                <tr><td>4</td><td>2024-02-10</td><td>EMEA</td><td>200</td><td>Equity</td></tr>
+                <tr><td>5</td><td>2024-03-05</td><td>EMEA</td><td>180</td><td>Bond</td></tr>
+                <tr><td>6</td><td>2024-03-05</td><td>AMER</td><td>150</td><td>Bond</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout motion">
+            <p class="body-copy">
+              Row store pages interleave int, date, varchar, and numeric values. Reading one column
+              still drags every other column through I/O and cache.
+            </p>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="store-pages motion">
+            <div class="page-block">
+              <div class="page-label">Page 1: entire rows packed together</div>
+              <div class="row-strip">
+                <span class="cell">1</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="cell sales">100</span><span class="cell product">Bond</span><span class="cell">2</span><span class="cell date">2024-01-15</span><span class="cell region">APAC</span><span class="ellipsis">...</span>
               </div>
             </div>
-            <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">After RLE:
+            <div class="page-block">
+              <div class="page-label">Page 2: unrelated types continue</div>
+              <div class="row-strip">
+                <span class="ellipsis">...</span><span class="cell product">Bond</span><span class="cell">3</span><span class="cell date">2024-02-10</span><span class="cell region">APAC</span><span class="cell sales">130</span><span class="cell product">Equity</span><span class="cell">4</span><span class="ellipsis">...</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel motion" style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
+            <div class="simple-list">
+              <div class="item"><span class="dot"></span><span>Repeated APAC values are scattered across pages with other columns.</span></div>
+              <div class="item"><span class="dot"></span><span>Compression cannot exploit repetition across unrelated types.</span></div>
+              <div class="item"><span class="dot"></span><span>Projection pushdown matters because columnar layouts can avoid unused columns.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-06" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">The Column Store Layout</div>
+          <h2 class="motion">Each column is stored independently in its own segment.</h2>
+        </div>
+        <div class="slide-no motion">06 / 25</div>
+      </div>
+      <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-evenly;">
+        <div class="segment motion">
+          <div class="segment-name">Segment: ID</div>
+          <div class="segment-strip"><span class="cell">1</span><span class="cell">2</span><span class="cell">3</span><span class="cell">4</span><span class="cell">5</span><span class="cell">6</span></div>
+          <div class="segment-note">Monotonic integers bit-pack well.</div>
+        </div>
+        <div class="segment motion">
+          <div class="segment-name">Segment: Date</div>
+          <div class="segment-strip"><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-05</span></div>
+          <div class="segment-note">Repeats cluster, so RLE compresses pairs.</div>
+        </div>
+        <div class="segment motion">
+          <div class="segment-name">Segment: Region</div>
+          <div class="segment-strip"><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">APAC</span><span class="cell region">EMEA</span><span class="cell region">EMEA</span><span class="cell region">AMER</span></div>
+          <div class="segment-note">3 values can be dictionary encoded to 2 bits.</div>
+        </div>
+        <div class="segment motion">
+          <div class="segment-name">Segment: Sales</div>
+          <div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">180</span><span class="cell sales">150</span></div>
+          <div class="segment-note">Small range, few bits per value.</div>
+        </div>
+        <div class="panel callout gold motion">
+          <p class="body-copy">
+            Same type per segment, clustered values, low cardinality dictionaries, bit-packing,
+            and min/max metadata combine into typical 5x to 10x compression over row-oriented storage.
+          </p>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-07" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">2. Run-Length Encoding</div>
+          <h2 class="motion">RLE replaces consecutive repeated values with value-count pairs.</h2>
+        </div>
+        <div class="slide-no motion">07 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Original region segment in one rowgroup</h3>
+            <div class="rle-band" style="margin-top: 18px;">
+              <div class="rle-section">
+                <div class="value">APAC</div>
+                <div class="count">350,000 identical values</div>
+              </div>
+              <div class="rle-section">
+                <div class="value">EMEA</div>
+                <div class="count">350,000 identical values</div>
+              </div>
+              <div class="rle-section">
+                <div class="value">AMER</div>
+                <div class="count">348,576 identical values</div>
+              </div>
+            </div>
+          </div>
+          <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">After RLE:
 [(APAC, 350000) | (EMEA, 350000) | (AMER, 348576)]</div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>How it works</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              Scan the segment top to bottom. Whenever the same value appears in consecutive
+              positions, store one value plus a count instead of repeating the value.
+            </p>
           </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion">
-              <h3>How it works</h3>
-              <p class="body-copy" style="margin-top: 16px;">
-                Scan the segment top to bottom. Whenever the same value appears in consecutive
-                positions, store one value plus a count instead of repeating the value.
-              </p>
-            </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Storage impact</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Before: 1,048,576 x 4 bytes = about 4 MB.</span></div>
-                <div class="item"><span class="dot"></span><span>After: 3 x value-count pairs = about 24 bytes.</span></div>
-                <div class="item"><span class="dot"></span><span>Compression ratio: about 170,000:1 for this column.</span></div>
-              </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Storage impact</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Before: 1,048,576 x 4 bytes = about 4 MB.</span></div>
+              <div class="item"><span class="dot"></span><span>After: 3 x value-count pairs = about 24 bytes.</span></div>
+              <div class="item"><span class="dot"></span><span>Compression ratio: about 170,000:1 for this column.</span></div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+  </section>
 
-      <section id="slide-8" class="clip slide" data-start="56" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">RLE Effectiveness And Sorting</div>
-            <h2 class="motion">RLE works best when physical order creates long runs.</h2>
-          </div>
-          <div class="slide-no motion">08 / 14</div>
+      <section class="slide" data-composition-id="slide-08" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">RLE Effectiveness And Sorting</div>
+          <h2 class="motion">RLE works best when physical order creates long runs.</h2>
         </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>Date column: partially sorted</h3>
-              <div class="segment-strip" style="margin-top: 18px;">
-                <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span>
-              </div>
-              <div class="codebox" style="margin-top: 18px;">After RLE:
+        <div class="slide-no motion">08 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Date column: partially sorted</h3>
+            <div class="segment-strip" style="margin-top: 18px;">
+              <span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-01-15</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-02-10</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span><span class="cell date">2024-03-01</span>
+            </div>
+            <div class="codebox" style="margin-top: 18px;">After RLE:
 [(2024-01-15, 3) | (2024-02-10, 2)]</div>
-            </div>
-            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">
-                Ordered columnstore indexes reduce segment overlap by sorting order-key values before compression,
-                improving both RLE opportunities and segment elimination.
-              </p>
-            </div>
           </div>
-          <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-            <div class="tier motion">
-              <div class="tier-label">BEST</div>
-              <p class="body-copy">Sorted columns with long consecutive runs, such as APAC... EMEA... AMER...</p>
-            </div>
-            <div class="tier good motion">
-              <div class="tier-label">GOOD</div>
-              <p class="body-copy">Naturally clustered batches, such as one trade date appearing 50,000 times.</p>
-            </div>
-            
-            <div class="tier motion" style="margin-top: 24px; background: var(--soft); border: 1px solid var(--line);">
-              <div class="tier-label" style="background: var(--teal);">PRO TIP</div>
-              <p class="body-copy">Use <strong>Clustered Columnstore Indexes</strong> to enforce physical order on your most important filter columns.</p>
-            </div>
-            <div class="tier poor motion">
-              <div class="tier-label">POOR</div>
-              <p class="body-copy">Random high-cardinality columns, such as unique trade IDs or event UUIDs.</p>
-            </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              Ordered columnstore indexes reduce segment overlap by sorting order-key values before compression,
+              improving both RLE opportunities and segment elimination.
+            </p>
           </div>
         </div>
-      </section>
+        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="tier motion">
+            <div class="tier-label">BEST</div>
+            <p class="body-copy">Sorted columns with long consecutive runs, such as APAC... EMEA... AMER...</p>
+          </div>
+          <div class="tier good motion">
+            <div class="tier-label">GOOD</div>
+            <p class="body-copy">Naturally clustered batches, such as one trade date appearing 50,000 times.</p>
+          </div>
+          
+          <div class="tier motion" style="margin-top: 24px; background: var(--soft); border: 1px solid var(--line);">
+            <div class="tier-label" style="background: var(--teal);">PRO TIP</div>
+            <p class="body-copy">Use <strong>Clustered Columnstore Indexes</strong> to enforce physical order on your most important filter columns.</p>
+          </div>
+          <div class="tier poor motion">
+            <div class="tier-label">POOR</div>
+            <p class="body-copy">Random high-cardinality columns, such as unique trade IDs or event UUIDs.</p>
+          </div>
+        </div>
+      </div>
+  </section>
 
-      <section id="slide-9" class="clip slide" data-start="64" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">3. Dictionary Encoding</div>
-            <h2 class="motion">Repeated strings become compact integer codes plus one lookup table.</h2>
-          </div>
-          <div class="slide-no motion">09 / 14</div>
+      <section class="slide" data-composition-id="slide-09" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">3. Dictionary Encoding</div>
+          <h2 class="motion">Repeated strings become compact integer codes plus one lookup table.</h2>
         </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>Step 1: build dictionary once per segment</h3>
-              <table style="margin-top: 16px;">
-                <thead>
-                  <tr><th>Code</th><th>Value</th><th>Original size</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>0</td><td>Singapore</td><td>9 bytes x 400,000 occurrences</td></tr>
-                  <tr><td>1</td><td>London</td><td>6 bytes x 300,000 occurrences</td></tr>
-                  <tr><td>2</td><td>Tokyo</td><td>5 bytes x 200,000 occurrences</td></tr>
-                  <tr><td>3</td><td>New York</td><td>8 bytes x 148,576 occurrences</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Step 2: replace strings with codes</h3>
-              <div class="encoded-row" style="margin-top: 18px;">
-                <span class="code-token">0</span><span class="code-token">1</span><span class="code-token">0</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="ellipsis">...</span>
-              </div>
-            </div>
+        <div class="slide-no motion">09 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Step 1: build dictionary once per segment</h3>
+            <table style="margin-top: 16px;">
+              <thead>
+                <tr><th>Code</th><th>Value</th><th>Original size</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>Singapore</td><td>9 bytes x 400,000 occurrences</td></tr>
+                <tr><td>1</td><td>London</td><td>6 bytes x 300,000 occurrences</td></tr>
+                <tr><td>2</td><td>Tokyo</td><td>5 bytes x 200,000 occurrences</td></tr>
+                <tr><td>3</td><td>New York</td><td>8 bytes x 148,576 occurrences</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="stack">
-            <div class="panel teal motion">
-              <h3>Why it compresses</h3>
-              <p class="body-copy" style="margin-top: 16px;">
-                Four distinct values need only 2 bits per row. The strings stay in a small dictionary;
-                the segment stores a dense stream of integers.
-              </p>
-            </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Storage impact</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Before: 1,048,576 rows x avg 7 bytes = about 7.3 MB.</span></div>
-                <div class="item"><span class="dot"></span><span>After: about 40 bytes dictionary + 256 KB codes.</span></div>
-                <div class="item"><span class="dot"></span><span>Compression ratio: about 29:1 before other encodings.</span></div>
-              </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Step 2: replace strings with codes</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="code-token">0</span><span class="code-token">1</span><span class="code-token">0</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="ellipsis">...</span>
             </div>
           </div>
         </div>
-      </section>
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>Why it compresses</h3>
+            <p class="body-copy" style="margin-top: 16px;">
+              Four distinct values need only 2 bits per row. The strings stay in a small dictionary;
+              the segment stores a dense stream of integers.
+            </p>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Storage impact</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Before: 1,048,576 rows x avg 7 bytes = about 7.3 MB.</span></div>
+              <div class="item"><span class="dot"></span><span>After: about 40 bytes dictionary + 256 KB codes.</span></div>
+              <div class="item"><span class="dot"></span><span>Compression ratio: about 29:1 before other encodings.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
 
-      <section id="slide-10" class="clip slide" data-start="72" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Dictionary Encoding Benefits</div>
-            <h2 class="motion">Storage savings also become CPU and cache advantages.</h2>
-          </div>
-          <div class="slide-no motion">10 / 14</div>
+      <section class="slide" data-composition-id="slide-10" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Dictionary Encoding Benefits</div>
+          <h2 class="motion">Storage savings also become CPU and cache advantages.</h2>
         </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <div class="simple-list">
-                <div class="item"><span class="num">1</span><span>Cache efficiency: integer codes fit more rows into L1/L2 cache.</span></div>
-                <div class="item"><span class="num">2</span><span>Faster comparisons: WHERE Region = 'Singapore' becomes code lookup plus integer scan.</span></div>
-                <div class="item"><span class="num">3</span><span>Composable compression: codes can be RLE compressed and bit-packed.</span></div>
-              </div>
+        <div class="slide-no motion">10 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <div class="simple-list">
+              <div class="item"><span class="num">1</span><span>Cache efficiency: integer codes fit more rows into L1/L2 cache.</span></div>
+              <div class="item"><span class="num">2</span><span>Faster comparisons: WHERE Region = 'Singapore' becomes code lookup plus integer scan.</span></div>
+              <div class="item"><span class="num">3</span><span>Composable compression: codes can be RLE compressed and bit-packed.</span></div>
             </div>
-            <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">codes: [0, 0, 0, 0, 1, 1, 2]
+          </div>
+          <div class="codebox motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">codes: [0, 0, 0, 0, 1, 1, 2]
 RLE:   [(0, 4), (1, 2), (2, 1)]
 bits:  values 0-3 need only 2 bits each</div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel callout rust motion">
+            <h3>SQL Server specifics</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Column segments can use local dictionaries within a rowgroup segment.</span></div>
+              <div class="item"><span class="dot"></span><span>Segment metadata exposes encoding type, dictionary IDs, row counts, and min/max statistics.</span></div>
+              <div class="item"><span class="dot"></span><span>String columns and repeated values benefit most when segments are well ordered.</span></div>
+            </div>
           </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel callout rust motion">
-              <h3>SQL Server specifics</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Column segments can use local dictionaries within a rowgroup segment.</span></div>
-                <div class="item"><span class="dot"></span><span>Segment metadata exposes encoding type, dictionary IDs, row counts, and min/max statistics.</span></div>
-                <div class="item"><span class="dot"></span><span>String columns and repeated values benefit most when segments are well ordered.</span></div>
-              </div>
-            </div>
-            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">
-                In the access layer, prefer constrained categorical columns and stable domain values
-                over free-form strings in high-volume analytical tables.
-              </p>
-            </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              In the access layer, prefer constrained categorical columns and stable domain values
+              over free-form strings in high-volume analytical tables.
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+  </section>
 
-      <section id="slide-11" class="clip slide" data-start="80" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">4. Bit-Packing</div>
-            <h2 class="motion">Store integers using only the minimum number of bits required.</h2>
-          </div>
-          <div class="slide-no motion">11 / 14</div>
+      <section class="slide" data-composition-id="slide-11" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">4. Bit-Packing</div>
+          <h2 class="motion">Store integers using only the minimum number of bits required.</h2>
         </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>Dictionary codes from Region</h3>
-              <div class="encoded-row" style="margin-top: 18px;">
-                <span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">1</span><span class="code-token">3</span><span class="code-token">0</span><span class="code-token">2</span>
-              </div>
-              <p class="body-copy muted" style="margin-top: 18px;">Max value = 3, so ceil(log2(4)) = 2 bits per value.</p>
+        <div class="slide-no motion">11 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>Dictionary codes from Region</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="code-token">3</span><span class="code-token">1</span><span class="code-token">2</span><span class="code-token">0</span><span class="code-token">1</span><span class="code-token">3</span><span class="code-token">0</span><span class="code-token">2</span>
             </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Bit-packed stream</h3>
-              <div class="encoded-row" style="margin-top: 18px;">
-                <span class="bit teal">11</span><span class="bit">01</span><span class="bit rust">10</span><span class="bit">00</span><span class="bit">01</span><span class="bit teal">11</span><span class="bit">00</span><span class="bit rust">10</span>
-              </div>
+            <p class="body-copy muted" style="margin-top: 18px;">Max value = 3, so ceil(log2(4)) = 2 bits per value.</p>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Bit-packed stream</h3>
+            <div class="encoded-row" style="margin-top: 18px;">
+              <span class="bit teal">11</span><span class="bit">01</span><span class="bit rust">10</span><span class="bit">00</span><span class="bit">01</span><span class="bit teal">11</span><span class="bit">00</span><span class="bit rust">10</span>
             </div>
           </div>
-          <div class="stack" style="flex: 1;">
-            <div class="codebox dark motion">Standard 32-bit storage:
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="codebox dark motion">Standard 32-bit storage:
 8 values x 32 bits = 256 bits = 32 bytes
 
 Bit-packed storage:
 8 values x 2 bits = 16 bits = 2 bytes
 
 Savings in this example: 16x</div>
-            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">
-                The access layer helps by preserving low-cardinality domains, projecting only needed
-                columns, and avoiding transformations that explode values before filters run.
-              </p>
-            </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              The access layer helps by preserving low-cardinality domains, projecting only needed
+              columns, and avoiding transformations that explode values before filters run.
+            </p>
           </div>
         </div>
-      </section>
+      </div>
+  </section>
 
-      <section id="slide-12" class="clip slide" data-start="88" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Bit-Packing At Segment Scale</div>
-            <h2 class="motion">The fewer distinct values, the more rows per byte, cache line, and memory page.</h2>
-          </div>
-          <div class="slide-no motion">12 / 14</div>
+      <section class="slide" data-composition-id="slide-12" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Bit-Packing At Segment Scale</div>
+          <h2 class="motion">The fewer distinct values, the more rows per byte, cache line, and memory page.</h2>
         </div>
-        <div class="content-grid wide-left">
-          <div class="panel motion">
-            <table class="dense-table">
-              <thead>
-                <tr><th>Distinct values</th><th>Bits/value</th><th>32-bit storage</th><th>Bit-packed</th><th>Savings</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>2</td><td>1 bit</td><td>4 MB</td><td>128 KB</td><td>32x</td></tr>
-                <tr><td>4</td><td>2 bits</td><td>4 MB</td><td>256 KB</td><td>16x</td></tr>
-                <tr><td>8</td><td>3 bits</td><td>4 MB</td><td>384 KB</td><td>10.7x</td></tr>
-                <tr><td>16</td><td>4 bits</td><td>4 MB</td><td>512 KB</td><td>8x</td></tr>
-                <tr><td>64</td><td>6 bits</td><td>4 MB</td><td>768 KB</td><td>5.3x</td></tr>
-                <tr><td>256</td><td>8 bits</td><td>4 MB</td><td>1 MB</td><td>4x</td></tr>
-                <tr><td>65,536</td><td>16 bits</td><td>4 MB</td><td>2 MB</td><td>2x</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel motion">
-              <h3>3-bit values can cross byte boundaries</h3>
-              <div class="byte-boundary" style="margin-top: 18px;">
-                <div class="byte">
-                  <div class="byte-title">Byte 1</div>
-                  <div class="bit-line"><span class="bit-chip">101</span><span class="bit-chip">011</span><span class="bit-chip">10</span></div>
-                </div>
-                <div class="byte">
-                  <div class="byte-title">Byte 2</div>
-                  <div class="bit-line"><span class="bit-chip">0</span><span class="bit-chip">110</span><span class="bit-chip">001</span></div>
-                </div>
-                <div class="byte">
-                  <div class="byte-title">Byte 3</div>
-                  <div class="bit-line"><span class="bit-chip">1</span><span class="bit-chip">111</span><span class="bit-chip">000</span></div>
-                </div>
-              </div>
-            </div>
-            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">The storage engine packs for density. The query engine unpacks or compares vectors in batches.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-13" class="clip slide" data-start="96" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">5. Query Performance Benefits</div>
-            <h2 class="motion">Compression reduces bytes read, values touched, and CPU work per predicate.</h2>
-          </div>
-          <div class="slide-no motion">13 / 14</div>
-        </div>
-        <div class="stack">
-          <div class="chain motion">
-            <div class="node warn">
-              <div class="node-title">Raw strings</div>
-              <div class="node-text">"Singapore", 9 bytes per value</div>
-            </div>
-            <div class="node accent">
-              <div class="node-title">Dictionary codes</div>
-              <div class="node-text">0, 1, 0, 2... 2 bits each</div>
-            </div>
-            <div class="node accent">
-              <div class="node-title">RLE</div>
-              <div class="node-text">(0, 4), (1, 2), ...</div>
-            </div>
-            <div class="node">
-              <div class="node-title">Bit-pack</div>
-              <div class="node-text">Contiguous bit stream for scan and compare</div>
-            </div>
-          </div>
-          <div class="content-grid" style="flex: 1;">
-            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Four reinforcing mechanisms</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="num">1</span><span>Column elimination: read only referenced columns.</span></div>
-                <div class="item"><span class="num">2</span><span>Segment elimination: skip rowgroups by min/max metadata.</span></div>
-                <div class="item"><span class="num">3</span><span>Compressed I/O: move fewer bytes from disk and memory.</span></div>
-                <div class="item"><span class="num">4</span><span>Batch execution: compare and aggregate many values at once.</span></div>
-              </div>
-            </div>
-            <div class="codebox dark motion" style="display: flex; flex-direction: column; justify-content: center;">SELECT Region, SUM(Sales)
-FROM FactTrades
-WHERE Date >= '2024-01-01'
-  AND Date <  '2024-04-01'
-GROUP BY Region;</div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-14" class="clip slide" data-start="104" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Query Execution</div>
-            <h2 class="motion">Column and segment elimination skip work before decompression.</h2>
-          </div>
-          <div class="slide-no motion">14 / 20</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>A. Column elimination</h3>
-              <p class="small muted" style="margin-top: 8px;">The table has 12 columns; the query needs Date, Region, and Sales.</p>
-              <div class="prune-strip" style="margin-top: 18px;">
-                <div class="prune-col skip"><strong>ID</strong><span>SKIP</span></div>
-                <div class="prune-col read"><strong>Date</strong><span>READ</span></div>
-                <div class="prune-col read"><strong>Region</strong><span>READ</span></div>
-                <div class="prune-col read"><strong>Sales</strong><span>READ</span></div>
-                <div class="prune-col skip"><strong>Product</strong><span>SKIP</span></div>
-                <div class="prune-col skip"><strong>Trader</strong><span>SKIP</span></div>
-                <div class="prune-col skip"><strong>Desk</strong><span>SKIP</span></div>
-                <div class="prune-col skip"><strong>Notes</strong><span>SKIP</span></div>
-              </div>
-            </div>
-            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Row store reads all columns from every page. Column store reads only the referenced segments: 3 of 12 columns, about 25% of column I/O.</p>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel motion">
-              <h3>B. Segment elimination</h3>
-              <p class="small muted" style="margin-top: 8px;">Predicate: Date >= 2024-01-01 and Date < 2024-04-01</p>
-              <div class="rg-grid" style="margin-top: 18px;">
-                <div class="rowgroup-card skip"><h3>RG 0</h3><p class="small muted">max < 2024-01-01</p><span class="status skip">SKIP</span></div>
-                <div class="rowgroup-card read"><h3>RG 1</h3><p class="small muted">overlaps range</p><span class="status">READ</span></div>
-                <div class="rowgroup-card skip"><h3>RG 2</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
-                <div class="rowgroup-card skip"><h3>RG 3</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
-              </div>
-            </div>
-            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Ordered CCI keeps min/max ranges tight, so elimination is precise instead of producing overlapping false positives.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-15" class="clip slide" data-start="112" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Execution Mechanics</div>
-            <h2 class="motion">Compressed I/O and batch mode turn scans into vector work.</h2>
-          </div>
-          <div class="slide-no motion">15 / 20</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>C. Compressed I/O</h3>
-              <table style="margin-top: 16px;">
-                <thead><tr><th>Layer</th><th>Row store</th><th>Column store</th></tr></thead>
-                <tbody>
-                  <tr><td>On disk</td><td>100 GB</td><td>10-15 GB</td></tr>
-                  <tr><td>Disk read</td><td>100 GB</td><td>10-15 GB</td></tr>
-                  <tr><td>Memory</td><td>wide pages</td><td>narrow segments</td></tr>
-                  <tr><td>Cache</td><td>low locality</td><td>high locality</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Engines can operate directly on dictionary codes and packed values, delaying materialization until results are needed.</p>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel motion">
-              <h3>D. Batch mode vectors</h3>
-              <div class="vector-stack" style="margin-top: 18px;">
-                <div class="vector-row"><div class="vector-label">Date[]</div><div class="segment-strip"><span class="cell date">Jan</span><span class="cell date">Jan</span><span class="cell date">Feb</span><span class="cell date">Feb</span><span class="cell date">Apr</span></div></div>
-                <div class="vector-row"><div class="vector-label">Region[]</div><div class="segment-strip"><span class="cell region">0</span><span class="cell region">0</span><span class="cell region">1</span><span class="cell region">1</span><span class="cell region">3</span></div></div>
-                <div class="vector-row"><div class="vector-label">Sales[]</div><div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">150</span></div></div>
-                <div class="vector-row"><div class="vector-label">Bitmap</div><div class="bitmap"><span>1</span><span>1</span><span>1</span><span class="zero">0</span><span class="zero">0</span></div></div>
-              </div>
-            </div>
-            <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Instead of row-by-row branching, a batch scan evaluates about 900 rows as column vectors and aggregates surviving values.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-16" class="clip slide" data-start="120" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Aggregate Pushdown</div>
-            <h2 class="motion">Simple aggregates can be partially computed at segment scan level.</h2>
-          </div>
-          <div class="slide-no motion">16 / 20</div>
-        </div>
-        <div class="stack">
-          <div class="flow motion">
-            <div class="node accent"><div class="node-title">Segment 0</div><div class="node-text">SUM = 45,000</div></div>
-            <div class="node accent"><div class="node-title">Segment 1</div><div class="node-text">SUM = 52,000</div></div>
-            <div class="node accent"><div class="node-title">Segment 2</div><div class="node-text">SUM = 38,000</div></div>
-            <div class="node"><div class="node-title">Merge</div><div class="node-text">combine partials</div></div>
-            <div class="node warn"><div class="node-title">Final SUM</div><div class="node-text">135,000</div></div>
-          </div>
-          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-            <table>
-              <thead><tr><th>Mechanism</th><th>Impact</th></tr></thead>
-              <tbody>
-                <tr><td>Column elimination</td><td>75% less data to consider</td></tr>
-                <tr><td>Segment elimination</td><td>75% of remaining rowgroups skipped</td></tr>
-                <tr><td>Compressed I/O</td><td>10x less data read from disk</td></tr>
-                <tr><td>Batch mode</td><td>CPU processes vector batches per call</td></tr>
-                <tr><td>Aggregate pushdown</td><td>Partial results are created during scan</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="panel callout gold motion" style="display: flex; flex-direction: column; justify-content: center;">
-            <p class="body-copy">The net effect compounds: queries that took minutes can often complete in seconds when pruning, compression, and vector execution align.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-17" class="clip slide" data-start="128" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">6. End-to-End Pipeline</div>
-            <h2 class="motion">Compression moves from raw rows to compact segments plus metadata.</h2>
-          </div>
-          <div class="slide-no motion">17 / 20</div>
-        </div>
-        <div class="stack">
-          <div class="pipeline motion">
-            <div class="pipe-stage"><strong>Raw rows</strong><span>Incoming facts with ID, Date, Region, Sales, Product, and more.</span></div>
-            <div class="pipe-stage"><strong>Rowgroup</strong><span>Batch about 1,048,576 rows, the unit of compression and I/O.</span></div>
-            <div class="pipe-stage"><strong>Column segments</strong><span>Split each column independently: ID, Date, Region, Sales, Product.</span></div>
-            <div class="pipe-stage"><strong>Encode + compress</strong><span>Dictionary, RLE, delta, bit-pack selected per segment.</span></div>
-            <div class="pipe-stage"><strong>Metadata</strong><span>Store min, max, null count, row count, and compact segment bytes.</span></div>
-          </div>
-          <div class="content-grid" style="flex: 1;">
-            <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Engine choices per segment</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Region: dictionary encode, RLE runs, then bit-pack codes.</span></div>
-                <div class="item"><span class="dot"></span><span>Sales: reduce value range, then bit-pack narrow integers.</span></div>
-                <div class="item"><span class="dot"></span><span>Date: convert to integer representation, then exploit repeated runs.</span></div>
-              </div>
-            </div>
-            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Compression result</h3>
-              <p class="body-copy" style="margin-top: 16px;">Original rowgroup around 50 MB can compress to about 4 MB when order and domains are favorable.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-18" class="clip slide" data-start="136" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Query Execution Pipeline</div>
-            <h2 class="motion">The query touches only the useful columns, rowgroups, and vector lanes.</h2>
-          </div>
-          <div class="slide-no motion">18 / 20</div>
-        </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="codebox dark motion">SELECT Region, SUM(Sales)
-FROM FactTrades
-WHERE Date >= '2024-01-01'
-  AND Date <  '2024-04-01'
-GROUP BY Region;</div>
-            <div class="flow two-row motion" style="flex: 1; align-content: space-evenly;">
-              <div class="node accent"><div class="node-title">1. Columns</div><div class="node-text">Need Date, Region, Sales only.</div></div>
-              <div class="node accent"><div class="node-title">2. Segments</div><div class="node-text">Min/max skips 2 of 3 rowgroups.</div></div>
-              <div class="node accent"><div class="node-title">3. Batch scan</div><div class="node-text">Build bitmaps over vectors.</div></div>
-              <div class="node warn"><div class="node-title">4. Merge</div><div class="node-text">Partial aggregates become final result.</div></div>
-            </div>
-          </div>
-          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-            <h3>Output table</h3>
-            <table style="margin-top: 16px;">
-              <thead><tr><th>Region</th><th>SUM(Sales)</th></tr></thead>
-              <tbody>
-                <tr><td>APAC</td><td>350</td></tr>
-                <tr><td>EMEA</td><td>380</td></tr>
-                <tr><td>AMER</td><td>150</td></tr>
-              </tbody>
-            </table>
-            <p class="body-copy muted" style="margin-top: 18px;">Late materialization means rows are assembled only after filters and aggregates shrink the work.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="slide-19" class="clip slide" data-start="144" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">7. DAL Implementation</div>
-            <h2 class="motion">Parallel staging plus CCI rebuild produces partition-aligned compressed segments.</h2>
-          </div>
-          <div class="slide-no motion">19 / 20</div>
-        </div>
-        <div class="stack">
-          <div class="switch-flow motion">
-            <div class="month-box">
-              <div class="month-title">Staging Jan</div>
-              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-              <p class="small muted" style="margin-top: 14px;">Clustered rowstore index sorted on data_date.</p>
-            </div>
-            <div class="month-box">
-              <div class="month-title">Staging Feb</div>
-              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-              <p class="small muted" style="margin-top: 14px;">Loaded independently in parallel.</p>
-            </div>
-            <div class="month-box">
-              <div class="month-title">Staging Mar</div>
-              <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-              <p class="small muted" style="margin-top: 14px;">Monthly partition boundary is explicit.</p>
-            </div>
-          </div>
-          <div class="content-grid" style="flex: 1;">
-            <div class="panel teal motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Rebuild CCI per staging table</h3>
-              <p class="body-copy" style="margin-top: 16px;">The CCI builder reads pre-sorted rowstore data, creating rowgroups with tight, non-overlapping min/max metadata.</p>
-            </div>
-            <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <h3>Partition switch</h3>
-              <p class="body-copy" style="margin-top: 16px;">Truncate target partition, then switch staging partition into target. The swap is metadata-only and preserves fully compressed segments.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════════ SLIDE 20 ═══ -->
-      <section id="slide-20" class="clip slide" data-start="152" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Partition Switch</div>
-            <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
-          </div>
-          <div class="slide-no motion">20 / 25</div>
-        </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="panel motion" style="padding: 22px;">
-              <h3 style="margin-bottom: 16px;">d. Metadata-only switch — no data movement</h3>
-              <div class="switch-diagram">
-                <div class="switch-col">
-                  <div class="staging-box motion">
-                    <div class="stag-title">Staging Jan</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                    <p class="small muted" style="margin-top:8px;">CCI pre-sorted on data_date</p>
-                  </div>
-                  <div class="staging-box motion">
-                    <div class="stag-title">Staging Feb</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                    <p class="small muted" style="margin-top:8px;">Loaded independently, in parallel</p>
-                  </div>
-                  <div class="staging-box motion">
-                    <div class="stag-title">Staging Mar</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                    <p class="small muted" style="margin-top:8px;">Monthly partition boundary explicit</p>
-                  </div>
-                </div>
-                <div class="switch-mid motion">
-                  <div class="sw-chevron">→</div>
-                  <div class="sw-chevron">→</div>
-                  <div class="sw-chevron">→</div>
-                  <div style="margin-top:4px;">SWITCH</div>
-                </div>
-                <div class="switch-col">
-                  <div class="month-box motion">
-                    <div class="month-title">Part 1 — Jan CCI</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                  </div>
-                  <div class="month-box motion">
-                    <div class="month-title">Part 2 — Feb CCI</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                  </div>
-                  <div class="month-box motion">
-                    <div class="month-title">Part 3 — Mar CCI</div>
-                    <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="codebox dark motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">TRUNCATE target PARTITION N
-ALTER TABLE staging
-  SWITCH PARTITION N TO target PARTITION N</div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion">
-              <h3>e. Result: Fully compressed segments</h3>
-              <div class="simple-list" style="margin-top: 16px;">
-                <div class="item"><span class="num">1</span><span>Full rowgroups (~1 M rows each, maximally compressed)</span></div>
-                <div class="item"><span class="num">2</span><span>Ordered CCI segments with tight, non-overlapping min/max</span></div>
-                <div class="item"><span class="num">3</span><span>No delta stores, no open rowgroups, no fragmentation</span></div>
-              </div>
-            </div>
-            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">The swap is metadata-only — only internal page pointers are reassigned. No rows move on disk. Completes in milliseconds regardless of table size.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ SLIDE 21 ═══ -->
-      <section id="slide-21" class="clip slide" data-start="160" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Architectural Comparison</div>
-            <h2 class="motion">Old (DELETE → INSERT) vs. New (staging → CCI → SWITCH)</h2>
-          </div>
-          <div class="slide-no motion">21 / 25</div>
+        <div class="slide-no motion">12 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="panel motion">
+          <table class="dense-table">
+            <thead>
+              <tr><th>Distinct values</th><th>Bits/value</th><th>32-bit storage</th><th>Bit-packed</th><th>Savings</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>2</td><td>1 bit</td><td>4 MB</td><td>128 KB</td><td>32x</td></tr>
+              <tr><td>4</td><td>2 bits</td><td>4 MB</td><td>256 KB</td><td>16x</td></tr>
+              <tr><td>8</td><td>3 bits</td><td>4 MB</td><td>384 KB</td><td>10.7x</td></tr>
+              <tr><td>16</td><td>4 bits</td><td>4 MB</td><td>512 KB</td><td>8x</td></tr>
+              <tr><td>64</td><td>6 bits</td><td>4 MB</td><td>768 KB</td><td>5.3x</td></tr>
+              <tr><td>256</td><td>8 bits</td><td>4 MB</td><td>1 MB</td><td>4x</td></tr>
+              <tr><td>65,536</td><td>16 bits</td><td>4 MB</td><td>2 MB</td><td>2x</td></tr>
+            </tbody>
+          </table>
         </div>
         <div class="stack" style="flex: 1;">
-          <div class="content-grid" style="flex: 1;">
-            <div class="stack">
-              <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                <h3>OLD — DELETE → INSERT</h3>
-                <div class="codebox motion" style="margin-top:14px;font-size:18px;line-height:1.4;">DELETE FROM target
+          <div class="panel motion">
+            <h3>3-bit values can cross byte boundaries</h3>
+            <div class="byte-boundary" style="margin-top: 18px;">
+              <div class="byte">
+                <div class="byte-title">Byte 1</div>
+                <div class="bit-line"><span class="bit-chip">101</span><span class="bit-chip">011</span><span class="bit-chip">10</span></div>
+              </div>
+              <div class="byte">
+                <div class="byte-title">Byte 2</div>
+                <div class="bit-line"><span class="bit-chip">0</span><span class="bit-chip">110</span><span class="bit-chip">001</span></div>
+              </div>
+              <div class="byte">
+                <div class="byte-title">Byte 3</div>
+                <div class="bit-line"><span class="bit-chip">1</span><span class="bit-chip">111</span><span class="bit-chip">000</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">The storage engine packs for density. The query engine unpacks or compares vectors in batches.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-13" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">5. Query Performance Benefits</div>
+          <h2 class="motion">Compression reduces bytes read, values touched, and CPU work per predicate.</h2>
+        </div>
+        <div class="slide-no motion">13 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="chain motion">
+          <div class="node warn">
+            <div class="node-title">Raw strings</div>
+            <div class="node-text">"Singapore", 9 bytes per value</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">Dictionary codes</div>
+            <div class="node-text">0, 1, 0, 2... 2 bits each</div>
+          </div>
+          <div class="node accent">
+            <div class="node-title">RLE</div>
+            <div class="node-text">(0, 4), (1, 2), ...</div>
+          </div>
+          <div class="node">
+            <div class="node-title">Bit-pack</div>
+            <div class="node-text">Contiguous bit stream for scan and compare</div>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Four reinforcing mechanisms</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Column elimination: read only referenced columns.</span></div>
+              <div class="item"><span class="num">2</span><span>Segment elimination: skip rowgroups by min/max metadata.</span></div>
+              <div class="item"><span class="num">3</span><span>Compressed I/O: move fewer bytes from disk and memory.</span></div>
+              <div class="item"><span class="num">4</span><span>Batch execution: compare and aggregate many values at once.</span></div>
+            </div>
+          </div>
+          <div class="codebox dark motion" style="display: flex; flex-direction: column; justify-content: center;">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-14" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Query Execution</div>
+          <h2 class="motion">Column and segment elimination skip work before decompression.</h2>
+        </div>
+        <div class="slide-no motion">14 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>A. Column elimination</h3>
+            <p class="small muted" style="margin-top: 8px;">The table has 12 columns; the query needs Date, Region, and Sales.</p>
+            <div class="prune-strip" style="margin-top: 18px;">
+              <div class="prune-col skip"><strong>ID</strong><span>SKIP</span></div>
+              <div class="prune-col read"><strong>Date</strong><span>READ</span></div>
+              <div class="prune-col read"><strong>Region</strong><span>READ</span></div>
+              <div class="prune-col read"><strong>Sales</strong><span>READ</span></div>
+              <div class="prune-col skip"><strong>Product</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Trader</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Desk</strong><span>SKIP</span></div>
+              <div class="prune-col skip"><strong>Notes</strong><span>SKIP</span></div>
+            </div>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Row store reads all columns from every page. Column store reads only the referenced segments: 3 of 12 columns, about 25% of column I/O.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel motion">
+            <h3>B. Segment elimination</h3>
+            <p class="small muted" style="margin-top: 8px;">Predicate: Date >= 2024-01-01 and Date < 2024-04-01</p>
+            <div class="rg-grid" style="margin-top: 18px;">
+              <div class="rowgroup-card skip"><h3>RG 0</h3><p class="small muted">max < 2024-01-01</p><span class="status skip">SKIP</span></div>
+              <div class="rowgroup-card read"><h3>RG 1</h3><p class="small muted">overlaps range</p><span class="status">READ</span></div>
+              <div class="rowgroup-card skip"><h3>RG 2</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+              <div class="rowgroup-card skip"><h3>RG 3</h3><p class="small muted">min >= 2024-04-01</p><span class="status skip">SKIP</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Ordered CCI keeps min/max ranges tight, so elimination is precise instead of producing overlapping false positives.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-15" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Execution Mechanics</div>
+          <h2 class="motion">Compressed I/O and batch mode turn scans into vector work.</h2>
+        </div>
+        <div class="slide-no motion">15 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>C. Compressed I/O</h3>
+            <table style="margin-top: 16px;">
+              <thead><tr><th>Layer</th><th>Row store</th><th>Column store</th></tr></thead>
+              <tbody>
+                <tr><td>On disk</td><td>100 GB</td><td>10-15 GB</td></tr>
+                <tr><td>Disk read</td><td>100 GB</td><td>10-15 GB</td></tr>
+                <tr><td>Memory</td><td>wide pages</td><td>narrow segments</td></tr>
+                <tr><td>Cache</td><td>low locality</td><td>high locality</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Engines can operate directly on dictionary codes and packed values, delaying materialization until results are needed.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel motion">
+            <h3>D. Batch mode vectors</h3>
+            <div class="vector-stack" style="margin-top: 18px;">
+              <div class="vector-row"><div class="vector-label">Date[]</div><div class="segment-strip"><span class="cell date">Jan</span><span class="cell date">Jan</span><span class="cell date">Feb</span><span class="cell date">Feb</span><span class="cell date">Apr</span></div></div>
+              <div class="vector-row"><div class="vector-label">Region[]</div><div class="segment-strip"><span class="cell region">0</span><span class="cell region">0</span><span class="cell region">1</span><span class="cell region">1</span><span class="cell region">3</span></div></div>
+              <div class="vector-row"><div class="vector-label">Sales[]</div><div class="segment-strip"><span class="cell sales">100</span><span class="cell sales">120</span><span class="cell sales">130</span><span class="cell sales">200</span><span class="cell sales">150</span></div></div>
+              <div class="vector-row"><div class="vector-label">Bitmap</div><div class="bitmap"><span>1</span><span>1</span><span>1</span><span class="zero">0</span><span class="zero">0</span></div></div>
+            </div>
+          </div>
+          <div class="panel soft motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Instead of row-by-row branching, a batch scan evaluates about 900 rows as column vectors and aggregates surviving values.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-16" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Aggregate Pushdown</div>
+          <h2 class="motion">Simple aggregates can be partially computed at segment scan level.</h2>
+        </div>
+        <div class="slide-no motion">16 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="flow motion">
+          <div class="node accent"><div class="node-title">Segment 0</div><div class="node-text">SUM = 45,000</div></div>
+          <div class="node accent"><div class="node-title">Segment 1</div><div class="node-text">SUM = 52,000</div></div>
+          <div class="node accent"><div class="node-title">Segment 2</div><div class="node-text">SUM = 38,000</div></div>
+          <div class="node"><div class="node-title">Merge</div><div class="node-text">combine partials</div></div>
+          <div class="node warn"><div class="node-title">Final SUM</div><div class="node-text">135,000</div></div>
+        </div>
+        <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <table>
+            <thead><tr><th>Mechanism</th><th>Impact</th></tr></thead>
+            <tbody>
+              <tr><td>Column elimination</td><td>75% less data to consider</td></tr>
+              <tr><td>Segment elimination</td><td>75% of remaining rowgroups skipped</td></tr>
+              <tr><td>Compressed I/O</td><td>10x less data read from disk</td></tr>
+              <tr><td>Batch mode</td><td>CPU processes vector batches per call</td></tr>
+              <tr><td>Aggregate pushdown</td><td>Partial results are created during scan</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel callout gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+          <p class="body-copy">The net effect compounds: queries that took minutes can often complete in seconds when pruning, compression, and vector execution align.</p>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-17" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">6. End-to-End Pipeline</div>
+          <h2 class="motion">Compression moves from raw rows to compact segments plus metadata.</h2>
+        </div>
+        <div class="slide-no motion">17 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="pipeline motion">
+          <div class="pipe-stage"><strong>Raw rows</strong><span>Incoming facts with ID, Date, Region, Sales, Product, and more.</span></div>
+          <div class="pipe-stage"><strong>Rowgroup</strong><span>Batch about 1,048,576 rows, the unit of compression and I/O.</span></div>
+          <div class="pipe-stage"><strong>Column segments</strong><span>Split each column independently: ID, Date, Region, Sales, Product.</span></div>
+          <div class="pipe-stage"><strong>Encode + compress</strong><span>Dictionary, RLE, delta, bit-pack selected per segment.</span></div>
+          <div class="pipe-stage"><strong>Metadata</strong><span>Store min, max, null count, row count, and compact segment bytes.</span></div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Engine choices per segment</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Region: dictionary encode, RLE runs, then bit-pack codes.</span></div>
+              <div class="item"><span class="dot"></span><span>Sales: reduce value range, then bit-pack narrow integers.</span></div>
+              <div class="item"><span class="dot"></span><span>Date: convert to integer representation, then exploit repeated runs.</span></div>
+            </div>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Compression result</h3>
+            <p class="body-copy" style="margin-top: 16px;">Original rowgroup around 50 MB can compress to about 4 MB when order and domains are favorable.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-18" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Query Execution Pipeline</div>
+          <h2 class="motion">The query touches only the useful columns, rowgroups, and vector lanes.</h2>
+        </div>
+        <div class="slide-no motion">18 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="codebox dark motion">SELECT Region, SUM(Sales)
+FROM FactTrades
+WHERE Date >= '2024-01-01'
+  AND Date <  '2024-04-01'
+GROUP BY Region;</div>
+          <div class="flow two-row motion" style="flex: 1; align-content: space-evenly;">
+            <div class="node accent"><div class="node-title">1. Columns</div><div class="node-text">Need Date, Region, Sales only.</div></div>
+            <div class="node accent"><div class="node-title">2. Segments</div><div class="node-text">Min/max skips 2 of 3 rowgroups.</div></div>
+            <div class="node accent"><div class="node-title">3. Batch scan</div><div class="node-text">Build bitmaps over vectors.</div></div>
+            <div class="node warn"><div class="node-title">4. Merge</div><div class="node-text">Partial aggregates become final result.</div></div>
+          </div>
+        </div>
+        <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+          <h3>Output table</h3>
+          <table style="margin-top: 16px;">
+            <thead><tr><th>Region</th><th>SUM(Sales)</th></tr></thead>
+            <tbody>
+              <tr><td>APAC</td><td>350</td></tr>
+              <tr><td>EMEA</td><td>380</td></tr>
+              <tr><td>AMER</td><td>150</td></tr>
+            </tbody>
+          </table>
+          <p class="body-copy muted" style="margin-top: 18px;">Late materialization means rows are assembled only after filters and aggregates shrink the work.</p>
+        </div>
+      </div>
+  </section>
+
+      <section class="slide" data-composition-id="slide-19" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">7. DAL Implementation</div>
+          <h2 class="motion">Parallel staging plus CCI rebuild produces partition-aligned compressed segments.</h2>
+        </div>
+        <div class="slide-no motion">19 / 25</div>
+      </div>
+      <div class="stack">
+        <div class="switch-flow motion">
+          <div class="month-box">
+            <div class="month-title">Staging Jan</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Clustered rowstore index sorted on data_date.</p>
+          </div>
+          <div class="month-box">
+            <div class="month-title">Staging Feb</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Loaded independently in parallel.</p>
+          </div>
+          <div class="month-box">
+            <div class="month-title">Staging Mar</div>
+            <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+            <p class="small muted" style="margin-top: 14px;">Monthly partition boundary is explicit.</p>
+          </div>
+        </div>
+        <div class="content-grid" style="flex: 1;">
+          <div class="panel teal motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Rebuild CCI per staging table</h3>
+            <p class="body-copy" style="margin-top: 16px;">The CCI builder reads pre-sorted rowstore data, creating rowgroups with tight, non-overlapping min/max metadata.</p>
+          </div>
+          <div class="panel gold motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <h3>Partition switch</h3>
+            <p class="body-copy" style="margin-top: 16px;">Truncate target partition, then switch staging partition into target. The swap is metadata-only and preserves fully compressed segments.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <!-- ═══════════════════════════════════════════════════ SLIDE 20 ═══ -->
+      <section class="slide" data-composition-id="slide-20" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Partition Switch</div>
+          <h2 class="motion">Pipeline Execution: Partition Switch &amp; Results</h2>
+        </div>
+        <div class="slide-no motion">20 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel motion" style="padding: 22px;">
+            <h3 style="margin-bottom: 16px;">d. Metadata-only switch — no data movement</h3>
+            <div class="switch-diagram">
+              <div class="switch-col">
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Jan</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">CCI pre-sorted on data_date</p>
+                </div>
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Feb</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">Loaded independently, in parallel</p>
+                </div>
+                <div class="staging-box motion">
+                  <div class="stag-title">Staging Mar</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                  <p class="small muted" style="margin-top:8px;">Monthly partition boundary explicit</p>
+                </div>
+              </div>
+              <div class="switch-mid motion">
+                <div class="sw-chevron">→</div>
+                <div class="sw-chevron">→</div>
+                <div class="sw-chevron">→</div>
+                <div style="margin-top:4px;">SWITCH</div>
+              </div>
+              <div class="switch-col">
+                <div class="month-box motion">
+                  <div class="month-title">Part 1 — Jan CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+                <div class="month-box motion">
+                  <div class="month-title">Part 2 — Feb CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+                <div class="month-box motion">
+                  <div class="month-title">Part 3 — Mar CCI</div>
+                  <div class="sort-lines"><div class="sort-line"></div><div class="sort-line"></div><div class="sort-line"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="codebox dark motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">TRUNCATE target PARTITION N
+ALTER TABLE staging
+  SWITCH PARTITION N TO target PARTITION N</div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>e. Result: Fully compressed segments</h3>
+            <div class="simple-list" style="margin-top: 16px;">
+              <div class="item"><span class="num">1</span><span>Full rowgroups (~1 M rows each, maximally compressed)</span></div>
+              <div class="item"><span class="num">2</span><span>Ordered CCI segments with tight, non-overlapping min/max</span></div>
+              <div class="item"><span class="num">3</span><span>No delta stores, no open rowgroups, no fragmentation</span></div>
+            </div>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">The swap is metadata-only — only internal page pointers are reassigned. No rows move on disk. Completes in milliseconds regardless of table size.</p>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <!-- ═══ SLIDE 21 ═══ -->
+      <section class="slide" data-composition-id="slide-21" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Architectural Comparison</div>
+          <h2 class="motion">Old (DELETE → INSERT) vs. New (staging → CCI → SWITCH)</h2>
+        </div>
+        <div class="slide-no motion">21 / 25</div>
+      </div>
+      <div class="stack" style="flex: 1;">
+        <div class="content-grid" style="flex: 1;">
+          <div class="stack">
+            <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <h3>OLD — DELETE → INSERT</h3>
+              <div class="codebox motion" style="margin-top:14px;font-size:18px;line-height:1.4;">DELETE FROM target
   WHERE data_date BETWEEN @start AND @end
   -- row-level logging · lock escalation · minutes
 INSERT INTO target SELECT * FROM source
   -- row-level logging · random segment order</div>
-                <div class="simple-list" style="margin-top:14px;">
-                  <div class="item"><span class="dot"></span><span>Heavy transaction log · serial execution · slow</span></div>
-                  <div class="item"><span class="dot"></span><span>Segment min/max widens on every reload</span></div>
-                  <div class="item"><span class="dot"></span><span>Fragmentation accumulates with each run</span></div>
-                </div>
+              <div class="simple-list" style="margin-top:14px;">
+                <div class="item"><span class="dot"></span><span>Heavy transaction log · serial execution · slow</span></div>
+                <div class="item"><span class="dot"></span><span>Segment min/max widens on every reload</span></div>
+                <div class="item"><span class="dot"></span><span>Fragmentation accumulates with each run</span></div>
               </div>
             </div>
-            <div class="stack">
-              <div class="panel callout motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                <h3>NEW — Staging → CCI rebuild → SWITCH</h3>
-                <div class="codebox dark motion" style="margin-top:14px;font-size:18px;line-height:1.4;">Load staging tables  -- no contention, parallel
+          </div>
+          <div class="stack">
+            <div class="panel callout motion" style="height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+              <h3>NEW — Staging → CCI rebuild → SWITCH</h3>
+              <div class="codebox dark motion" style="margin-top:14px;font-size:18px;line-height:1.4;">Load staging tables  -- no contention, parallel
 Build CCI per staging  -- pre-sorted, optimal
 TRUNCATE + SWITCH      -- metadata-only, ms</div>
-                <div class="simple-list" style="margin-top:14px;">
-                  <div class="item"><span class="dot"></span><span>Minimal log · concurrent across partitions</span></div>
-                  <div class="item"><span class="dot"></span><span>Tight non-overlapping segment min/max always</span></div>
-                  <div class="item"><span class="dot"></span><span>Zero fragmentation — fresh CCI every reload</span></div>
+              <div class="simple-list" style="margin-top:14px;">
+                <div class="item"><span class="dot"></span><span>Minimal log · concurrent across partitions</span></div>
+                <div class="item"><span class="dot"></span><span>Tight non-overlapping segment min/max always</span></div>
+                <div class="item"><span class="dot"></span><span>Zero fragmentation — fresh CCI every reload</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="metric-row">
+          <div class="metric motion">
+            <div class="value" style="color:var(--rust);">mins</div>
+            <div class="label">Old: DELETE + INSERT duration</div>
+          </div>
+          <div class="metric motion">
+            <div class="value">ms</div>
+            <div class="label">New: SWITCH duration (metadata only)</div>
+          </div>
+          <div class="metric motion">
+            <div class="value">0%</div>
+            <div class="label">Fragmentation after new pipeline run</div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <!-- ═══ SLIDE 22 ═══ -->
+      <section class="slide" data-composition-id="slide-22" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">8. Fragmented CCI — Segment Overlap</div>
+          <h2 class="motion">Overlapping min/max ranges force the engine to scan every rowgroup.</h2>
+        </div>
+        <div class="slide-no motion">22 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>data_date segments — unordered CCI</h3>
+            <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
+            <div class="rg-timeline" style="margin-top:18px;">
+              <div class="rg-axis-row">
+                <div></div>
+                <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span></div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 0</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill overlap" style="left:2%;width:94%;">Jan 3 — Mar 28</div>
+                  </div>
+                  <div class="rg-query-line" style="left:51%;"><div class="rg-query-label">Feb 15</div></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 1</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill overlap" style="left:5%;width:89%;">Jan 5 — Mar 25</div>
+                  </div>
+                  <div class="rg-query-line" style="left:51%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 2</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill overlap" style="left:0%;width:98%;">Jan 1 — Mar 30</div>
+                  </div>
+                  <div class="rg-query-line" style="left:51%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 3</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill overlap" style="left:8%;width:84%;">Jan 8 — Mar 20</div>
+                  </div>
+                  <div class="rg-query-line" style="left:51%;"></div>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="panel callout rust motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">All 4 rowgroups read — <strong>0% elimination.</strong> Every query must decompress and scan the full table.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>Why this happens</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item"><span class="num">1</span><span>Data arrives in random order — mixed dates per batch</span></div>
+              <div class="item"><span class="num">2</span><span>Rows fill rowgroups in arrival order, not date order</span></div>
+              <div class="item"><span class="num">3</span><span>Each ~1 M-row rowgroup ends up spanning the full date range</span></div>
+              <div class="item"><span class="num">4</span><span>Segment min/max spans months — elimination is useless</span></div>
+            </div>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Visualized as overlapping ranges</h3>
+            <div class="rg-grid" style="margin-top:14px;">
+              <div class="rowgroup-card skip">
+                <h3>RG 0</h3><p class="small muted">Jan 3 → Mar 28</p>
+                <span class="status">MUST READ</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 1</h3><p class="small muted">Jan 5 → Mar 25</p>
+                <span class="status">MUST READ</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 2</h3><p class="small muted">Jan 1 → Mar 30</p>
+                <span class="status">MUST READ</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 3</h3><p class="small muted">Jan 8 → Mar 20</p>
+                <span class="status">MUST READ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <!-- ═══ SLIDE 23 ═══ -->
+      <section class="slide" data-composition-id="slide-23" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
+          <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
+        </div>
+        <div class="slide-no motion">23 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack">
+          <div class="panel motion">
+            <h3>data_date segments — ordered CCI</h3>
+            <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
+            <div class="rg-timeline" style="margin-top:18px;">
+              <div class="rg-axis-row">
+                <div></div>
+                <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span></div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 0</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:0%;width:25%;">Jan 1—31</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"><div class="rg-query-label">Feb 15</div></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 1</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill match" style="left:25%;width:23%;">Feb 1—28</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 2</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:48%;width:26%;">Mar 1—31</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+              <div class="rg-bar-row">
+                <div class="rg-bar-label">RG 3</div>
+                <div class="rg-track-wrap">
+                  <div class="rg-track">
+                    <div class="rg-fill faded" style="left:74%;width:25%;">Apr 1—30</div>
+                  </div>
+                  <div class="rg-query-line" style="left:38%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Only <strong>RG 1</strong> overlaps Feb 15. RG 0, 2, 3 are skipped by min/max metadata — <strong>75% elimination before decompression.</strong></p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion">
+            <h3>How ordering enables elimination</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item"><span class="num">1</span><span>Staging table sorted on data_date — B-tree guarantees physical order</span></div>
+              <div class="item"><span class="num">2</span><span>CCI builder reads rows sequentially: each rowgroup receives a contiguous date range</span></div>
+              <div class="item"><span class="num">3</span><span>Segment min/max spans only ~30 days, not 90</span></div>
+              <div class="item"><span class="num">4</span><span>Query engine checks metadata first — skips non-overlapping segments entirely</span></div>
+            </div>
+          </div>
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Rowgroup status at query time</h3>
+            <div class="rg-grid" style="margin-top:14px;">
+              <div class="rowgroup-card skip">
+                <h3>RG 0</h3><p class="small muted">Jan 1 → Jan 31</p>
+                <span class="status skip">SKIP</span>
+              </div>
+              <div class="rowgroup-card read">
+                <h3>RG 1</h3><p class="small muted">Feb 1 → Feb 28</p>
+                <span class="status">READ</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 2</h3><p class="small muted">Mar 1 → Mar 31</p>
+                <span class="status skip">SKIP</span>
+              </div>
+              <div class="rowgroup-card skip">
+                <h3>RG 3</h3><p class="small muted">Apr 1 → Apr 30</p>
+                <span class="status skip">SKIP</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+      <!-- ═══ SLIDE 24 ═══ -->
+      <section class="slide" data-composition-id="slide-24" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Final Impact from All Optimizations</div>
+          <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
+        </div>
+        <div class="slide-no motion">24 / 25</div>
+      </div>
+      <div class="content-grid wide-left">
+        <div class="stack">
+          <div class="panel teal motion">
+            <h3>How strict ordering is achieved</h3>
+            <div class="simple-list" style="margin-top:16px;">
+              <div class="item motion">
+                <span class="num">1</span>
+                <span><strong>Create staging table with clustered rowstore index</strong><br>
+                  <span class="muted small">ON (data_date, ...) — B-tree guarantees physical sort order on disk</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">2</span>
+                <span><strong>Load data into staging table</strong><br>
+                  <span class="muted small">Rows stored in date order; arrival sequence doesn’t matter</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">3</span>
+                <span><strong>Build CCI on the sorted staging table</strong><br>
+                  <span class="muted small">CCI builder reads sequentially — each rowgroup gets a contiguous date range with tight min/max</span></span>
+              </div>
+              <div class="item motion">
+                <span class="num">4</span>
+                <span><strong>Partition switch into target table</strong><br>
+                  <span class="muted small">Target inherits perfectly ordered segments — metadata-only, milliseconds</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">Column elimination × segment elimination × compressed I/O × batch mode — each layer compounds the benefit of the one before it.</p>
+          </div>
+        </div>
+        <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+          <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Impact on query performance</h3>
+            <table style="margin-top:16px;" class="dense-table">
+              <thead>
+                <tr><th>Metric</th><th style="color:var(--rust);">Fragmented CCI</th><th style="color:var(--teal);">Unfragmented CCI</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Segments scanned</strong></td><td style="color:var(--rust);">ALL</td><td style="color:var(--teal);">Only matching</td></tr>
+                <tr><td><strong>Decompression work</strong></td><td style="color:var(--rust);">100%</td><td style="color:var(--teal);">~25%</td></tr>
+                <tr><td><strong>I/O from disk</strong></td><td style="color:var(--rust);">Full table</td><td style="color:var(--teal);">1 rowgroup</td></tr>
+                <tr><td><strong>Segment elimination</strong></td><td style="color:var(--rust);">0%</td><td style="color:var(--teal);">75%</td></tr>
+                <tr><td><strong>Query speed</strong></td><td style="color:var(--rust);">Slow</td><td style="color:var(--teal);">Fast</td></tr>
+              </tbody>
+            </table>
           </div>
           <div class="metric-row">
             <div class="metric motion">
-              <div class="value" style="color:var(--rust);">mins</div>
-              <div class="label">Old: DELETE + INSERT duration</div>
+              <div class="value">75%</div>
+              <div class="label">Rowgroups eliminated by min/max metadata</div>
+            </div>
+            <div class="metric motion">
+              <div class="value">~10x</div>
+              <div class="label">Typical end-to-end query speed improvement</div>
             </div>
             <div class="metric motion">
               <div class="value">ms</div>
-              <div class="label">New: SWITCH duration (metadata only)</div>
-            </div>
-            <div class="metric motion">
-              <div class="value">0%</div>
-              <div class="label">Fragmentation after new pipeline run</div>
+              <div class="label">SWITCH duration — zero data movement</div>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- ═══ SLIDE 22 ═══ -->
-      <section id="slide-22" class="clip slide" data-start="168" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">8. Fragmented CCI — Segment Overlap</div>
-            <h2 class="motion">Overlapping min/max ranges force the engine to scan every rowgroup.</h2>
-          </div>
-          <div class="slide-no motion">22 / 25</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>data_date segments — unordered CCI</h3>
-              <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
-              <div class="rg-timeline" style="margin-top:18px;">
-                <div class="rg-axis-row">
-                  <div></div>
-                  <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span></div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 0</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill overlap" style="left:2%;width:94%;">Jan 3 — Mar 28</div>
-                    </div>
-                    <div class="rg-query-line" style="left:51%;"><div class="rg-query-label">Feb 15</div></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 1</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill overlap" style="left:5%;width:89%;">Jan 5 — Mar 25</div>
-                    </div>
-                    <div class="rg-query-line" style="left:51%;"></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 2</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill overlap" style="left:0%;width:98%;">Jan 1 — Mar 30</div>
-                    </div>
-                    <div class="rg-query-line" style="left:51%;"></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 3</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill overlap" style="left:8%;width:84%;">Jan 8 — Mar 20</div>
-                    </div>
-                    <div class="rg-query-line" style="left:51%;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="panel callout rust motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">All 4 rowgroups read — <strong>0% elimination.</strong> Every query must decompress and scan the full table.</p>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion">
-              <h3>Why this happens</h3>
-              <div class="simple-list" style="margin-top:16px;">
-                <div class="item"><span class="num">1</span><span>Data arrives in random order — mixed dates per batch</span></div>
-                <div class="item"><span class="num">2</span><span>Rows fill rowgroups in arrival order, not date order</span></div>
-                <div class="item"><span class="num">3</span><span>Each ~1 M-row rowgroup ends up spanning the full date range</span></div>
-                <div class="item"><span class="num">4</span><span>Segment min/max spans months — elimination is useless</span></div>
-              </div>
-            </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Visualized as overlapping ranges</h3>
-              <div class="rg-grid" style="margin-top:14px;">
-                <div class="rowgroup-card skip">
-                  <h3>RG 0</h3><p class="small muted">Jan 3 → Mar 28</p>
-                  <span class="status">MUST READ</span>
-                </div>
-                <div class="rowgroup-card skip">
-                  <h3>RG 1</h3><p class="small muted">Jan 5 → Mar 25</p>
-                  <span class="status">MUST READ</span>
-                </div>
-                <div class="rowgroup-card skip">
-                  <h3>RG 2</h3><p class="small muted">Jan 1 → Mar 30</p>
-                  <span class="status">MUST READ</span>
-                </div>
-                <div class="rowgroup-card skip">
-                  <h3>RG 3</h3><p class="small muted">Jan 8 → Mar 20</p>
-                  <span class="status">MUST READ</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ SLIDE 23 ═══ -->
-      <section id="slide-23" class="clip slide" data-start="176" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">9. Unfragmented CCI — No Segment Overlap</div>
-            <h2 class="motion">Tight, non-overlapping ranges let the engine skip 75% of rowgroups.</h2>
-          </div>
-          <div class="slide-no motion">23 / 25</div>
-        </div>
-        <div class="content-grid">
-          <div class="stack">
-            <div class="panel motion">
-              <h3>data_date segments — ordered CCI</h3>
-              <p class="small muted" style="margin-top:6px;">Query: <span style="font-family:var(--mono);color:var(--rust);">WHERE data_date = '2024-02-15'</span></p>
-              <div class="rg-timeline" style="margin-top:18px;">
-                <div class="rg-axis-row">
-                  <div></div>
-                  <div class="rg-axis-labels"><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span></div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 0</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill faded" style="left:0%;width:25%;">Jan 1—31</div>
-                    </div>
-                    <div class="rg-query-line" style="left:38%;"><div class="rg-query-label">Feb 15</div></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 1</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill match" style="left:25%;width:23%;">Feb 1—28</div>
-                    </div>
-                    <div class="rg-query-line" style="left:38%;"></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 2</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill faded" style="left:48%;width:26%;">Mar 1—31</div>
-                    </div>
-                    <div class="rg-query-line" style="left:38%;"></div>
-                  </div>
-                </div>
-                <div class="rg-bar-row">
-                  <div class="rg-bar-label">RG 3</div>
-                  <div class="rg-track-wrap">
-                    <div class="rg-track">
-                      <div class="rg-fill faded" style="left:74%;width:25%;">Apr 1—30</div>
-                    </div>
-                    <div class="rg-query-line" style="left:38%;"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="panel callout motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Only <strong>RG 1</strong> overlaps Feb 15. RG 0, 2, 3 are skipped by min/max metadata — <strong>75% elimination before decompression.</strong></p>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion">
-              <h3>How ordering enables elimination</h3>
-              <div class="simple-list" style="margin-top:16px;">
-                <div class="item"><span class="num">1</span><span>Staging table sorted on data_date — B-tree guarantees physical order</span></div>
-                <div class="item"><span class="num">2</span><span>CCI builder reads rows sequentially: each rowgroup receives a contiguous date range</span></div>
-                <div class="item"><span class="num">3</span><span>Segment min/max spans only ~30 days, not 90</span></div>
-                <div class="item"><span class="num">4</span><span>Query engine checks metadata first — skips non-overlapping segments entirely</span></div>
-              </div>
-            </div>
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Rowgroup status at query time</h3>
-              <div class="rg-grid" style="margin-top:14px;">
-                <div class="rowgroup-card skip">
-                  <h3>RG 0</h3><p class="small muted">Jan 1 → Jan 31</p>
-                  <span class="status skip">SKIP</span>
-                </div>
-                <div class="rowgroup-card read">
-                  <h3>RG 1</h3><p class="small muted">Feb 1 → Feb 28</p>
-                  <span class="status">READ</span>
-                </div>
-                <div class="rowgroup-card skip">
-                  <h3>RG 2</h3><p class="small muted">Mar 1 → Mar 31</p>
-                  <span class="status skip">SKIP</span>
-                </div>
-                <div class="rowgroup-card skip">
-                  <h3>RG 3</h3><p class="small muted">Apr 1 → Apr 30</p>
-                  <span class="status skip">SKIP</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ═══ SLIDE 24 ═══ -->
-      <section id="slide-24" class="clip slide" data-start="184" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Final Impact from All Optimizations</div>
-            <h2 class="motion">How strict ordering is achieved — and why it compounds.</h2>
-          </div>
-          <div class="slide-no motion">24 / 25</div>
-        </div>
-        <div class="content-grid wide-left">
-          <div class="stack">
-            <div class="panel teal motion">
-              <h3>How strict ordering is achieved</h3>
-              <div class="simple-list" style="margin-top:16px;">
-                <div class="item motion">
-                  <span class="num">1</span>
-                  <span><strong>Create staging table with clustered rowstore index</strong><br>
-                    <span class="muted small">ON (data_date, ...) — B-tree guarantees physical sort order on disk</span></span>
-                </div>
-                <div class="item motion">
-                  <span class="num">2</span>
-                  <span><strong>Load data into staging table</strong><br>
-                    <span class="muted small">Rows stored in date order; arrival sequence doesn’t matter</span></span>
-                </div>
-                <div class="item motion">
-                  <span class="num">3</span>
-                  <span><strong>Build CCI on the sorted staging table</strong><br>
-                    <span class="muted small">CCI builder reads sequentially — each rowgroup gets a contiguous date range with tight min/max</span></span>
-                </div>
-                <div class="item motion">
-                  <span class="num">4</span>
-                  <span><strong>Partition switch into target table</strong><br>
-                    <span class="muted small">Target inherits perfectly ordered segments — metadata-only, milliseconds</span></span>
-                </div>
-              </div>
-            </div>
-            <div class="panel callout gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">Column elimination × segment elimination × compressed I/O × batch mode — each layer compounds the benefit of the one before it.</p>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
-            <div class="panel motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Impact on query performance</h3>
-              <table style="margin-top:16px;" class="dense-table">
-                <thead>
-                  <tr><th>Metric</th><th style="color:var(--rust);">Fragmented CCI</th><th style="color:var(--teal);">Unfragmented CCI</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td><strong>Segments scanned</strong></td><td style="color:var(--rust);">ALL</td><td style="color:var(--teal);">Only matching</td></tr>
-                  <tr><td><strong>Decompression work</strong></td><td style="color:var(--rust);">100%</td><td style="color:var(--teal);">~25%</td></tr>
-                  <tr><td><strong>I/O from disk</strong></td><td style="color:var(--rust);">Full table</td><td style="color:var(--teal);">1 rowgroup</td></tr>
-                  <tr><td><strong>Segment elimination</strong></td><td style="color:var(--rust);">0%</td><td style="color:var(--teal);">75%</td></tr>
-                  <tr><td><strong>Query speed</strong></td><td style="color:var(--rust);">Slow</td><td style="color:var(--teal);">Fast</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="metric-row">
-              <div class="metric motion">
-                <div class="value">75%</div>
-                <div class="label">Rowgroups eliminated by min/max metadata</div>
-              </div>
-              <div class="metric motion">
-                <div class="value">~10x</div>
-                <div class="label">Typical end-to-end query speed improvement</div>
-              </div>
-              <div class="metric motion">
-                <div class="value">ms</div>
-                <div class="label">SWITCH duration — zero data movement</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      </div>
+  </section>
 
       <!-- ═══ SLIDE 25 ═══ -->
-      <section id="slide-25" class="clip slide" data-start="192" data-duration="8" data-track-index="1">
-        <div class="slide-header" data-layout-allow-overflow>
-          <div>
-            <div class="kicker motion">Implementation Playbook</div>
-            <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
-          </div>
-          <div class="slide-no motion">25 / 25</div>
+      <section class="slide" data-composition-id="slide-25" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">Implementation Playbook</div>
+          <h2 class="motion">Make query shape and file layout first-class parts of the library contract.</h2>
         </div>
-        <div class="content-grid">
-          <div class="stack" style="flex: 1;">
-            <div class="panel teal motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Transformation API rules</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
-                <div class="item"><span class="num">2</span><span>Push predicates before joins and aggregations whenever semantics allow.</span></div>
-                <div class="item"><span class="num">3</span><span>Select columns explicitly so engines can perform column elimination.</span></div>
-                <div class="item"><span class="num">4</span><span>Keep transformations lazy until the boundary that materializes results.</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="stack" style="flex: 1;">
-            <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-              <h3>Columnar storage rules</h3>
-              <div class="simple-list" style="margin-top: 18px;">
-                <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
-                <div class="item"><span class="dot"></span><span>Sort by common filters to improve RLE and min/max segment skipping.</span></div>
-                <div class="item"><span class="dot"></span><span>Preserve low-cardinality domains for dictionary encoding and bit-packing.</span></div>
-                <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
-              </div>
-            </div>
-            <div class="panel callout rust motion" style="display: flex; flex-direction: column; justify-content: center;">
-              <p class="body-copy">
-                The unified access layer is not just portability. It is a place to encode the habits
-                that let columnar engines avoid work.
-              </p>
+        <div class="slide-no motion">25 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack" style="flex: 1;">
+          <div class="panel teal motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Transformation API rules</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="num">1</span><span>Expose reusable Ibis expressions for metrics, dimensions, and filters.</span></div>
+              <div class="item"><span class="num">2</span><span>Push predicates before joins and aggregations whenever semantics allow.</span></div>
+              <div class="item"><span class="num">3</span><span>Select columns explicitly so engines can perform column elimination.</span></div>
+              <div class="item"><span class="num">4</span><span>Keep transformations lazy until the boundary that materializes results.</span></div>
             </div>
           </div>
         </div>
-      </section>
+        <div class="stack" style="flex: 1;">
+          <div class="panel gold motion" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+            <h3>Columnar storage rules</h3>
+            <div class="simple-list" style="margin-top: 18px;">
+              <div class="item"><span class="dot"></span><span>Partition by coarse pruning keys such as date, tenant, or source system.</span></div>
+              <div class="item"><span class="dot"></span><span>Sort by common filters to improve RLE and min/max segment skipping.</span></div>
+              <div class="item"><span class="dot"></span><span>Preserve low-cardinality domains for dictionary encoding and bit-packing.</span></div>
+              <div class="item"><span class="dot"></span><span>Use rowgroup-sized writes where the platform supports compressed segments.</span></div>
+            </div>
+          </div>
+          <div class="panel callout rust motion" style="display: flex; flex-direction: column; justify-content: center;">
+            <p class="body-copy">
+              The unified access layer is not just portability. It is a place to encode the habits
+              that let columnar engines avoid work.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
 
 
       <div class="clicker-controls" data-layout-ignore>
         <button class="clicker-button" type="button" data-clicker-prev aria-label="Previous slide">‹</button>
-        <span class="clicker-progress" data-clicker-progress>01 / 20</span>
+        <span class="clicker-progress" data-clicker-progress>01 / 25</span>
         <button class="clicker-button" type="button" data-clicker-next aria-label="Next slide">›</button>
       </div>
     </div>
@@ -2450,32 +2436,6 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
 
       tl.to("#drift-a", { x: 38, y: -22, duration: 5.6, repeat: 19, yoyo: true, ease: "sine.inOut" }, 0);
       tl.to("#drift-b", { x: -42, y: 18, duration: 6.4, repeat: 17, yoyo: true, ease: "sine.inOut" }, 0);
-
-      for (let i = 1; i <= slideCount; i += 1) {
-        const start = (i - 1) * slideDuration;
-        const selector = `#slide-${i}`;
-
-        tl.from(`${selector} .motion`, {
-          y: 28,
-          opacity: 0,
-          duration: 0.52,
-          stagger: 0.055,
-          immediateRender: false,
-          ease: "power3.out"
-        }, start + 0.12);
-
-        const detailTargets = `${selector} .cell, ${selector} .code-token, ${selector} .bit, ${selector} .node, ${selector} .tier`;
-        if (document.querySelector(detailTargets)) {
-          tl.from(detailTargets, {
-            y: 16,
-            opacity: 0,
-            duration: 0.36,
-            stagger: 0.025,
-            immediateRender: false,
-            ease: "power2.out"
-          }, start + 0.72);
-        }
-      }
 
       window.__timelines["main"] = tl;
 
@@ -2504,21 +2464,21 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
 
       if (clickerRequested) {
         document.body.classList.add("clicker-mode");
-        tl.pause(0);
 
-        const slides = Array.from(document.querySelectorAll(".slide"));
         const progress = document.querySelector("[data-clicker-progress]");
         let currentSlide = 0;
         let activeBuildTimeline = null;
 
-        const runClickerAnimation = (slide) => {
+        const runClickerAnimation = (slideId) => {
           if (activeBuildTimeline) {
             activeBuildTimeline.kill();
           }
 
+          const slide = document.querySelector("[data-composition-id=\"" + slideId + "\"]");
+          if (!slide) return;
+
           // Collect elements into groups, deduplicating so each element belongs
-          // to exactly one group. This prevents later fromTo tweens from resetting
-          // opacity:0 on elements already fully animated by an earlier group.
+          // to exactly one group.
           const seen = new Set();
 
           const collect = (selector) => {
@@ -2532,33 +2492,21 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
             return els;
           };
 
-          // Group 1: slide header items
           const header = collect(".slide-header .motion");
-
-          // Group 2: major content blocks (panels, codeboxes, flow diagrams, etc.)
           const panels = collect(
             ".panel.motion, .codebox.motion, .flow.motion, .chain.motion, " +
             ".store-pages.motion, .segment.motion, .pipeline.motion, .switch-flow.motion"
           );
-
-          // Group 3: inline detail items (cells, bits, nodes, rows, etc.)
           const detail = collect(
             ".cell, .code-token, .bit, .node, .tier, .simple-list .item, " +
             ".rle-section, .prune-col, .rowgroup-card, .vector-row, " +
             ".pipe-stage, .month-box, tbody tr, .bit-chip"
           );
-
-          // Group 4: callout / accent panels — collected last so overlapping
-          // elements (e.g. .panel.callout.motion) are already claimed by group 2.
           const callouts = collect(".callout.motion, .gold.motion, .teal.motion, .soft.motion");
 
-          // Clear any lingering inline styles so every element starts clean.
           const allEls = [...header, ...panels, ...detail, ...callouts];
           gsap.set(allEls, { clearProps: "all" });
 
-          // Use fromTo so the end state (opacity:1, y/x:0) is always explicit.
-          // This guarantees elements stay fully visible once their tween completes,
-          // regardless of when other tweens start.
           activeBuildTimeline = gsap.timeline();
 
           if (header.length) {
@@ -2568,7 +2516,6 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
               { y: 0, opacity: 1, duration: 0.46, stagger: 0.06, ease: "power3.out" }
             );
           }
-
           if (panels.length) {
             activeBuildTimeline.fromTo(
               panels,
@@ -2577,7 +2524,6 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
               "-=0.18"
             );
           }
-
           if (detail.length) {
             activeBuildTimeline.fromTo(
               detail,
@@ -2586,7 +2532,6 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
               "-=0.12"
             );
           }
-
           if (callouts.length) {
             activeBuildTimeline.fromTo(
               callouts,
@@ -2597,14 +2542,15 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
           }
         };
 
+        let slides = [];
+
         const showSlide = (index) => {
+          if (slides.length === 0) return;
           currentSlide = Math.max(0, Math.min(index, slides.length - 1));
-          slides.forEach((slide, slideIndex) => {
-            slide.classList.toggle("active-slide", slideIndex === currentSlide);
-          });
-          progress.textContent = `${String(currentSlide + 1).padStart(2, "0")} / ${slides.length}`;
-          window.location.hash = `slide-${currentSlide + 1}`;
-          runClickerAnimation(slides[currentSlide]);
+          slides.forEach((s, si) => s.classList.toggle("active-slide", si === currentSlide));
+          progress.textContent = String(currentSlide + 1).padStart(2, "0") + " / " + slides.length;
+          window.location.hash = "slide-" + (currentSlide + 1);
+          runClickerAnimation(slides[currentSlide].getAttribute("data-composition-id"));
         };
 
         const nextSlide = () => showSlide(currentSlide + 1);
@@ -2659,9 +2605,7 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
             };
 
             parentDocument.addEventListener("keydown", (event) => {
-              if (isEditable(event.target)) {
-                return;
-              }
+              if (isEditable(event.target)) return;
               if (["ArrowRight", "PageDown", " ", "Enter"].includes(event.key)) {
                 event.preventDefault();
                 nextSlide();
@@ -2682,9 +2626,7 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
 
             parentDocument.addEventListener("click", (event) => {
               const frame = window.frameElement;
-              if (!frame) {
-                return;
-              }
+              if (!frame) return;
               const rect = frame.getBoundingClientRect();
               const clickedPreview =
                 event.clientX >= rect.left &&
@@ -2700,9 +2642,19 @@ TRUNCATE + SWITCH      -- metadata-only, ms</div>
           // Direct presenter mode does not need parent-window controls.
         }
 
-        const hashMatch = window.location.hash.match(/slide-(\d+)/);
-        const initialSlide = hashMatch ? Number(hashMatch[1]) - 1 : 0;
-        showSlide(initialSlide);
+        tl.pause(0);
+
+        const initClicker = () => {
+          slides = Array.from(document.querySelectorAll(".slide"));
+          if (slides.length < 25) {
+            setTimeout(initClicker, 50);
+            return;
+          }
+          var hashMatch = window.location.hash.match(/slide-(\d+)/);
+          var initialSlide = hashMatch ? Number(hashMatch[1]) - 1 : 0;
+          showSlide(initialSlide);
+        };
+        initClicker();
       }
     </script>
   </body>

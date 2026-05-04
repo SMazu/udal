@@ -1,0 +1,76 @@
+<template>
+<section data-composition-id="slide-02" data-width="1920" data-height="1080">
+      <div class="slide-header" data-layout-allow-overflow>
+        <div>
+          <div class="kicker motion">The Integration Problem</div>
+          <h2 class="motion">Transformation logic is fragmented across engines, dialects, and notebooks.</h2>
+        </div>
+        <div class="slide-no motion">02 / 25</div>
+      </div>
+      <div class="content-grid">
+        <div class="stack center-stack">
+          <div class="panel callout rust motion" style="height: 100%; display: flex; flex-direction: column;">
+            <h3>Without a shared layer</h3>
+            <div class="simple-list" style="margin-top: auto; margin-bottom: auto;">
+              <div class="item"><span class="dot"></span><span>Metrics drift because each team reimplements joins, filters, and date logic.</span></div>
+              <div class="item"><span class="dot"></span><span>Moving a workload from local development to a warehouse means rewriting code.</span></div>
+              <div class="item"><span class="dot"></span><span>Optimization choices stay implicit: projection, sort order, partitioning, and file layout are scattered.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="flow two-row motion">
+            <div class="node warn">
+              <div class="node-title">pandas notebook</div>
+              <div class="node-text">Fast exploration, limited pushdown</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">Warehouse SQL</div>
+              <div class="node-text">Powerful execution, dialect drift</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">Spark job</div>
+              <div class="node-text">Scale, but separate code path</div>
+            </div>
+            <div class="node warn">
+              <div class="node-title">BI semantic layer</div>
+              <div class="node-text">Metrics after the fact</div>
+            </div>
+          </div>
+          <div class="panel soft motion">
+            <p class="body-copy">
+              The access layer should turn transformation code into a portable query plan,
+              while keeping storage-aware choices visible to engineers.
+            </p>
+          </div>
+        </div>
+      </div>
+  </section>
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({ paused: true });
+    
+    tl.from('[data-composition-id="slide-02"] .motion', {
+      y: 28,
+      opacity: 0,
+      duration: 0.52,
+      stagger: 0.055,
+      immediateRender: false,
+      ease: "power3.out"
+    }, 0.12);
+
+    const detailTargets = '[data-composition-id="slide-02"] .cell, [data-composition-id="slide-02"] .code-token, [data-composition-id="slide-02"] .bit, [data-composition-id="slide-02"] .node, [data-composition-id="slide-02"] .tier';
+    if (document.querySelector(detailTargets)) {
+      tl.from(detailTargets, {
+        y: 16,
+        opacity: 0,
+        duration: 0.36,
+        stagger: 0.025,
+        immediateRender: false,
+        ease: "power2.out"
+      }, 0.72);
+    }
+
+    window.__timelines["slide-02"] = tl;
+  </script>
+</template>
