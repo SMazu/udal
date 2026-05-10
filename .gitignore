@@ -2,3 +2,6 @@
 renders/
 node_modules/
 npm-debug.log*
+lineage_demo/.venv/
+.pytest_cache/
+__pycache__/
