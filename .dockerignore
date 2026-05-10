@@ -1,0 +1,9 @@
+node_modules/
+renders/
+.thumbnails/
+lineage_demo/.venv/
+lineage_demo/.pytest_cache/
+lineage_demo/artifacts/
+**/__pycache__/
+**/*.pyc
+.git/
