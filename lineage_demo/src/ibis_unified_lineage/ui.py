@@ -8,9 +8,20 @@ from ibis_unified_lineage.models import LineageGraph
 
 
 def write_lineage_ui(graph: LineageGraph, path: str | Path, *, title: str = "Ibis Unified Column Lineage") -> Path:
+    """Write a standalone HTML lineage viewer.
+
+    Args:
+        graph: Lineage graph to render.
+        path: Output HTML path.
+        title: Page title.
+
+    Returns:
+        The written HTML path.
+    """
+
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    payload = json.dumps(graph.to_dict(), indent=2)
+    payload = json.dumps(graph.to_dict(), indent=2).replace("</", "<\\/")
     path.write_text(_html(title=title, payload=payload), encoding="utf-8")
     return path
 
@@ -26,14 +37,15 @@ def _html(*, title: str, payload: str) -> str:
   <style>
     :root {{
       color-scheme: light;
-      --bg: #f7f8fb;
-      --ink: #19212a;
-      --muted: #637083;
+      --bg: #f5f7fa;
+      --ink: #18212b;
+      --muted: #627084;
       --panel: #ffffff;
-      --line: #d8dee9;
+      --line: #d8dee8;
+      --soft: #f9fafc;
       --value: #2166ac;
       --filter: #b2182b;
-      --join: #5aae61;
+      --join: #4d9221;
       --group: #7b3294;
       --order: #d6604d;
       --opaque: #4d4d4d;
@@ -46,7 +58,7 @@ def _html(*, title: str, payload: str) -> str:
       font: 14px/1.4 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }}
     header {{
-      padding: 24px 28px 16px;
+      padding: 22px 28px 16px;
       background: #ffffff;
       border-bottom: 1px solid var(--line);
     }}
@@ -58,7 +70,7 @@ def _html(*, title: str, payload: str) -> str:
     }}
     .summary {{
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
       color: var(--muted);
     }}
@@ -69,17 +81,25 @@ def _html(*, title: str, payload: str) -> str:
       background: #fbfcfe;
     }}
     main {{
-      padding: 22px 28px 32px;
+      padding: 22px 28px 30px;
+      overflow-x: auto;
+    }}
+    .graph-shell {{
+      position: relative;
       display: grid;
-      grid-template-columns: 320px minmax(420px, 1fr) 320px;
-      gap: 18px;
+      grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr) minmax(280px, 1fr);
+      gap: 20px;
+      align-items: start;
       min-width: 980px;
     }}
     .panel {{
+      position: relative;
+      z-index: 1;
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 1px 2px rgba(24, 33, 43, .04);
     }}
     .panel h2 {{
       margin: 0;
@@ -89,6 +109,7 @@ def _html(*, title: str, payload: str) -> str:
       letter-spacing: .08em;
       color: var(--muted);
       border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
     }}
     .dataset {{
       padding: 12px 14px 14px;
@@ -103,6 +124,9 @@ def _html(*, title: str, payload: str) -> str:
       margin-bottom: 8px;
       font-weight: 700;
     }}
+    .dataset-name {{
+      overflow-wrap: anywhere;
+    }}
     .engine {{
       color: var(--muted);
       font-size: 11px;
@@ -112,40 +136,48 @@ def _html(*, title: str, payload: str) -> str:
       white-space: nowrap;
     }}
     .column {{
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 8px;
+      align-items: center;
       margin: 4px 0;
+      min-height: 30px;
       padding: 5px 7px;
       border-radius: 6px;
-      background: #f9fafc;
+      background: var(--soft);
       border: 1px solid transparent;
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 12px;
+    }}
+    .column span:first-child {{
+      overflow-wrap: anywhere;
     }}
     .column[data-active="true"] {{
       background: #eef5ff;
       border-color: #b9d6fb;
     }}
-    .dtype {{ color: var(--muted); }}
-    .canvas {{
-      position: relative;
-      min-height: 760px;
-      background: linear-gradient(#ffffff, #fbfcfe);
+    .dtype {{ color: var(--muted); white-space: nowrap; }}
+    .empty {{
+      padding: 18px 14px;
+      color: var(--muted);
+      font-size: 13px;
     }}
     #edges {{
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
+      z-index: 0;
       pointer-events: none;
+      overflow: visible;
     }}
     .edge-label {{
       position: absolute;
+      z-index: 2;
       padding: 2px 6px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       font-size: 11px;
       color: var(--muted);
       transform: translate(-50%, -50%);
@@ -155,8 +187,8 @@ def _html(*, title: str, payload: str) -> str:
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
+      margin: 0 28px 22px;
       padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
     }}
     .legend span {{
       display: inline-flex;
@@ -171,9 +203,12 @@ def _html(*, title: str, payload: str) -> str:
       border-radius: 50%;
       background: var(--value);
     }}
+    .raw {{
+      margin: 0 28px 28px;
+    }}
     pre {{
       margin: 0;
-      max-height: 280px;
+      max-height: 320px;
       overflow: auto;
       padding: 12px 14px;
       color: #2a3440;
@@ -189,15 +224,15 @@ def _html(*, title: str, payload: str) -> str:
     <div class="summary" id="summary"></div>
   </header>
   <main>
-    <section class="panel" id="sources"><h2>Source Columns</h2></section>
-    <section class="panel canvas">
-      <h2>Column-Level Lineage Edges</h2>
-      <div class="legend" id="legend"></div>
+    <section class="graph-shell" id="graph-shell">
       <svg id="edges" aria-label="lineage edges"></svg>
+      <section class="panel" id="sources"><h2>Source Datasets</h2></section>
+      <section class="panel" id="intermediates"><h2>Intermediate Datasets</h2></section>
+      <section class="panel" id="targets"><h2>Final Outputs</h2></section>
     </section>
-    <section class="panel" id="targets"><h2>Output Columns</h2></section>
   </main>
-  <section class="panel" style="margin: 0 28px 28px;">
+  <section class="panel legend" id="legend"></section>
+  <section class="panel raw">
     <h2>Raw Lineage JSON</h2>
     <pre id="json"></pre>
   </section>
@@ -215,36 +250,50 @@ def _html(*, title: str, payload: str) -> str:
       unknown: "var(--opaque)"
     }};
 
-    function columnId(ref) {{
-      return `${{ref.dataset}}.${{ref.column}}`.replace(/[^A-Za-z0-9_-]/g, "_");
+    function columnId(ref, tier) {{
+      return `${{tier}}-${{ref.dataset}}.${{ref.column}}`.replace(/[^A-Za-z0-9_-]/g, "_");
     }}
 
-    function columnsForDataset(datasetKey, edges, side) {{
+    function datasetLabel(dataset) {{
+      return dataset.logical_name || dataset.qualified_name || dataset.name;
+    }}
+
+    function sortedColumns(datasetKey, tier) {{
       const names = new Set();
-      for (const edge of edges) {{
-        const ref = side === "source" ? edge.source : edge.target;
-        if (ref.dataset === datasetKey) names.add(ref.column);
+      if (tier === "target" || tier === "intermediate") {{
+        graph.outputs
+          .filter(ref => ref.dataset === datasetKey)
+          .forEach(ref => names.add(ref.column));
+      }}
+      if (tier === "source" || tier === "intermediate") {{
+        graph.edges
+          .filter(edge => edge.source.dataset === datasetKey)
+          .forEach(edge => names.add(edge.source.column));
+      }}
+      if (!names.size) {{
+        graph.edges
+          .filter(edge => edge.target.dataset === datasetKey)
+          .forEach(edge => names.add(edge.target.column));
       }}
       return [...names].sort();
     }}
 
-    function renderDataset(parent, datasetKey, side) {{
+    function renderDataset(parent, datasetKey, tier) {{
       const dataset = byDataset[datasetKey];
-      const columns = side === "target"
-        ? graph.outputs.filter(ref => ref.dataset === datasetKey).map(ref => ref.column)
-        : columnsForDataset(datasetKey, graph.edges, "source");
+      if (!dataset) return;
+      const columns = sortedColumns(datasetKey, tier);
       if (!columns.length) return;
       const root = document.createElement("div");
       root.className = "dataset";
       const title = document.createElement("div");
       title.className = "dataset-title";
-      title.innerHTML = `<span>${{dataset.logical_name || dataset.qualified_name || dataset.name}}</span><span class="engine">${{dataset.engine}}</span>`;
+      title.innerHTML = `<span class="dataset-name">${{datasetLabel(dataset)}}</span><span class="engine">${{dataset.engine}}</span>`;
       root.appendChild(title);
       const schema = new Map((dataset.schema || []).map(col => [col.name, col.dtype]));
       for (const column of columns) {{
         const row = document.createElement("div");
         row.className = "column";
-        row.id = `${{side}}-${{columnId({{ dataset: datasetKey, column }})}}`;
+        row.id = columnId({{ dataset: datasetKey, column }}, tier);
         row.dataset.active = "true";
         row.innerHTML = `<span>${{column}}</span><span class="dtype">${{schema.get(column) || ""}}</span>`;
         root.appendChild(row);
@@ -252,19 +301,36 @@ def _html(*, title: str, payload: str) -> str:
       parent.appendChild(root);
     }}
 
-    function render() {{
-      const sourcePanel = document.getElementById("sources");
-      const targetPanel = document.getElementById("targets");
-      const sourceDatasets = new Set(graph.edges.map(edge => edge.source.dataset));
-      const targetDatasets = new Set(graph.outputs.map(output => output.dataset));
-      for (const key of [...sourceDatasets].sort()) renderDataset(sourcePanel, key, "source");
-      for (const key of [...targetDatasets].sort()) renderDataset(targetPanel, key, "target");
+    function addEmptyState(parent) {{
+      if (parent.querySelector(".dataset")) return;
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "No materialized datasets in this tier";
+      parent.appendChild(empty);
+    }}
 
+    function tiers() {{
+      const sourceDatasets = new Set(graph.edges.map(edge => edge.source.dataset));
+      const outputDatasets = new Set(graph.outputs.map(output => output.dataset));
+      const intermediate = [...outputDatasets].filter(key => sourceDatasets.has(key)).sort();
+      const final = [...outputDatasets].filter(key => !sourceDatasets.has(key)).sort();
+      const sources = [...sourceDatasets].filter(key => !outputDatasets.has(key)).sort();
+      return {{ sources, intermediate, final: final.length ? final : [...outputDatasets].sort() }};
+    }}
+
+    function render() {{
+      const tierSets = tiers();
+      for (const key of tierSets.sources) renderDataset(document.getElementById("sources"), key, "source");
+      for (const key of tierSets.intermediate) renderDataset(document.getElementById("intermediates"), key, "intermediate");
+      for (const key of tierSets.final) renderDataset(document.getElementById("targets"), key, "target");
+      addEmptyState(document.getElementById("intermediates"));
+
+      const stageText = Array.isArray(graph.metadata.stages) ? `stages: ${{graph.metadata.stages.join(" -> ")}}` : `job: ${{graph.metadata.job_name || "unknown"}}`;
       document.getElementById("summary").innerHTML = [
         `${{Object.keys(graph.datasets).length}} datasets`,
         `${{graph.outputs.length}} output columns`,
         `${{graph.edges.length}} column edges`,
-        `job: ${{graph.metadata.job_name || "unknown"}}`
+        stageText
       ].map(text => `<span>${{text}}</span>`).join("");
 
       document.getElementById("legend").innerHTML = Object.entries(roles)
@@ -276,27 +342,37 @@ def _html(*, title: str, payload: str) -> str:
       requestAnimationFrame(drawEdges);
     }}
 
+    function sourceTier(ref, tierSets) {{
+      return tierSets.intermediate.includes(ref.dataset) ? "intermediate" : "source";
+    }}
+
+    function targetTier(ref, tierSets) {{
+      return tierSets.intermediate.includes(ref.dataset) ? "intermediate" : "target";
+    }}
+
     function drawEdges() {{
+      const shell = document.getElementById("graph-shell");
       const svg = document.getElementById("edges");
-      const canvas = svg.parentElement.getBoundingClientRect();
-      svg.setAttribute("viewBox", `0 0 ${{canvas.width}} ${{canvas.height}}`);
+      const shellBox = shell.getBoundingClientRect();
+      svg.setAttribute("viewBox", `0 0 ${{shellBox.width}} ${{shellBox.height}}`);
       svg.innerHTML = "";
       document.querySelectorAll(".edge-label").forEach(label => label.remove());
 
+      const tierSets = tiers();
       graph.edges.forEach((edge, index) => {{
-        const source = document.getElementById(`source-${{columnId(edge.source)}}`);
-        const target = document.getElementById(`target-${{columnId(edge.target)}}`);
+        const source = document.getElementById(columnId(edge.source, sourceTier(edge.source, tierSets)));
+        const target = document.getElementById(columnId(edge.target, targetTier(edge.target, tierSets)));
         if (!source || !target) return;
         const s = source.getBoundingClientRect();
         const t = target.getBoundingClientRect();
-        const x1 = 0;
-        const y1 = s.top + s.height / 2 - canvas.top;
-        const x2 = canvas.width;
-        const y2 = t.top + t.height / 2 - canvas.top;
-        const bend = canvas.width / 2 + ((index % 9) - 4) * 10;
+        const x1 = s.right - shellBox.left;
+        const y1 = s.top + s.height / 2 - shellBox.top;
+        const x2 = t.left - shellBox.left;
+        const y2 = t.top + t.height / 2 - shellBox.top;
+        const bend = Math.max(40, Math.abs(x2 - x1) / 2) + ((index % 7) - 3) * 7;
         const color = roles[edge.role] || roles.unknown;
         const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", `M ${{x1}} ${{y1}} C ${{bend}} ${{y1}}, ${{bend}} ${{y2}}, ${{x2}} ${{y2}}`);
+        path.setAttribute("d", `M ${{x1}} ${{y1}} C ${{x1 + bend}} ${{y1}}, ${{x2 - bend}} ${{y2}}, ${{x2}} ${{y2}}`);
         path.setAttribute("fill", "none");
         path.setAttribute("stroke", color);
         path.setAttribute("stroke-width", edge.role === "value" ? "1.8" : "1.1");
@@ -304,20 +380,20 @@ def _html(*, title: str, payload: str) -> str:
         svg.appendChild(path);
       }});
 
-      const samples = graph.edges.filter(edge => edge.role !== "join").slice(0, 18);
-      samples.forEach((edge, index) => {{
-        const source = document.getElementById(`source-${{columnId(edge.source)}}`);
-        const target = document.getElementById(`target-${{columnId(edge.target)}}`);
+      const labeled = graph.edges.filter(edge => edge.role !== "join").slice(0, 24);
+      labeled.forEach((edge, index) => {{
+        const source = document.getElementById(columnId(edge.source, sourceTier(edge.source, tierSets)));
+        const target = document.getElementById(columnId(edge.target, targetTier(edge.target, tierSets)));
         if (!source || !target) return;
         const s = source.getBoundingClientRect();
         const t = target.getBoundingClientRect();
         const label = document.createElement("div");
         label.className = "edge-label";
         label.textContent = edge.role;
-        label.style.left = `${{50 + ((index % 5) - 2) * 6}}%`;
-        label.style.top = `${{(s.top + t.top + s.height) / 2 - canvas.top}}px`;
+        label.style.left = `${{(s.right + t.left) / 2 - shellBox.left + ((index % 5) - 2) * 10}}px`;
+        label.style.top = `${{(s.top + t.top + s.height) / 2 - shellBox.top}}px`;
         label.style.borderColor = roles[edge.role] || roles.unknown;
-        svg.parentElement.appendChild(label);
+        shell.appendChild(label);
       }});
     }}
 

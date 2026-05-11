@@ -14,6 +14,7 @@ from ibis_unified_lineage.models import (
     DatasetRef,
     LineageEdge,
     LineageGraph,
+    merge_lineage_graphs,
 )
 
 __all__ = [
@@ -32,6 +33,7 @@ __all__ = [
     "load_default_config",
     "logical_registry",
     "mart_dataset",
+    "merge_lineage_graphs",
     "read_csv_fixture",
     "unbound_tables",
 ]
