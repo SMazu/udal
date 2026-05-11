@@ -22,12 +22,28 @@ from ibis_unified_lineage.models import (
 
 @dataclass
 class RelationDerivation:
+    """Column derivations and source datasets for an Ibis relation node.
+
+    Attributes:
+        columns: Mapping of relation output column name to derivation metadata.
+        datasets: Source datasets reachable from this relation.
+    """
+
     columns: dict[str, ColumnDerivation]
     datasets: dict[str, DatasetRef] = field(default_factory=dict)
 
 
 class IbisLineageExtractor:
+    """Extract backend-agnostic column lineage from Ibis expression graphs."""
+
     def __init__(self, registry: Mapping[str, DatasetRef] | None = None) -> None:
+        """Initialize the extractor.
+
+        Args:
+            registry: Optional mapping from Ibis table aliases to logical and
+                physical dataset metadata.
+        """
+
         self.registry = dict(registry or {})
         self._relation_cache: dict[ops.Relation, RelationDerivation] = {}
 
@@ -38,6 +54,18 @@ class IbisLineageExtractor:
         target: DatasetRef | None = None,
         job_name: str | None = None,
     ) -> LineageGraph:
+        """Extract a column-level lineage graph for an Ibis expression.
+
+        Args:
+            expr: Ibis expression to analyze.
+            target: Optional dataset metadata for the materialized output.
+            job_name: Optional job name to attach to graph metadata.
+
+        Returns:
+            A lineage graph with source datasets, output columns, and
+            source-to-output column edges.
+        """
+
         table_expr = expr.as_table()
         rel = table_expr.op()
         derivation = self.trace_relation(rel)
@@ -74,6 +102,18 @@ class IbisLineageExtractor:
         return graph
 
     def trace_relation(self, rel: ops.Relation) -> RelationDerivation:
+        """Trace column derivations for an Ibis relation operation.
+
+        Args:
+            rel: Relation operation from an Ibis expression tree.
+
+        Raises:
+            TypeError: If a value operation is passed instead of a relation.
+
+        Returns:
+            Relation-level derivation metadata.
+        """
+
         cached = self._relation_cache.get(rel)
         if cached is not None:
             return cached
@@ -259,6 +299,17 @@ class IbisLineageExtractor:
         role: str = "value",
         transform: str | None = None,
     ) -> tuple[ColumnDependency, ...]:
+        """Trace dependencies for multiple Ibis value operations.
+
+        Args:
+            values: Value operations to inspect.
+            role: Dependency role to assign to discovered source columns.
+            transform: Optional transform override.
+
+        Returns:
+            De-duplicated source column dependencies.
+        """
+
         dependencies = []
         for value in values:
             dependencies.extend(self.trace_value(value, role=role, transform=transform).dependencies)
@@ -271,6 +322,17 @@ class IbisLineageExtractor:
         role: str = "value",
         transform: str | None = None,
     ) -> ColumnDerivation:
+        """Trace dependencies for one Ibis value operation.
+
+        Args:
+            value: Value operation to inspect.
+            role: Dependency role to assign to discovered source columns.
+            transform: Optional transform override.
+
+        Returns:
+            Column derivation metadata.
+        """
+
         fields = value.find_topmost(ops.Field)
         dependencies: list[ColumnDependency] = []
         for field in fields:
@@ -294,6 +356,16 @@ class IbisLineageExtractor:
         )
 
     def trace_column(self, rel: ops.Relation, name: str) -> ColumnDerivation:
+        """Trace the derivation for one relation column.
+
+        Args:
+            rel: Relation operation that exposes the column.
+            name: Column name.
+
+        Returns:
+            Column derivation metadata, or an unknown derivation if unresolved.
+        """
+
         derivation = self.trace_relation(rel)
         return derivation.columns.get(
             name,
@@ -353,6 +425,18 @@ def extract_lineage(
     registry: Mapping[str, DatasetRef] | None = None,
     job_name: str | None = None,
 ) -> LineageGraph:
+    """Extract lineage for an Ibis expression using a one-shot extractor.
+
+    Args:
+        expr: Ibis expression to analyze.
+        target: Optional dataset metadata for the materialized output.
+        registry: Optional mapping from Ibis table aliases to dataset metadata.
+        job_name: Optional job name to attach to graph metadata.
+
+    Returns:
+        Extracted column-level lineage graph.
+    """
+
     return IbisLineageExtractor(registry=registry).extract(expr, target=target, job_name=job_name)
 
 

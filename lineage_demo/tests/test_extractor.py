@@ -7,6 +7,8 @@ from ibis_unified_lineage.sqlglot_bridge import extract_sqlglot_lineage
 
 
 def test_projection_filter_and_aggregate_lineage() -> None:
+    """Verify value, filter, and group dependencies for a compact Ibis job."""
+
     orders = ibis.table(
         {
             "customer_id": "int64",
@@ -42,6 +44,8 @@ def test_projection_filter_and_aggregate_lineage() -> None:
 
 
 def test_cross_engine_job_lineage_is_stable_when_orders_backend_moves() -> None:
+    """Verify logical dependencies survive a Spark Delta to SQLite swap."""
+
     expr = build_monthly_revenue_job(unbound_tables())
     spark_graph = extract_lineage(
         expr,
@@ -65,6 +69,8 @@ def test_cross_engine_job_lineage_is_stable_when_orders_backend_moves() -> None:
 
 
 def test_sqlglot_bridge_extracts_column_lineage() -> None:
+    """Verify SQLGlot SQL lineage maps into the shared graph model."""
+
     registry = {
         "orders": DatasetRef(
             name="orders",

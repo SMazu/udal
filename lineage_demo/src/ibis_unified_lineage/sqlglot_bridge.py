@@ -16,7 +16,18 @@ def extract_sqlglot_lineage(
     schema: Mapping | None = None,
     dialect: str | None = None,
 ) -> LineageGraph:
-    """Extract SQLGlot AST/scope lineage into the common graph model."""
+    """Extract SQLGlot AST/scope lineage into the common graph model.
+
+    Args:
+        sql: SQL text or parsed SQLGlot expression.
+        target: Dataset metadata for the SQL output.
+        registry: Mapping from SQL table aliases/names to dataset metadata.
+        schema: Optional SQLGlot schema mapping used to qualify columns.
+        dialect: Optional SQL dialect for parsing and expression rendering.
+
+    Returns:
+        Column-level lineage graph in the same model as the Ibis extractor.
+    """
 
     graph = LineageGraph(metadata={"source": "sqlglot"})
     graph.add_dataset(target)

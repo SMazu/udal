@@ -5,6 +5,8 @@ from ibis_unified_lineage.ui import write_lineage_ui
 
 
 def test_lineage_ui_is_generated(tmp_path) -> None:
+    """Verify the standalone HTML UI includes lineage data and labels."""
+
     expr = build_monthly_revenue_job(unbound_tables())
     graph = extract_lineage(expr, registry=logical_registry(), target=mart_dataset(), job_name="monthly_revenue")
     path = write_lineage_ui(graph, tmp_path / "lineage.html")
