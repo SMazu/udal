@@ -356,7 +356,6 @@ def _html(*, title: str, payload: str) -> str:
       const shellBox = shell.getBoundingClientRect();
       svg.setAttribute("viewBox", `0 0 ${{shellBox.width}} ${{shellBox.height}}`);
       svg.innerHTML = "";
-      document.querySelectorAll(".edge-label").forEach(label => label.remove());
 
       const tierSets = tiers();
       graph.edges.forEach((edge, index) => {{
@@ -378,22 +377,6 @@ def _html(*, title: str, payload: str) -> str:
         path.setAttribute("stroke-width", edge.role === "value" ? "1.8" : "1.1");
         path.setAttribute("stroke-opacity", edge.role === "value" ? "0.72" : "0.34");
         svg.appendChild(path);
-      }});
-
-      const labeled = graph.edges.filter(edge => edge.role !== "join").slice(0, 24);
-      labeled.forEach((edge, index) => {{
-        const source = document.getElementById(columnId(edge.source, sourceTier(edge.source, tierSets)));
-        const target = document.getElementById(columnId(edge.target, targetTier(edge.target, tierSets)));
-        if (!source || !target) return;
-        const s = source.getBoundingClientRect();
-        const t = target.getBoundingClientRect();
-        const label = document.createElement("div");
-        label.className = "edge-label";
-        label.textContent = edge.role;
-        label.style.left = `${{(s.right + t.left) / 2 - shellBox.left + ((index % 5) - 2) * 10}}px`;
-        label.style.top = `${{(s.top + t.top + s.height) / 2 - shellBox.top}}px`;
-        label.style.borderColor = roles[edge.role] || roles.unknown;
-        shell.appendChild(label);
       }});
     }}
 
