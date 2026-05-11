@@ -45,17 +45,18 @@ prototype-shaped in several important ways.
 
 ## Hardening Work In This Pass
 
-This pass upgrades the most important design seams:
+This pass upgrades the most important design seams. Items marked complete are
+implemented in the current codebase.
 
-1. Add a JSON-backed `JobConfig` / `TableConfig` model.
-2. Move canonical demo data into CSV fixtures.
-3. Add generic engine dispatch for seeding/reading configured tables.
-4. Add CLI overrides for table engines and target engine.
-5. Generalize the UI to render source, intermediate, and final tiers.
-6. Add stage graph merging for multi-hop lineage.
-7. Add multi-stage tests for `A+B -> C`, `D+E+F -> G`, and `C+G -> H`.
-8. Add Google-style docstrings to public library APIs and tests.
-9. Expand the docs so users can understand the library without opening every
+1. Complete: Add a JSON-backed `JobConfig` / `TableConfig` model.
+2. Complete: Move canonical demo data into CSV fixtures.
+3. Complete: Add generic engine dispatch for seeding/reading configured tables.
+4. Complete: Add CLI overrides for table engines and target engine.
+5. Complete: Generalize the UI to render source, intermediate, and final tiers.
+6. Complete: Add stage graph merging for multi-hop lineage.
+7. Complete: Add multi-stage tests for `A+B -> C`, `D+E+F -> G`, and `C+G -> H`.
+8. Complete: Add Google-style docstrings to public library APIs and tests.
+9. Complete: Expand the docs so users can understand the library without opening every
    source file.
 
 ## Remaining Production Work After This Pass
