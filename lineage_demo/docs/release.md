@@ -25,6 +25,8 @@ uv run pytest tests
 scripts/uv_test_matrix.sh
 rm -rf dist
 uv build
+uv run --no-editable python -m examples.multistage_pipeline.demo_run \
+  --artifacts artifacts/multistage-lineage
 ```
 
 Inspect the wheel:
@@ -87,3 +89,5 @@ repository is finalized.
 - Decide whether the package should remain `Development Status :: 3 - Alpha`.
 - Decide whether examples should be published in the sdist. They are excluded
   from the wheel but currently included in the sdist for handoff usefulness.
+- Confirm whether `docs/design.md` should ship as project documentation or be
+  split into public design docs and internal maintainer notes.

@@ -10,6 +10,10 @@ example as separate products:
 - Docker/OrbStack integration image: `docker`.
 - Release notes and handoff docs: `docs`.
 
+Start with `docs/design.md`, then `docs/architecture.md`, then this file.
+Those three documents preserve the current technical context from this agent
+thread.
+
 ## Current State
 
 - Python package metadata is in `pyproject.toml` and uses Hatchling.
@@ -21,6 +25,17 @@ example as separate products:
   package demo fixtures, engine setup code, or the monthly revenue runner.
 - The monthly revenue example still exercises Spark Delta, SQLite, Postgres,
   MySQL, Polars/parquet, and DuckDB through one Docker image.
+- Multi-stage lineage is now a first-class library feature. Use
+  `PipelineStage`, `extract_pipeline_lineage`, and
+  `transitive_dependency_pairs` for cascading materialized jobs.
+- Scanning mode is implemented in `scan_ibis_project`. It discovers documented
+  stage declarations and returns the same `PipelineStage` objects used by
+  explicit registration. It must remain conservative and diagnostic-rich rather
+  than guessing lineage from arbitrary Python.
+- The HTML UI is an arbitrary-depth dataset DAG viewer. Do not reintroduce the
+  old fixed source/intermediate/final three-column layout.
+- `examples/multistage_pipeline` is the handoff example for static deep DAG
+  lineage and UI generation.
 
 ## Context From The Previous Agent
 
@@ -31,9 +46,30 @@ the static Ibis expression graph before execution. Backend-specific table
 locations are represented as metadata on `DatasetRef`; logical lineage is keyed
 by stable names such as `sales.orders` and `mart.monthly_revenue`.
 
+The canonical graph remains direct/materialized lineage. Each edge represents a
+dependency across a stage boundary or within a stage output. Raw-to-final
+lineage is derived by traversing the direct graph and should not replace the
+canonical stored graph. The library must not execute queries to extract lineage.
+Stage builders are invoked only to construct lazy Ibis expressions from declared
+schemas.
+
 SQLGlot lineage is AST/scope-based rather than logical-plan-based. The package
 keeps this separate in `sqlglot_bridge.py` and maps SQLGlot output into the same
 `LineageGraph` model used by the Ibis extractor.
+
+Scanner conventions currently supported:
+
+- module-level `PipelineStage` objects,
+- collections named `LINEAGE_STAGES`, `PIPELINE_STAGES`, or `STAGES`,
+- module metadata variables `LINEAGE_STAGE_ID`, `LINEAGE_INPUTS`,
+  `LINEAGE_TARGET`, and a builder named `LINEAGE_BUILDER`, `build_lineage`,
+  `build_job`, or `build`,
+- `LINEAGE_JOBS` collections of dictionaries with `stage_id`, `inputs`,
+  `target`, `builder`, and optional `metadata`.
+
+If a file cannot be imported or understood safely, preserve the current behavior
+of reporting a structured diagnostic. Do not silently skip suspicious lineage
+markers and do not invent target/input metadata.
 
 The prior uv work found two packaging issues that should stay guarded:
 
@@ -53,6 +89,8 @@ uv run pytest tests
 scripts/uv_test_matrix.sh
 rm -rf dist
 uv build
+uv run --no-editable python -m examples.multistage_pipeline.demo_run \
+  --artifacts artifacts/multistage-lineage
 ```
 
 Run these from the parent repository root:

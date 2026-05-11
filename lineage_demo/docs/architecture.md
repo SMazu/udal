@@ -3,6 +3,8 @@
 `ibis-unified-lineage` is split into a small library and a heavier example
 harness.
 
+For product-level decisions and handoff context, read `docs/design.md` first.
+
 ## Core Library
 
 The PyPI wheel should contain only `src/ibis_unified_lineage`:
@@ -11,14 +13,59 @@ The PyPI wheel should contain only `src/ibis_unified_lineage`:
   dependencies, edges, graphs, and graph merging.
 - `extractor.py` walks Ibis operation trees and emits column dependency edges
   with roles such as `value`, `filter`, `join`, `group`, `order`, and `opaque`.
+- `pipeline.py` defines `PipelineStage`, static multi-stage extraction, and
+  derived transitive dependency traversal. It keeps direct/materialized lineage
+  as the canonical graph and computes raw-to-output lineage from direct edges.
+- `scanner.py` discovers supported lineage declarations across Python project
+  roots and produces the same `PipelineStage` objects as explicit registration.
+  Scanner failures are surfaced as structured diagnostics.
 - `sqlglot_bridge.py` maps SQLGlot lineage output into the same graph model for
   SQL-string entry points.
-- `ui.py` renders any `LineageGraph` as standalone HTML without depending on
-  the monthly revenue example.
+- `ui.py` renders any `LineageGraph` as standalone arbitrary-depth DAG HTML
+  without depending on the monthly revenue example.
 - `py.typed` marks the package as typed for downstream type checkers.
 
 Core code must not import example modules, CSV fixtures, Docker setup, database
 clients, Spark, pandas, or test-only helpers.
+
+## Lineage Model
+
+Extraction remains static. The library builds lazy Ibis tables from
+`DatasetRef.schema`, invokes stage builders only far enough to produce lazy Ibis
+expressions, and traverses the expression graph. It does not run SQL, collect
+data, call backend metadata APIs, or require Spark/Delta/Postgres/MySQL to be
+available for lineage extraction.
+
+The graph model distinguishes two views:
+
+- Direct/materialized lineage is canonical. These edges preserve stage and
+  materialization boundaries such as `raw.a -> mart.c -> mart.h`.
+- Transitive lineage is derived on demand from the direct graph. This provides
+  raw-to-selected-output pairs without flattening the stored graph.
+
+The standalone HTML viewer embeds both views. Dataset nodes are laid out in
+topological layers of arbitrary depth, with materialized datasets allowed at any
+rank. Users can switch between direct and transitive edges and filter by
+dataset, column, role, stage, and engine.
+
+## Scanning Conventions
+
+`scan_ibis_project` scans one or more files or directories. It currently
+supports these conventions:
+
+- module-level `PipelineStage` objects,
+- module-level collections named `LINEAGE_STAGES`, `PIPELINE_STAGES`, or
+  `STAGES`,
+- module metadata variables `LINEAGE_STAGE_ID`, `LINEAGE_INPUTS`,
+  `LINEAGE_TARGET`, and a builder named `LINEAGE_BUILDER`, `build_lineage`,
+  `build_job`, or `build`,
+- `LINEAGE_JOBS` collections of dictionaries with `stage_id`, `inputs`,
+  `target`, `builder`, and optional `metadata`.
+
+Scanning is intentionally conservative. If arbitrary Python cannot be understood
+through a documented convention, the scanner reports a skipped file or
+diagnostic. It does not guess target datasets, infer schemas from live systems,
+or execute Ibis queries.
 
 ## Example Harness
 

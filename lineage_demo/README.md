@@ -1,6 +1,6 @@
 # Ibis Unified Lineage
 
-`ibis-unified-lineage` extracts engine-agnostic column lineage from Ibis
+`ibis-unified-lineage` extracts engine-agnostic column lineage from lazy Ibis
 expression graphs before a query is executed. The same logical job should emit
 the same dependency graph whether an input table lives in Spark Delta, SQLite,
 Postgres, MySQL, DuckDB, Polars, parquet, or another Ibis backend.
@@ -9,13 +9,20 @@ The importable package is intentionally small:
 
 - `ibis_unified_lineage.models`: dataset, column, edge, and graph models.
 - `ibis_unified_lineage.extractor`: Ibis expression graph lineage extraction.
+- `ibis_unified_lineage.pipeline`: materialized stage registration, pipeline
+  extraction, and derived transitive lineage.
+- `ibis_unified_lineage.scanner`: project/folder scanning that discovers
+  supported stage declarations and returns structured diagnostics.
 - `ibis_unified_lineage.sqlglot_bridge`: SQLGlot SQL lineage mapped into the
   shared graph model.
-- `ibis_unified_lineage.ui`: standalone HTML lineage viewer generation.
+- `ibis_unified_lineage.ui`: standalone arbitrary-depth DAG HTML viewer
+  generation.
 
 Everything demo-specific lives outside `src/` under `examples/monthly_revenue`.
 That example contains the config parser, CSV fixtures, engine seeding code,
 DuckDB execution smoke test, and service-backed runner.
+
+Read `docs/design.md` for the production design and handoff context.
 
 ## Quick Start
 
@@ -46,6 +53,107 @@ graph = extract_lineage(
 )
 
 print(graph.to_dict())
+```
+
+## Multi-Stage Pipeline Lineage
+
+The canonical graph is direct/materialized lineage: each edge describes how one
+stage writes one materialized target from its declared inputs. Raw-to-final
+lineage is derived from those direct edges.
+
+```python
+from ibis_unified_lineage import DatasetRef, PipelineStage, extract_pipeline_lineage
+
+raw_orders = DatasetRef(
+    name="orders",
+    engine="spark-delta",
+    schema={"customer_id": "int64", "amount": "float64"},
+    logical_name="sales.orders",
+)
+customer_revenue = DatasetRef(
+    name="customer_revenue",
+    engine="duckdb",
+    logical_name="mart.customer_revenue",
+)
+
+def build_customer_revenue(tables):
+    orders = tables["orders"]
+    return orders.group_by(orders.customer_id).agg(total_amount=orders.amount.sum())
+
+graph = extract_pipeline_lineage(
+    [
+        PipelineStage(
+            stage_id="customer_revenue",
+            inputs={"orders": raw_orders},
+            target=customer_revenue,
+            builder=build_customer_revenue,
+        )
+    ]
+)
+```
+
+`PipelineStage.builder` is invoked only to construct lazy Ibis expressions. The
+library does not execute the query or connect to the backend while extracting
+lineage. Input datasets must provide schemas unless they are produced by an
+earlier discovered stage.
+
+Use `transitive_dependency_pairs(graph)` when a caller needs raw source columns
+for a selected final output column.
+
+## Scanning Mode
+
+Explicit stage registration is supported, but production projects can also scan
+folders or many repos for known declarations:
+
+```python
+from ibis_unified_lineage import scan_ibis_project, extract_pipeline_lineage
+
+scan = scan_ibis_project(["jobs", "shared_transforms"])
+graph = extract_pipeline_lineage(scan.stages)
+```
+
+Initial supported conventions are:
+
+- modules exporting `PipelineStage` objects,
+- modules exporting lists/tuples of `PipelineStage` as `LINEAGE_STAGES`,
+  `PIPELINE_STAGES`, or `STAGES`,
+- modules exposing `LINEAGE_STAGE_ID`, `LINEAGE_INPUTS`, `LINEAGE_TARGET`, and a
+  builder named `LINEAGE_BUILDER`, `build_lineage`, `build_job`, or `build`,
+- modules exporting `LINEAGE_JOBS` as mappings with `stage_id`, `inputs`,
+  `target`, `builder`, and optional `metadata`.
+
+If a file cannot be understood safely, the scanner reports diagnostics, skipped
+files, duplicate target conflicts, and unresolved inputs rather than inventing
+lineage.
+
+## Deep Multi-Stage Example
+
+The static multi-stage example lives in `examples/multistage_pipeline`. It
+generates a five-layer DAG:
+
+```text
+raw.a + raw.b -> mart.c
+raw.d + raw.e + raw.f -> mart.g
+mart.c + mart.g + raw.a -> mart.h
+mart.h + mart.c -> mart.i
+mart.i + raw.f -> mart.k
+```
+
+Generate its lineage JSON and HTML UI:
+
+```bash
+uv run --no-editable python -m examples.multistage_pipeline.demo_run \
+  --artifacts artifacts/multistage-lineage
+```
+
+Override logical dataset engines without changing lineage:
+
+```bash
+uv run --no-editable python -m examples.multistage_pipeline.demo_run \
+  --artifacts artifacts/multistage-lineage-swapped \
+  --table-engine raw.a=spark-delta \
+  --table-engine mart.c=postgres \
+  --table-engine mart.k=polars
 ```
 
 ## Monthly Revenue Example
