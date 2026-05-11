@@ -2,8 +2,15 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, replace
+from importlib import resources
+from os import PathLike
 from pathlib import Path
 from typing import Any, Mapping
+
+try:
+    from importlib.resources.abc import Traversable
+except ImportError:  # Python 3.10 exposes Traversable from importlib.abc.
+    from importlib.abc import Traversable
 
 import ibis
 import pandas as pd
@@ -99,7 +106,9 @@ class JobConfig:
     Attributes:
         job_name: Human-readable job identifier.
         execution_engine: Engine used to execute the demo query.
-        fixture_root: Directory containing fixture CSV files.
+        fixture_root: Directory or importlib resource containing fixture CSV
+            files. Production callers should pass explicit config and fixture
+            resources rather than relying on the bundled demo config.
         tables: Input table configurations keyed by job table name.
         target: Output dataset configuration.
         expected_csv: Optional expected-output CSV path for result checks.
@@ -109,7 +118,7 @@ class JobConfig:
 
     job_name: str
     execution_engine: str
-    fixture_root: Path
+    fixture_root: str | PathLike[str] | Traversable
     tables: dict[str, TableConfig]
     target: DatasetRef
     expected_csv: str | None = None
@@ -128,9 +137,40 @@ class JobConfig:
 
         path = Path(path)
         payload = json.loads(path.read_text(encoding="utf-8"))
-        fixture_root = Path(payload.get("fixture_root", "."))
-        if not fixture_root.is_absolute():
-            fixture_root = path.parent / fixture_root
+        return cls.from_mapping(payload, fixture_root=path.parent)
+
+    @classmethod
+    def from_resource(cls, config_resource: Traversable, *, fixture_root: Traversable) -> JobConfig:
+        """Load a job config from an importlib resource.
+
+        Args:
+            config_resource: Traversable resource for the JSON job config.
+            fixture_root: Traversable resource containing fixture CSV files.
+
+        Returns:
+            Parsed job configuration.
+        """
+
+        payload = json.loads(config_resource.read_text(encoding="utf-8"))
+        return cls.from_mapping(payload, fixture_root=fixture_root)
+
+    @classmethod
+    def from_mapping(cls, payload: Mapping[str, Any], *, fixture_root: str | PathLike[str] | Traversable) -> JobConfig:
+        """Build a job config from an already loaded mapping.
+
+        Args:
+            payload: JSON-compatible job configuration.
+            fixture_root: Path-like or importlib Traversable fixture root.
+
+        Returns:
+            Parsed job configuration.
+        """
+
+        configured_fixture_root = Path(payload.get("fixture_root", "."))
+        if configured_fixture_root.is_absolute():
+            resolved_fixture_root = configured_fixture_root
+        else:
+            resolved_fixture_root = _join_fixture_path(fixture_root, configured_fixture_root)
         target_payload = payload["target"]
         target = DatasetRef(
             name=str(target_payload["name"]),
@@ -145,7 +185,7 @@ class JobConfig:
         return cls(
             job_name=str(payload["job_name"]),
             execution_engine=str(payload.get("execution_engine", "duckdb")),
-            fixture_root=fixture_root,
+            fixture_root=resolved_fixture_root,
             tables={name: TableConfig.from_dict(spec) for name, spec in payload["tables"].items()},
             target=target,
             expected_csv=payload.get("expected_csv"),
@@ -231,7 +271,7 @@ class JobConfig:
         """Load all configured CSV fixtures into pandas data frames."""
 
         return {
-            name: read_csv_fixture(self.fixture_root / table.csv_path, table.schema)
+            name: read_csv_fixture(_join_fixture_path(self.fixture_root, table.csv_path), table.schema)
             for name, table in self.tables.items()
         }
 
@@ -240,39 +280,54 @@ class JobConfig:
 
         if not self.expected_csv:
             return None
-        return read_csv_fixture(self.fixture_root / self.expected_csv, dict(self.target.schema))
+        return read_csv_fixture(_join_fixture_path(self.fixture_root, self.expected_csv), dict(self.target.schema))
 
 
-def read_csv_fixture(path: str | Path, schema: Mapping[str, str]) -> pd.DataFrame:
+def read_csv_fixture(path: str | PathLike[str] | Traversable, schema: Mapping[str, str]) -> pd.DataFrame:
     """Read a fixture CSV using the configured schema.
 
     Args:
-        path: CSV path.
+        path: CSV path or importlib resource.
         schema: Mapping of column name to Ibis type string.
 
     Returns:
         A pandas DataFrame with columns ordered as configured.
     """
 
-    path = Path(path)
     dtype = {
         column: _pandas_dtype(dtype_name)
         for column, dtype_name in schema.items()
         if _pandas_dtype(dtype_name) is not None
     }
-    frame = pd.read_csv(path, dtype=dtype)
+    if _is_pathlike(path):
+        frame = pd.read_csv(Path(path), dtype=dtype)
+    else:
+        with path.open("rb") as handle:
+            frame = pd.read_csv(handle, dtype=dtype)
     return frame[list(schema.keys())]
 
 
 def default_config_path() -> Path:
-    """Return the built-in monthly revenue demo config path."""
+    """Return a filesystem path for the bundled monthly revenue demo config.
 
+    Production code should prefer explicit job configs. This helper exists for
+    the bundled demo and wheel-install tests where resources are installed as
+    ordinary files.
+    """
+
+    package_fixture = _packaged_monthly_revenue_root().joinpath("job_config.json")
+    if _is_pathlike(package_fixture) and Path(package_fixture).exists():
+        return Path(package_fixture)
     return Path(__file__).resolve().parents[2] / "fixtures" / "monthly_revenue" / "job_config.json"
 
 
 def load_default_config() -> JobConfig:
-    """Load the built-in monthly revenue demo config."""
+    """Load the bundled monthly revenue demo config from package resources."""
 
+    package_root = _packaged_monthly_revenue_root()
+    package_config = package_root.joinpath("job_config.json")
+    if package_config.is_file():
+        return JobConfig.from_resource(package_config, fixture_root=package_root)
     return JobConfig.from_path(default_config_path())
 
 
@@ -296,3 +351,20 @@ def _default_kind_for_engine(engine: str) -> str:
     if "parquet" in normalized:
         return "parquet"
     return "table"
+
+
+def _packaged_monthly_revenue_root() -> Traversable:
+    return resources.files("ibis_unified_lineage").joinpath("fixtures", "monthly_revenue")
+
+
+def _join_fixture_path(
+    root: str | PathLike[str] | Traversable,
+    relative_path: str | Path,
+) -> str | PathLike[str] | Traversable:
+    if _is_pathlike(root):
+        return Path(root) / relative_path
+    return root.joinpath(*Path(relative_path).parts)
+
+
+def _is_pathlike(value: Any) -> bool:
+    return isinstance(value, (str, PathLike))
