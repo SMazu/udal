@@ -1,120 +1,111 @@
-# Ibis Unified Lineage Demo
+# Ibis Unified Lineage
 
-This package is a working reference implementation for extracting
-engine-agnostic column lineage from Ibis jobs. The important design choice is
-that lineage is derived from the Ibis expression graph before execution, so the
-same logical job produces the same dependency graph when a source table moves
-from Spark Delta to SQLite, Postgres, MySQL, DuckDB, or parquet-backed Polars.
+`ibis-unified-lineage` extracts engine-agnostic column lineage from Ibis
+expression graphs before a query is executed. The same logical job should emit
+the same dependency graph whether an input table lives in Spark Delta, SQLite,
+Postgres, MySQL, DuckDB, Polars, parquet, or another Ibis backend.
 
-## Architecture
+The importable package is intentionally small:
 
-The library has five layers:
+- `ibis_unified_lineage.models`: dataset, column, edge, and graph models.
+- `ibis_unified_lineage.extractor`: Ibis expression graph lineage extraction.
+- `ibis_unified_lineage.sqlglot_bridge`: SQLGlot SQL lineage mapped into the
+  shared graph model.
+- `ibis_unified_lineage.ui`: standalone HTML lineage viewer generation.
 
-1. `JobConfig` and `TableConfig` describe logical tables, schemas, fixture CSVs,
-   physical engines, target datasets, and backend-swap variants.
-2. `engine_io` loads fixture data directly from CSV for fast tests or
-   round-trips each table through its configured engine for service-backed
-   integration runs.
-3. Job builders, such as `build_monthly_revenue_job`, create Ibis expressions
-   from a mapping of table names to Ibis tables. They do not know which engine
-   owns each source table.
-4. `IbisLineageExtractor` walks the Ibis operation tree and emits the shared
-   `LineageGraph` model with value, filter, join, group, order, and opaque
-   dependency roles.
-5. `write_lineage_ui` writes a standalone HTML viewer that lays out source,
-   intermediate, and final datasets from the graph itself.
+Everything demo-specific lives outside `src/` under `examples/monthly_revenue`.
+That example contains the config parser, CSV fixtures, engine seeding code,
+DuckDB execution smoke test, and service-backed runner.
 
-`sqlglot_bridge.extract_sqlglot_lineage` is included for SQL strings and uses
-SQLGlot's AST/scope lineage API, then maps the result into the same graph model.
+## Quick Start
 
-## Configuration
+```python
+import ibis
 
-The canonical demo config lives at
-`fixtures/monthly_revenue/job_config.json`. Each input table declares:
+from ibis_unified_lineage import DatasetRef, extract_lineage
 
-- `name`: the table key used by the Ibis job.
-- `logical_name`: the stable governance name used in backend-invariant lineage.
-- `engine`: physical engine or storage system.
-- `kind`: physical object kind, such as `table`, `delta`, or `parquet`.
-- `csv`: fixture CSV path relative to the config file.
-- `schema`: ordered Ibis type strings.
+orders = ibis.table(
+    {"customer_id": "int64", "amount": "float64", "status": "string"},
+    name="orders",
+)
+expr = orders.filter(orders.status == "paid").group_by(orders.customer_id).agg(
+    total_amount=orders.amount.sum(),
+)
 
-The packaged monthly revenue fixtures are intentionally bundled as demo and
-installed-wheel test resources. Production jobs should provide their own config
-path or resource root so lineage extraction is driven by the caller's datasets,
-not by the example assets in the wheel.
+graph = extract_lineage(
+    expr,
+    registry={
+        "orders": DatasetRef(
+            name="orders",
+            engine="duckdb",
+            schema=orders.schema().items(),
+            logical_name="sales.orders",
+        )
+    },
+    target=DatasetRef(name="customer_revenue", engine="duckdb", logical_name="mart.customer_revenue"),
+)
 
-Example override from the CLI:
+print(graph.to_dict())
+```
+
+## Monthly Revenue Example
+
+The canonical cross-engine example lives in `examples/monthly_revenue`.
+Its config is `examples/monthly_revenue/fixtures/monthly_revenue/job_config.json`.
+The example proves that lineage stays keyed by logical dataset names such as
+`sales.orders` and `mart.monthly_revenue` even when physical engines change.
+
+Run the local example without external services:
 
 ```bash
-uv run --no-editable python -m ibis_unified_lineage.demo_run \
+uv run --no-editable python -m examples.monthly_revenue.demo_run \
+  --artifacts artifacts/local-smoke
+```
+
+Override table engines from the CLI:
+
+```bash
+uv run --no-editable python -m examples.monthly_revenue.demo_run \
   --artifacts artifacts/local-sqlite-orders \
   --table-engine orders=sqlite \
   --table-engine returns=duckdb \
   --target-engine postgres
 ```
 
-The lineage dependencies remain keyed by logical names like `sales.orders` and
-`mart.monthly_revenue`; engine changes update metadata, not the logical graph.
+The run writes `monthly_revenue.csv`, lineage JSON files, `lineage.html`, and
+`summary.json` into the artifact directory.
 
-## Local Tests
+## Development
 
-This project uses `uv` exclusively for Python dependency management, virtual
-environment management, package builds, and test execution. Add runtime or dev
-dependencies with canonical commands such as `uv add PACKAGE` or
-`uv add --dev PACKAGE`.
+This project uses `uv` exclusively for dependency management, virtualenv
+management, builds, and tests. Add dependencies with canonical commands such as
+`uv add PACKAGE` or `uv add --dev PACKAGE`.
 
 ```bash
 uv sync --dev
 uv run pytest tests
 ```
 
-Build the source distribution and wheel with the Hatchling backend:
+Build the source distribution and wheel with Hatchling:
 
 ```bash
+rm -rf dist
 uv build
 ```
 
-Run the installed-wheel compatibility matrix across Python 3.10 through the
-latest stable 3.14.x interpreter that uv resolves:
+Run installed-wheel compatibility tests across Python 3.10 through 3.14:
 
 ```bash
 scripts/uv_test_matrix.sh
 ```
 
-The test suite covers:
+The wheel matrix intentionally installs the built wheel in isolated uv
+environments and asserts that demo modules are not importable from
+`ibis_unified_lineage`.
 
-- CSV-backed fixture loading and engine override metadata.
-- DuckDB execution of the monthly revenue job.
-- Ibis extractor value/filter/join/group lineage.
-- SQLGlot SQL lineage mapping into the common graph model.
-- Backend-invariant lineage when `orders` moves from Spark Delta to SQLite.
-- Materialized multi-stage lineage for `A+B -> C`, `D+E+F -> G`, and `C+G -> H`.
-- Standalone HTML lineage UI generation.
+## Docker Service Example
 
-## Local Demo
-
-Run the demo without external services:
-
-```bash
-uv run --no-editable python -m ibis_unified_lineage.demo_run \
-  --artifacts artifacts/local-smoke
-```
-
-The demo writes:
-
-- `monthly_revenue.csv`
-- `lineage.json`
-- `lineage_base.json`
-- `lineage_orders_sqlite.json`
-- `lineage.html`
-- `summary.json`
-
-Open `lineage.html` to inspect the generated column-level graph.
-
-## Single-Image Service Demo
-
-Build the image from the repository root:
+Build the single-image service demo from the repository root:
 
 ```bash
 docker build -f lineage_demo/docker/Dockerfile -t ibis-unified-lineage-demo:latest .
@@ -129,10 +120,10 @@ docker run --rm \
 ```
 
 The image starts Postgres and MariaDB, writes Spark Delta or parquet-fallback
-orders, SQLite customers, Postgres FX rates, MySQL promotions, and Polars parquet
-returns, then executes the unified Ibis job through DuckDB.
+orders, SQLite customers, Postgres FX rates, MySQL promotions, and
+Polars/parquet returns, then executes the unified Ibis job through DuckDB.
 
-Run the same uv-managed installed-wheel Python matrix inside the image:
+Run the same installed-wheel Python matrix inside the image:
 
 ```bash
 docker run --rm \
@@ -140,21 +131,7 @@ docker run --rm \
   ibis-unified-lineage-demo:latest
 ```
 
-## Adding A Job
+## Release Handoff
 
-1. Add CSV fixtures and a JSON job config with schemas for every table.
-2. Write a job builder that accepts `Mapping[str, ibis.Table]` and returns an
-   Ibis table expression.
-3. Load configured tables with `JobConfig.unbound_tables()` for static lineage.
-4. Call `extract_lineage(expr, registry=config.registry(), target=config.target)`.
-5. Use `merge_lineage_graphs` when a pipeline materializes multiple stages.
-6. Use `collect_configured_frames` and `execute_ibis_job_with_duckdb` for
-   repeatable fixture execution tests.
-
-## Current Limits
-
-The current implementation is production-oriented but still a reference library.
-Known follow-up milestones are tracked in
-`../docs/production-hardening-plan.md`: strict context-lineage policies,
-OpenLineage/DataHub emitters, deeper SQLGlot source expansion, property-based
-expression tests, type/lint/doc CI, and a hardened non-root container image.
+Read `AGENTS.md` first. Then follow `docs/release.md` for the PyPI release
+checklist and `docs/gap-analysis.md` for remaining owner decisions.
