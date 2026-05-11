@@ -1,0 +1,5 @@
+region,segment,channel,order_month,total_net_usd,gross_local,active_customers,returned_orders
+EMEA,consumer,retail,2026-01,125.0,100.0,1,0
+EMEA,enterprise,email,2026-01,188.1,200.0,1,0
+NA,enterprise,search,2026-02,244.8,320.0,1,0
+NA,midmarket,search,2026-01,168.0,200.0,1,1

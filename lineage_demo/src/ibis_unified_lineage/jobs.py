@@ -4,6 +4,7 @@ from collections.abc import Mapping
 
 import ibis
 
+from ibis_unified_lineage.config import load_default_config
 from ibis_unified_lineage.models import DatasetRef
 
 
@@ -56,69 +57,55 @@ MART_SCHEMA = {
 
 
 def logical_registry(order_engine: str = "spark-delta") -> dict[str, DatasetRef]:
-    return {
-        "orders": DatasetRef(
-            name="orders",
-            engine=order_engine,
-            database="sales",
-            kind="delta" if order_engine == "spark-delta" else "table",
-            schema=ORDERS_SCHEMA.items(),
-            logical_name="sales.orders",
-        ),
-        "customers": DatasetRef(
-            name="customers",
-            engine="sqlite",
-            database="crm",
-            schema=CUSTOMERS_SCHEMA.items(),
-            logical_name="crm.customers",
-        ),
-        "fx_rates": DatasetRef(
-            name="fx_rates",
-            engine="postgres",
-            database="finance",
-            schema=FX_RATES_SCHEMA.items(),
-            logical_name="finance.fx_rates",
-        ),
-        "promotions": DatasetRef(
-            name="promotions",
-            engine="mysql",
-            database="marketing",
-            schema=PROMOTIONS_SCHEMA.items(),
-            logical_name="marketing.promotions",
-        ),
-        "returns": DatasetRef(
-            name="returns",
-            engine="parquet-polars",
-            database="ops",
-            kind="parquet",
-            schema=RETURNS_SCHEMA.items(),
-            logical_name="ops.returns",
-        ),
-    }
+    """Return dataset metadata for the canonical monthly-revenue inputs.
+
+    Args:
+        order_engine: Physical engine to advertise for the `orders` table. This
+            compatibility shortcut is used by tests that verify backend-invariant
+            lineage when a table moves from Spark Delta to another engine.
+
+    Returns:
+        Registry aliases that map Ibis table names to logical dataset metadata.
+    """
+
+    config = load_default_config()
+    tables = dict(config.tables)
+    orders_kind = "delta" if order_engine == "spark-delta" else "table"
+    tables["orders"] = tables["orders"].with_overrides({"engine": order_engine, "kind": orders_kind})
+    return config.__class__(
+        job_name=config.job_name,
+        execution_engine=config.execution_engine,
+        fixture_root=config.fixture_root,
+        tables=tables,
+        target=config.target,
+        expected_csv=config.expected_csv,
+        lineage_variants=config.lineage_variants,
+    ).registry()
 
 
 def mart_dataset() -> DatasetRef:
-    return DatasetRef(
-        name="monthly_revenue",
-        engine="duckdb",
-        database="mart",
-        kind="table",
-        schema=MART_SCHEMA.items(),
-        logical_name="mart.monthly_revenue",
-    )
+    """Return dataset metadata for the canonical monthly-revenue output."""
+
+    return load_default_config().target
 
 
 def unbound_tables() -> dict[str, ibis.Table]:
-    return {
-        "orders": ibis.table(ORDERS_SCHEMA, name="orders"),
-        "customers": ibis.table(CUSTOMERS_SCHEMA, name="customers"),
-        "fx_rates": ibis.table(FX_RATES_SCHEMA, name="fx_rates"),
-        "promotions": ibis.table(PROMOTIONS_SCHEMA, name="promotions"),
-        "returns": ibis.table(RETURNS_SCHEMA, name="returns"),
-    }
+    """Return unbound Ibis tables for the canonical monthly-revenue inputs."""
+
+    return load_default_config().unbound_tables()
 
 
 def build_monthly_revenue_job(tables: Mapping[str, ibis.Table]) -> ibis.Table:
+    """Build the canonical cross-engine monthly revenue transformation.
+
+    Args:
+        tables: Mapping of logical input table names to Ibis table expressions.
+
+    Returns:
+        An Ibis table expression that can be compiled or executed by any backend
+        that supports the operations used in the job.
+    """
+
     orders = tables["orders"]
     customers = tables["customers"]
     fx_rates = tables["fx_rates"]

@@ -1,0 +1,106 @@
+{
+  "job_name": "monthly_revenue",
+  "execution_engine": "duckdb",
+  "fixture_root": ".",
+  "target": {
+    "name": "monthly_revenue",
+    "logical_name": "mart.monthly_revenue",
+    "engine": "duckdb",
+    "database": "mart",
+    "kind": "table",
+    "schema": {
+      "region": "string",
+      "segment": "string",
+      "channel": "string",
+      "order_month": "string",
+      "total_net_usd": "float64",
+      "gross_local": "float64",
+      "active_customers": "int64",
+      "returned_orders": "int64"
+    }
+  },
+  "expected_csv": "expected_monthly_revenue.csv",
+  "tables": {
+    "orders": {
+      "name": "orders",
+      "logical_name": "sales.orders",
+      "engine": "spark-delta",
+      "database": "sales",
+      "kind": "delta",
+      "csv": "orders.csv",
+      "schema": {
+        "order_id": "int64",
+        "customer_id": "int64",
+        "order_month": "string",
+        "quantity": "int64",
+        "unit_price": "float64",
+        "discount_pct": "float64",
+        "currency": "string",
+        "status": "string",
+        "promo_id": "int64"
+      }
+    },
+    "customers": {
+      "name": "customers",
+      "logical_name": "crm.customers",
+      "engine": "sqlite",
+      "database": "crm",
+      "kind": "table",
+      "csv": "customers.csv",
+      "schema": {
+        "customer_id": "int64",
+        "region": "string",
+        "segment": "string"
+      }
+    },
+    "fx_rates": {
+      "name": "fx_rates",
+      "logical_name": "finance.fx_rates",
+      "engine": "postgres",
+      "database": "finance",
+      "kind": "table",
+      "csv": "fx_rates.csv",
+      "schema": {
+        "currency": "string",
+        "rate_month": "string",
+        "rate_to_usd": "float64"
+      }
+    },
+    "promotions": {
+      "name": "promotions",
+      "logical_name": "marketing.promotions",
+      "engine": "mysql",
+      "database": "marketing",
+      "kind": "table",
+      "csv": "promotions.csv",
+      "schema": {
+        "promo_id": "int64",
+        "channel": "string",
+        "promo_discount_pct": "float64"
+      }
+    },
+    "returns": {
+      "name": "returns",
+      "logical_name": "ops.returns",
+      "engine": "parquet-polars",
+      "database": "ops",
+      "kind": "parquet",
+      "csv": "returns.csv",
+      "schema": {
+        "order_id": "int64",
+        "is_returned": "boolean",
+        "return_fee": "float64"
+      }
+    }
+  },
+  "lineage_variants": {
+    "orders_sqlite": {
+      "tables": {
+        "orders": {
+          "engine": "sqlite",
+          "kind": "table"
+        }
+      }
+    }
+  }
+}

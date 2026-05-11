@@ -1,0 +1,5 @@
+customer_id,region,segment
+101,EMEA,enterprise
+102,NA,midmarket
+103,EMEA,consumer
+104,NA,enterprise

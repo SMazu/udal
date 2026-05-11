@@ -1,0 +1,4 @@
+promo_id,channel,promo_discount_pct
+9001,email,0.05
+9002,search,0.10
+9003,retail,0.00
