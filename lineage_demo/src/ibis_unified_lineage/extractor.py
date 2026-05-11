@@ -79,7 +79,8 @@ class IbisLineageExtractor:
                 logical_name=job_name or "result",
             )
 
-        graph = LineageGraph(metadata={"job_name": job_name or target.name})
+        stage_id = job_name or target.name
+        graph = LineageGraph(metadata={"job_name": stage_id})
         for dataset in derivation.datasets.values():
             graph.add_dataset(dataset)
         graph.add_dataset(target)
@@ -97,6 +98,7 @@ class IbisLineageExtractor:
                         transform=column.transform if dependency.transform == "identity" else dependency.transform,
                         expression=column.expression,
                         confidence=combine_confidence(column.confidence, dependency.confidence),
+                        stage_id=stage_id,
                     )
                 )
         return graph

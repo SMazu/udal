@@ -72,8 +72,9 @@ def test_materialized_multistage_lineage_is_merged_and_rendered(tmp_path) -> Non
 
     html_path = write_lineage_ui(merged, tmp_path / "multistage_lineage.html")
     html = html_path.read_text(encoding="utf-8")
-    assert "Intermediate Datasets" in html
-    assert "Final Outputs" in html
+    assert "arbitrary-depth-materialized-dag" in html
+    assert "Direct materialized lineage" in html
+    assert "Transitive raw-to-output lineage" in html
     assert "mart.c" in html
     assert "mart.g" in html
     assert "mart.h" in html

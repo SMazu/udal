@@ -169,6 +169,7 @@ class LineageEdge:
     transform: str
     expression: str
     confidence: str = "exact"
+    stage_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize the edge for JSON artifacts and UI rendering."""
@@ -180,6 +181,7 @@ class LineageEdge:
             "transform": self.transform,
             "expression": self.expression,
             "confidence": self.confidence,
+            "stage_id": self.stage_id,
         }
 
 
