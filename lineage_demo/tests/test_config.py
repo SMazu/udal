@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from ibis_unified_lineage import load_default_config
-from ibis_unified_lineage.engine_io import collect_configured_frames
+from examples.monthly_revenue.config import load_default_config
+from examples.monthly_revenue.engine_io import collect_configured_frames
 
 
 def test_job_config_loads_csv_fixtures_with_declared_schema(tmp_path) -> None:

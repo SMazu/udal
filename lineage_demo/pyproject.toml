@@ -1,46 +1,82 @@
 [project]
-name = "ibis-unified-lineage-demo"
+name = "ibis-unified-lineage"
 version = "0.1.0"
 description = "Engine-agnostic column lineage extraction for Ibis expressions."
+readme = "README.md"
 requires-python = ">=3.10,<3.15"
 dependencies = [
+  "ibis-framework>=12.0.0",
+  "sqlglot>=30",
+]
+authors = [
+  { name = "Unified Data Access Layer maintainers" },
+]
+keywords = ["ibis", "lineage", "data-engineering", "sqlglot", "governance"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: Database",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.optional-dependencies]
+demo = [
   "delta-spark==3.3.2",
   "ibis-framework[duckdb,polars,postgres,pyspark,sqlite]>=12.0.0",
   "pandas>=2.2,<3; python_version < '3.11'",
   "pandas>=2.2; python_version >= '3.11'",
   "pyarrow>=16",
   "pyspark==3.5.7",
-  "sqlglot>=30",
 ]
-
-[project.optional-dependencies]
 mysql = ["mysqlclient>=2.2.4"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build]
+exclude = [
+  "**/__pycache__",
+  "**/*.pyc",
+  "artifacts",
+  "dist",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/ibis_unified_lineage"]
-
-[tool.hatch.build.targets.wheel.force-include]
-"fixtures" = "ibis_unified_lineage/fixtures"
 
 [tool.hatch.build.targets.sdist]
 include = [
   "src/ibis_unified_lineage",
-  "fixtures",
+  ".github",
+  "examples",
+  "docs",
+  "docker",
   "pytest-wheel.ini",
   "scripts",
   "tests",
+  "AGENTS.md",
   "README.md",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
 
 [dependency-groups]
 dev = [
+    "delta-spark==3.3.2",
+    "ibis-framework[duckdb,polars,postgres,pyspark,sqlite]>=12.0.0",
+    "pandas>=2.2,<3; python_version < '3.11'",
+    "pandas>=2.2; python_version >= '3.11'",
+    "pyarrow>=16",
+    "pyspark==3.5.7",
     "pytest>=8",
 ]

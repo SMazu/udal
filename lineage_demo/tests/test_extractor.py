@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import ibis
 
-from ibis_unified_lineage import DatasetRef, build_monthly_revenue_job, extract_lineage, logical_registry, mart_dataset, unbound_tables
+from examples.monthly_revenue.jobs import build_monthly_revenue_job, logical_registry, mart_dataset, unbound_tables
+from ibis_unified_lineage import DatasetRef, extract_lineage
 from ibis_unified_lineage.sqlglot_bridge import extract_sqlglot_lineage
 
 

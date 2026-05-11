@@ -4,7 +4,7 @@ from collections.abc import Mapping
 
 import ibis
 
-from ibis_unified_lineage.config import load_default_config
+from examples.monthly_revenue.config import load_default_config
 from ibis_unified_lineage.models import DatasetRef
 
 

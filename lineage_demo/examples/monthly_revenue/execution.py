@@ -6,7 +6,7 @@ from typing import Callable
 import ibis
 import pandas as pd
 
-from ibis_unified_lineage.jobs import build_monthly_revenue_job
+from examples.monthly_revenue.jobs import build_monthly_revenue_job
 
 
 SORT_COLUMNS = ["region", "segment", "channel", "order_month"]

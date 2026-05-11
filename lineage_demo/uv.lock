@@ -170,44 +170,62 @@ sqlite = [
 ]
 
 [[package]]
-name = "ibis-unified-lineage-demo"
+name = "ibis-unified-lineage"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "ibis-framework" },
+    { name = "sqlglot" },
+]
+
+[package.optional-dependencies]
+demo = [
     { name = "delta-spark" },
     { name = "ibis-framework", extra = ["duckdb", "polars", "postgres", "pyspark", "sqlite"] },
     { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pandas", version = "3.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pyarrow" },
     { name = "pyspark" },
-    { name = "sqlglot" },
 ]
-
-[package.optional-dependencies]
 mysql = [
     { name = "mysqlclient" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "delta-spark" },
+    { name = "ibis-framework", extra = ["duckdb", "polars", "postgres", "pyspark", "sqlite"] },
+    { name = "pandas", version = "2.3.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "pandas", version = "3.0.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pyarrow" },
+    { name = "pyspark" },
     { name = "pytest" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "delta-spark", marker = "extra == 'demo'", specifier = "==3.3.2" },
+    { name = "ibis-framework", specifier = ">=12.0.0" },
+    { name = "ibis-framework", extras = ["duckdb", "polars", "postgres", "pyspark", "sqlite"], marker = "extra == 'demo'", specifier = ">=12.0.0" },
+    { name = "mysqlclient", marker = "extra == 'mysql'", specifier = ">=2.2.4" },
+    { name = "pandas", marker = "python_full_version >= '3.11' and extra == 'demo'", specifier = ">=2.2" },
+    { name = "pandas", marker = "python_full_version < '3.11' and extra == 'demo'", specifier = ">=2.2,<3" },
+    { name = "pyarrow", marker = "extra == 'demo'", specifier = ">=16" },
+    { name = "pyspark", marker = "extra == 'demo'", specifier = "==3.5.7" },
+    { name = "sqlglot", specifier = ">=30" },
+]
+provides-extras = ["demo", "mysql"]
+
+[package.metadata.requires-dev]
+dev = [
     { name = "delta-spark", specifier = "==3.3.2" },
     { name = "ibis-framework", extras = ["duckdb", "polars", "postgres", "pyspark", "sqlite"], specifier = ">=12.0.0" },
-    { name = "mysqlclient", marker = "extra == 'mysql'", specifier = ">=2.2.4" },
     { name = "pandas", marker = "python_full_version < '3.11'", specifier = ">=2.2,<3" },
     { name = "pandas", marker = "python_full_version >= '3.11'", specifier = ">=2.2" },
     { name = "pyarrow", specifier = ">=16" },
     { name = "pyspark", specifier = "==3.5.7" },
-    { name = "sqlglot", specifier = ">=30" },
+    { name = "pytest", specifier = ">=8" },
 ]
-provides-extras = ["mysql"]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8" }]
 
 [[package]]
 name = "importlib-metadata"

@@ -21,14 +21,14 @@ for python_version in ${PYTHON_MATRIX}; do
     --no-project \
     --isolated \
     --python "${python_version}" \
-    --with "${wheel_path}" \
+    --with "${wheel_path}[demo]" \
     --with pytest \
-    python -c 'from ibis_unified_lineage.config import default_config_path; import ibis_unified_lineage, pathlib, sys; package_path = pathlib.Path(ibis_unified_lineage.__file__).resolve(); print(sys.version.split()[0], package_path); assert "site-packages" in str(package_path); assert default_config_path().exists()'
+    python -c 'import importlib.util, ibis_unified_lineage, pathlib, sys; package_path = pathlib.Path(ibis_unified_lineage.__file__).resolve(); print(sys.version.split()[0], package_path); assert "site-packages" in str(package_path); assert importlib.util.find_spec("ibis_unified_lineage.config") is None; assert importlib.util.find_spec("ibis_unified_lineage.demo_run") is None'
   uv run \
     --no-project \
     --isolated \
     --python "${python_version}" \
-    --with "${wheel_path}" \
+    --with "${wheel_path}[demo]" \
     --with pytest \
     pytest -c pytest-wheel.ini tests
 done

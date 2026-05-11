@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from ibis_unified_lineage import build_monthly_revenue_job, extract_lineage, logical_registry, mart_dataset, unbound_tables
+from examples.monthly_revenue.jobs import build_monthly_revenue_job, logical_registry, mart_dataset, unbound_tables
+from ibis_unified_lineage import extract_lineage
 from ibis_unified_lineage.ui import write_lineage_ui
 
 

@@ -7,7 +7,7 @@ from typing import Any, Mapping
 
 import pandas as pd
 
-from ibis_unified_lineage.config import JobConfig, TableConfig
+from examples.monthly_revenue.config import JobConfig, TableConfig
 
 
 class EngineIOError(RuntimeError):

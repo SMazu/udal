@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from ibis_unified_lineage.config import load_default_config
+from examples.monthly_revenue.config import load_default_config
 
 
 def sample_frames() -> dict[str, pd.DataFrame]:

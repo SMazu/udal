@@ -4,11 +4,11 @@ import argparse
 import json
 from pathlib import Path
 
-from ibis_unified_lineage.config import JobConfig, default_config_path
-from ibis_unified_lineage.engine_io import collect_configured_frames
-from ibis_unified_lineage.execution import assert_frame_equalish, execute_monthly_revenue_with_duckdb
+from examples.monthly_revenue.config import JobConfig, default_config_path
+from examples.monthly_revenue.engine_io import collect_configured_frames
+from examples.monthly_revenue.execution import assert_frame_equalish, execute_monthly_revenue_with_duckdb
+from examples.monthly_revenue.jobs import build_monthly_revenue_job
 from ibis_unified_lineage.extractor import extract_lineage
-from ibis_unified_lineage.jobs import build_monthly_revenue_job
 from ibis_unified_lineage.models import LineageGraph
 from ibis_unified_lineage.ui import write_lineage_ui
 
