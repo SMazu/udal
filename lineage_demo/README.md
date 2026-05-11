@@ -39,10 +39,15 @@ The canonical demo config lives at
 - `csv`: fixture CSV path relative to the config file.
 - `schema`: ordered Ibis type strings.
 
+The packaged monthly revenue fixtures are intentionally bundled as demo and
+installed-wheel test resources. Production jobs should provide their own config
+path or resource root so lineage extraction is driven by the caller's datasets,
+not by the example assets in the wheel.
+
 Example override from the CLI:
 
 ```bash
-python -m ibis_unified_lineage.demo_run \
+uv run --no-editable python -m ibis_unified_lineage.demo_run \
   --artifacts artifacts/local-sqlite-orders \
   --table-engine orders=sqlite \
   --table-engine returns=duckdb \
@@ -54,10 +59,27 @@ The lineage dependencies remain keyed by logical names like `sales.orders` and
 
 ## Local Tests
 
+This project uses `uv` exclusively for Python dependency management, virtual
+environment management, package builds, and test execution. Add runtime or dev
+dependencies with canonical commands such as `uv add PACKAGE` or
+`uv add --dev PACKAGE`.
+
 ```bash
-python -m venv .venv
-.venv/bin/python -m pip install -e '.[test]'
-.venv/bin/python -m pytest tests
+uv sync --dev
+uv run pytest tests
+```
+
+Build the source distribution and wheel with the Hatchling backend:
+
+```bash
+uv build
+```
+
+Run the installed-wheel compatibility matrix across Python 3.10 through the
+latest stable 3.14.x interpreter that uv resolves:
+
+```bash
+scripts/uv_test_matrix.sh
 ```
 
 The test suite covers:
@@ -75,7 +97,7 @@ The test suite covers:
 Run the demo without external services:
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m ibis_unified_lineage.demo_run \
+uv run --no-editable python -m ibis_unified_lineage.demo_run \
   --artifacts artifacts/local-smoke
 ```
 
@@ -109,6 +131,14 @@ docker run --rm \
 The image starts Postgres and MariaDB, writes Spark Delta or parquet-fallback
 orders, SQLite customers, Postgres FX rates, MySQL promotions, and Polars parquet
 returns, then executes the unified Ibis job through DuckDB.
+
+Run the same uv-managed installed-wheel Python matrix inside the image:
+
+```bash
+docker run --rm \
+  --entrypoint /app/scripts/uv_test_matrix.sh \
+  ibis-unified-lineage-demo:latest
+```
 
 ## Adding A Job
 
