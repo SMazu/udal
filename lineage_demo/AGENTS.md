@@ -10,9 +10,9 @@ example as separate products:
 - Docker/OrbStack integration image: `docker`.
 - Release notes and handoff docs: `docs`.
 
-Start with `docs/design.md`, then `docs/architecture.md`, then this file.
-Those three documents preserve the current technical context from this agent
-thread.
+Start with `docs/agent-context.md`, then `docs/design.md`, then
+`docs/architecture.md`, then this file. Those documents preserve the current
+technical context from this agent thread.
 
 ## Current State
 
@@ -32,6 +32,8 @@ thread.
   stage declarations and returns the same `PipelineStage` objects used by
   explicit registration. It must remain conservative and diagnostic-rich rather
   than guessing lineage from arbitrary Python.
+- `pipeline.py` is the canonical extraction layer; `scanner.py` is a discovery
+  adapter that feeds `PipelineStage` objects into that layer.
 - The HTML UI is an arbitrary-depth dataset DAG viewer. Do not reintroduce the
   old fixed source/intermediate/final three-column layout.
 - `examples/multistage_pipeline` is the handoff example for static deep DAG

@@ -48,6 +48,19 @@ topological layers of arbitrary depth, with materialized datasets allowed at any
 rank. Users can switch between direct and transitive edges and filter by
 dataset, column, role, stage, and engine.
 
+## Pipeline API And Scanner Responsibilities
+
+`pipeline.py` is the production extraction layer. It should be used whenever a
+caller can already provide `PipelineStage` objects, whether those objects come
+from tests, explicit application code, orchestration metadata, or a future
+adapter.
+
+`scanner.py` is a discovery layer. It exists because production users should not
+have to manually register every stage from many repositories. The scanner finds
+documented declarations, returns `PipelineStage` objects, and reports
+diagnostics. It does not bypass `extract_pipeline_lineage`, and it must not
+guess lineage for unsupported Python.
+
 ## Scanning Conventions
 
 `scan_ibis_project` scans one or more files or directories. It currently

@@ -100,6 +100,30 @@ earlier discovered stage.
 Use `transitive_dependency_pairs(graph)` when a caller needs raw source columns
 for a selected final output column.
 
+### Pipeline API vs. Scanner Mode
+
+Use the pipeline API when the caller already has structured job metadata, such
+as an orchestration manifest, a test fixture, or a framework integration that
+can construct `PipelineStage` objects directly. This is the canonical extraction
+path: `extract_pipeline_lineage` receives stages, builds lazy Ibis expressions,
+and emits the direct/materialized `LineageGraph`.
+
+Use scanner mode when the caller has Python job repositories rather than an
+already-built stage list. `scan_ibis_project` discovers supported declarations,
+reports diagnostics for files it cannot understand safely, and returns
+`PipelineStage` objects. It is not a separate extractor. The normal production
+flow is:
+
+```python
+scan = scan_ibis_project(["repo_a/jobs", "repo_b/jobs"])
+if scan.diagnostics or scan.duplicate_target_conflicts or scan.unresolved_input_datasets:
+    ...
+graph = extract_pipeline_lineage(scan.stages)
+```
+
+In short: `pipeline.py` owns the lineage model and extraction workflow;
+`scanner.py` helps production users avoid manually assembling every stage.
+
 ## Scanning Mode
 
 Explicit stage registration is supported, but production projects can also scan

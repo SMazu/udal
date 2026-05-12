@@ -37,6 +37,37 @@ queries, seed databases, collect frames, or depend on live backend connections.
 Input datasets need schemas unless they are produced by an upstream discovered
 stage whose schema can be inferred from its lazy expression.
 
+## Pipeline API vs Scanner Mode
+
+The pipeline API and scanner mode are intentionally different layers:
+
+- `pipeline.py` is the canonical model and extraction path. It defines
+  `PipelineStage`, validates stage ordering, invokes builders to create lazy
+  Ibis expressions, extracts each materialization boundary, merges the direct
+  graph, and derives transitive pairs.
+- `scanner.py` is a discovery adapter. It scans files and folders for supported
+  declarations, turns those declarations into `PipelineStage` objects, and
+  reports structured diagnostics. It does not compute lineage independently and
+  should not contain backend-specific extraction logic.
+
+Use `PipelineStage` and `extract_pipeline_lineage` directly in tests, demos,
+or integrations where orchestration metadata is already available. Use
+`scan_ibis_project` in production repos where the caller wants the library to
+discover declared Ibis jobs across many packages. The scanner result should be
+validated first, then passed into the same extraction API:
+
+```python
+scan = scan_ibis_project(root_paths)
+if scan.duplicate_target_conflicts or scan.unresolved_input_datasets:
+    raise ValueError(scan.to_dict())
+graph = extract_pipeline_lineage(scan.stages)
+```
+
+This layering is important for maintainability: every future discovery source,
+including AST-only scanning, Airflow/Dagster/dbt adapters, or internal catalog
+manifests, should produce `PipelineStage` objects and reuse
+`extract_pipeline_lineage`.
+
 ## Scanner Contract
 
 Scanning is required for production use because callers should not have to
