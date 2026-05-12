@@ -136,6 +136,11 @@ scan = scan_ibis_project(["jobs", "shared_transforms"])
 graph = extract_pipeline_lineage(scan.stages)
 ```
 
+When scanning multiple roots, the scanner adds every scanned root to the import
+path for each stage import. This lets a stage in one repository import shared
+dataset metadata or target references from another scanned repository while
+still producing ordinary `PipelineStage` objects.
+
 Initial supported conventions are:
 
 - modules exporting `PipelineStage` objects,
@@ -149,6 +154,17 @@ Initial supported conventions are:
 If a file cannot be understood safely, the scanner reports diagnostics, skipped
 files, duplicate target conflicts, and unresolved inputs rather than inventing
 lineage.
+
+The multi-repo scanner example in `examples/multirepo_scan` scans four separate
+roots: a shared catalog repo plus mart, analytics, and operations job repos. The
+resulting DAG materializes several datasets and converges into
+`exec.scorecard`.
+
+```bash
+uv run --no-editable --reinstall-package ibis-unified-lineage \
+  python -m examples.multirepo_scan.demo_run \
+  --artifacts artifacts/multirepo-scan
+```
 
 ## Deep Multi-Stage Example
 

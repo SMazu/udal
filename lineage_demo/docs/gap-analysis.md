@@ -21,6 +21,9 @@ handoff refactor.
 - Scanning mode: added `scan_ibis_project` with supported declaration
   conventions and structured diagnostics for skipped, ambiguous, import-failed,
   duplicate-target, and unresolved-input cases.
+- Multi-repo scanner coverage: added cross-root import support and a scanner
+  stress example covering a shared catalog repo plus mart, analytics, and
+  operations repos with converging DAGs.
 - Deep tests: added coverage for `raw.a/raw.b -> mart.c`,
   `raw.d/raw.e/raw.f -> mart.g`, `mart.c/mart.g/raw.a -> mart.h`,
   `mart.h/mart.c -> mart.i`, and `mart.i/raw.f -> mart.k`, including

@@ -27,6 +27,9 @@ rm -rf dist
 uv build
 uv run --no-editable python -m examples.multistage_pipeline.demo_run \
   --artifacts artifacts/multistage-lineage
+uv run --no-editable --reinstall-package ibis-unified-lineage \
+  python -m examples.multirepo_scan.demo_run \
+  --artifacts artifacts/multirepo-scan
 ```
 
 Inspect the wheel:

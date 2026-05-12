@@ -74,6 +74,9 @@ Examples:
   `raw.a/raw.b -> mart.c`, `raw.d/raw.e/raw.f -> mart.g`,
   `mart.c/mart.g/raw.a -> mart.h`, `mart.h/mart.c -> mart.i`, and
   `mart.i/raw.f -> mart.k`.
+- `examples/multirepo_scan`: scanner stress demo for a shared catalog repo plus
+  mart, analytics, and operations repos. It verifies cross-repo imports and
+  multiple converging DAGs ending in `exec.scorecard`.
 
 Docs:
 
@@ -117,6 +120,11 @@ The scanner must not compute lineage independently. It should discover
 API. Future Airflow/Dagster/dbt/internal manifest adapters should follow the
 same pattern.
 
+The scanner now prepends every scanned root to the import path while importing a
+stage file. This is required for real multi-repo scans, for example when a stage
+in an analytics repo imports target refs from a mart repo and raw refs from a
+shared catalog repo.
+
 ## Scanner Conventions Implemented
 
 `scan_ibis_project` supports:
@@ -140,6 +148,16 @@ The scanner returns:
 
 If a file cannot be understood safely, report a structured diagnostic. Do not
 invent target/input metadata or silently flatten unknown logic.
+
+The multi-repo scanner example scans four roots and produced this verified UI
+summary:
+
+- 14 datasets
+- 4 layers
+- 28 materialized output columns
+- 155 direct column edges
+- 35 transitive edges
+- no browser console errors in direct or transitive mode
 
 ## UI Context
 
@@ -187,6 +205,9 @@ uv build
 scripts/uv_test_matrix.sh
 uv run --no-editable python -m examples.multistage_pipeline.demo_run \
   --artifacts artifacts/multistage-lineage
+uv run --no-editable --reinstall-package ibis-unified-lineage \
+  python -m examples.multirepo_scan.demo_run \
+  --artifacts artifacts/multirepo-scan
 uv run python -m compileall -q src examples tests
 ```
 
@@ -225,6 +246,8 @@ The relevant pushed commits are:
 
 - `bc164e9 feat: add production pipeline lineage DAG`
 - `dae1587 docs: document production lineage handoff`
+- `0fab487 fix: support cross-root scanner imports`
+- `4543460 test: add cross-repo scanner lineage coverage`
 
 Earlier context commits include:
 

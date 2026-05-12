@@ -59,7 +59,9 @@ adapter.
 have to manually register every stage from many repositories. The scanner finds
 documented declarations, returns `PipelineStage` objects, and reports
 diagnostics. It does not bypass `extract_pipeline_lineage`, and it must not
-guess lineage for unsupported Python.
+guess lineage for unsupported Python. During module import, it prepends every
+scanned root to `sys.path` so stage files in one repo can import catalog or
+target metadata from another scanned repo.
 
 ## Scanning Conventions
 
@@ -80,6 +82,10 @@ through a documented convention, the scanner reports a skipped file or
 diagnostic. It does not guess target datasets, infer schemas from live systems,
 or execute Ibis queries.
 
+The scanner stress example in `examples/multirepo_scan` scans four roots with
+cross-repo imports and converging DAGs. It is the preferred local fixture for
+validating multi-repo discovery behavior.
+
 ## Example Harness
 
 `examples/monthly_revenue` proves the package against a realistic cross-engine
@@ -92,6 +98,10 @@ job:
   Postgres, MySQL, Spark Delta/parquet, and Polars/parquet.
 - `demo_run.py`: command-line entry point used by local and Docker smoke tests.
 - `fixtures/monthly_revenue`: CSV data and expected output for the example.
+
+`examples/multistage_pipeline` and `examples/multirepo_scan` are static lineage
+examples. They are used to validate arbitrary-depth pipeline extraction and
+multi-repo scanner discovery without starting external services.
 
 The example is deliberately outside the wheel package. It may ship in the sdist
 and repository, but it is not part of the runtime import surface.

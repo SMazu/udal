@@ -48,7 +48,9 @@ The pipeline API and scanner mode are intentionally different layers:
 - `scanner.py` is a discovery adapter. It scans files and folders for supported
   declarations, turns those declarations into `PipelineStage` objects, and
   reports structured diagnostics. It does not compute lineage independently and
-  should not contain backend-specific extraction logic.
+  should not contain backend-specific extraction logic. During import, every
+  scanned root is added to the import path so stages can depend on shared
+  catalog or target modules from other scanned repositories.
 
 Use `PipelineStage` and `extract_pipeline_lineage` directly in tests, demos,
 or integrations where orchestration metadata is already available. Use
@@ -126,10 +128,22 @@ models:
 - `mart.h + mart.c -> mart.i`
 - `mart.i + raw.f -> mart.k`
 
+`examples/multirepo_scan` is the scanner stress demo. It scans a shared catalog
+repo plus mart, analytics, and operations repos. The scanned stages create
+multiple downstream datasets:
+
+- `raw.orders + raw.fx_rates -> mart.order_usd`
+- `raw.customers + raw.returns -> mart.customer_features`
+- `raw.products + raw.inventory -> mart.product_inventory`
+- `mart.order_usd + mart.customer_features -> analytics.customer_ltv`
+- `mart.order_usd + mart.product_inventory -> analytics.region_margin`
+- `mart.product_inventory + raw.suppliers -> ops.inventory_alerts`
+- `analytics.customer_ltv + analytics.region_margin + ops.inventory_alerts -> exec.scorecard`
+
 The tests cover source extraction, installed-wheel behavior, backend-invariant
 lineage, explicit deep pipeline extraction, transitive raw-to-final lineage,
-scanner discovery across multiple roots, scanner diagnostics, and arbitrary-depth
-HTML payload generation.
+scanner discovery across multiple roots, cross-repo imports, scanner
+diagnostics, and arbitrary-depth HTML payload generation.
 
 ## Current Verification
 
@@ -140,8 +154,16 @@ uv run pytest tests
 rm -rf dist
 uv build
 scripts/uv_test_matrix.sh
+uv run --no-editable --reinstall-package ibis-unified-lineage \
+  python -m examples.multirepo_scan.demo_run \
+  --artifacts artifacts/multirepo-scan
 ```
 
 The matrix installed the built wheel and ran tests on Python 3.10, 3.11, 3.12,
 3.13, and 3.14. Existing warnings are DuckDB/Pandas deprecations in the example
 execution path, not lineage failures.
+
+The multi-repo scanner UI was opened in the browser and verified in direct and
+transitive modes. It rendered 14 datasets, 4 layers, 28 materialized output
+columns, 155 direct column edges, and 35 transitive edges with no console
+errors.
