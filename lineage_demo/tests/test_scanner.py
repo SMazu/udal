@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from examples.multirepo_scan.demo_run import INCLUDE_GLOBS, repo_roots, run_multirepo_scan
 from ibis_unified_lineage import extract_pipeline_lineage, scan_ibis_project, transitive_dependency_pairs
 
 
@@ -73,8 +74,71 @@ raise RuntimeError("do not import me")
     assert [stage.stage_id for stage in result.stages] == ["stage_a", "stage_b"]
 
 
+def test_scanner_extracts_cross_repo_multi_dag_lineage(tmp_path) -> None:
+    """Verify scan mode across several repos with cross-repo dependencies."""
+
+    result = scan_ibis_project(repo_roots(), include_globs=INCLUDE_GLOBS)
+
+    assert not result.diagnostics
+    assert not result.duplicate_target_conflicts
+    assert not result.unresolved_input_datasets
+    assert sorted(stage.stage_id for stage in result.stages) == [
+        "stage_customer_features",
+        "stage_customer_ltv",
+        "stage_exec_scorecard",
+        "stage_inventory_alerts",
+        "stage_order_usd",
+        "stage_product_inventory",
+        "stage_region_margin",
+    ]
+
+    graph = extract_pipeline_lineage(result.stages, metadata={"job_name": "multi_repo_scan_test"})
+    direct = graph.dependency_pairs()
+    transitive = transitive_dependency_pairs(graph)
+
+    stage_order = graph.metadata["stages"]
+    assert set(stage_order) == {stage.stage_id for stage in result.stages}
+    assert _precedes(stage_order, "stage_order_usd", "stage_customer_ltv")
+    assert _precedes(stage_order, "stage_customer_features", "stage_customer_ltv")
+    assert _precedes(stage_order, "stage_order_usd", "stage_region_margin")
+    assert _precedes(stage_order, "stage_product_inventory", "stage_region_margin")
+    assert _precedes(stage_order, "stage_product_inventory", "stage_inventory_alerts")
+    assert _precedes(stage_order, "stage_customer_ltv", "stage_exec_scorecard")
+    assert _precedes(stage_order, "stage_region_margin", "stage_exec_scorecard")
+    assert _precedes(stage_order, "stage_inventory_alerts", "stage_exec_scorecard")
+    assert ("raw.orders.gross_amount", "mart.order_usd.total_net_usd", "value") in direct
+    assert ("raw.fx_rates.rate_to_usd", "mart.order_usd.total_net_usd", "value") in direct
+    assert ("raw.returns.return_fee", "mart.customer_features.total_return_fee", "value") in direct
+    assert ("raw.inventory.on_hand", "mart.product_inventory.stock_gap", "value") in direct
+    assert ("mart.order_usd.total_net_usd", "analytics.customer_ltv.lifetime_value", "value") in direct
+    assert ("mart.product_inventory.stock_gap", "analytics.region_margin.margin_usd", "value") in direct
+    assert ("raw.suppliers.risk_score", "ops.inventory_alerts.alert_score", "value") in direct
+    assert ("analytics.customer_ltv.lifetime_value", "exec.scorecard.score", "value") in direct
+    assert ("analytics.region_margin.margin_usd", "exec.scorecard.score", "value") in direct
+    assert ("ops.inventory_alerts.alert_score", "exec.scorecard.score", "value") in direct
+    assert ("raw.orders.gross_amount", "exec.scorecard.score") in transitive
+    assert ("raw.fx_rates.rate_to_usd", "exec.scorecard.score") in transitive
+    assert ("raw.returns.return_fee", "exec.scorecard.score") in transitive
+    assert ("raw.inventory.reorder_point", "exec.scorecard.score") in transitive
+    assert ("raw.suppliers.risk_score", "exec.scorecard.score") in transitive
+
+    summary = run_multirepo_scan(tmp_path / "lineage")
+    html = Path(summary["html"]).read_text(encoding="utf-8")
+    assert summary["dataset_count"] >= 14
+    assert summary["edge_count"] >= 100
+    assert summary["transitive_pair_count"] >= 20
+    assert "Multi-Repo Ibis Lineage" in html
+    assert "arbitrary-depth-materialized-dag" in html
+    assert "exec.scorecard" in html
+    assert '"transitive_edges"' in html
+
+
 def _write(path: Path, content: str) -> None:
     path.write_text(content.lstrip(), encoding="utf-8")
+
+
+def _precedes(stage_order: list[str], upstream: str, downstream: str) -> bool:
+    return stage_order.index(upstream) < stage_order.index(downstream)
 
 
 def _stage_c_module() -> str:
