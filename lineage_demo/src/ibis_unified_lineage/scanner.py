@@ -127,6 +127,7 @@ def scan_ibis_project(
     stages: list[PipelineStage] = []
     skipped_files: list[PipelineScanSkippedFile] = []
     diagnostics: list[PipelineScanDiagnostic] = []
+    import_roots = _import_roots(roots)
 
     for root, path in _iter_python_files(roots, includes, excludes):
         try:
@@ -143,7 +144,7 @@ def scan_ibis_project(
             skipped_files.append(PipelineScanSkippedFile(str(path), "no_supported_lineage_convention"))
             continue
 
-        module = _import_module(path, root, diagnostics)
+        module = _import_module(path, import_roots, diagnostics)
         if module is None:
             continue
         stages.extend(_stages_from_module(module, path, resolved_conventions, diagnostics))
@@ -165,6 +166,17 @@ def _normalize_roots(root_paths: str | Path | Iterable[str | Path]) -> tuple[Pat
     else:
         items = root_paths
     return tuple(Path(item).resolve() for item in items)
+
+
+def _import_roots(roots: Iterable[Path]) -> tuple[Path, ...]:
+    result: list[Path] = []
+    seen: set[Path] = set()
+    for root in roots:
+        import_root = root.parent if root.is_file() else root
+        if import_root not in seen:
+            result.append(import_root)
+            seen.add(import_root)
+    return tuple(result)
 
 
 def _merge_conventions(conventions: Mapping[str, Iterable[str]] | None) -> dict[str, tuple[str, ...]]:
@@ -215,7 +227,7 @@ def _looks_like_lineage_module(
     return False
 
 
-def _import_module(path: Path, root: Path, diagnostics: list[PipelineScanDiagnostic]) -> ModuleType | None:
+def _import_module(path: Path, import_roots: tuple[Path, ...], diagnostics: list[PipelineScanDiagnostic]) -> ModuleType | None:
     digest = hashlib.sha1(str(path).encode("utf-8")).hexdigest()
     module_name = f"_ibis_unified_lineage_scan_{digest}"
     spec = importlib.util.spec_from_file_location(module_name, path)
@@ -225,7 +237,7 @@ def _import_module(path: Path, root: Path, diagnostics: list[PipelineScanDiagnos
 
     module = importlib.util.module_from_spec(spec)
     old_path = list(sys.path)
-    sys.path.insert(0, str(root))
+    sys.path[:0] = [str(root) for root in import_roots]
     try:
         sys.modules[module_name] = module
         spec.loader.exec_module(module)
